@@ -1,0 +1,68 @@
+{
+    "data": [
+        {
+            "id": 1000,
+            "stem": "In which of the following do all three compounds have giant lattice structure?",
+            "key": 
+                {
+                    "answer": "BaO, AlF3, SiO2"
+                },
+            "distractors": [
+                {
+                    "answer": "K2O, BCl3, Cr2O3"
+                },
+                {
+                    "answer": "MgO, Fe2O3, P4O10"
+                },
+                {
+                    "answer": "Na2O, SiO2, SO3"
+                }
+            ],
+            "publish_on":"2023-11-30",
+            "topics": [{
+                "id": 1,
+                "name": "Chemical Bonding"
+            }],
+            "skills": [{
+                "id": 1,
+                "name": "Types of structure",
+                "topic_id": 1 
+            }]
+        },
+        {
+            "id": 2000,
+            "stem": "Ice is the crystalline form of water. The diagram below shows part of the structure of ice. Which of the following statements is not true about ice?",
+            "key":  {
+                "answer": "Ice has a giant covalent structure."
+            },
+            "distractors": [
+                {
+                    "answer": "Ice has a lower density than water at 0 oC due to its open structure."
+                },
+                {
+                    "answer": "The bond angle about oxygen in ice is 109.5o."
+                },
+                {
+                    "answer": "Ice does not conduct electricity."
+                },
+                {
+                    "answer": "Ice has a giant covalent structure."
+                }
+            ],
+            "publish_on":"2023-12-30",
+            "topics": [{
+                "id": 1,
+                "name": "Chemical Bonding"
+            }],
+            "skills": [{
+                "id": 2,
+                "name": "Simple molecular structure",
+                "topic_id": 1 
+            },{
+                "id": 3,
+                "name": "Intermolecular forces",
+                "topic_id": 1 
+            }]
+        }
+    ]
+}
