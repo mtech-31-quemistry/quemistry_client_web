@@ -1,24 +1,36 @@
 {
     "data": [
         {
-            "id": 1000,
-            "stem": "In which of the following do all three compounds have giant lattice structure?",
-            "key": 
+            "id": 1000, 
+            "stem": "In which of the following do all three compounds have giant lattice structure?",                
+            "options": [
                 {
-                    "answer": "BaO, AlF3, SiO2"
-                },
-            "distractors": [
-                {
-                    "answer": "K2O, BCl3, Cr2O3"
+                    "no": 1,
+                    "text": "BaO, AlF3, SiO2",
+                    "explanation": "optional explanation"
                 },
                 {
-                    "answer": "MgO, Fe2O3, P4O10"
+                    "no": 2,
+                    "text": "K2O, BCl3, Cr2O3",
+                    "explanation": "optional explanation"
                 },
                 {
-                    "answer": "Na2O, SiO2, SO3"
+                    "no": 3,
+                    "text": "MgO, Fe2O3, P4O10"
+                },
+                {
+                    "no": 4,
+                    "text": "Na2O, SiO2, SO3"
                 }
             ],
-            "publish_on":"2023-11-30",
+            "isAnswer": 1,
+            "status":"publised",
+            "published_on": "2024-01-31",
+            "published_by": "Sheau Shin",
+            "closed_on": "",
+            "closed_by": "",
+            "created_on": "",
+            "created_by": "",
             "topics": [{
                 "id": 1,
                 "name": "Chemical Bonding"
@@ -32,34 +44,44 @@
         {
             "id": 2000,
             "stem": "Ice is the crystalline form of water. The diagram below shows part of the structure of ice. Which of the following statements is not true about ice?",
-            "key":  {
-                "answer": "Ice has a giant covalent structure."
-            },
-            "distractors": [
+            "options": [
                 {
-                    "answer": "Ice has a lower density than water at 0 oC due to its open structure."
+                    "no": 1,
+                    "text": "Ice has a giant covalent structure.",
+                    "explanation": "optional explanation"
                 },
                 {
-                    "answer": "The bond angle about oxygen in ice is 109.5o."
+                    "no": 2,
+                    "text": "Ice has a lower density than water at 0 oC due to its open structure.",
+                    "explanation": "optional explanation"
                 },
                 {
-                    "answer": "Ice does not conduct electricity."
+                    "no": 3,
+                    "text": "Ice does not conduct electricity."
                 },
                 {
-                    "answer": "Ice has a giant covalent structure."
+                    "no": 4,
+                    "text": "The bond angle about oxygen in ice is 109.5o."
                 }
             ],
-            "publish_on":"2023-12-30",
+            "isAnswer": 1,
+            "status":"draft",
+            "published_on": "",
+            "published_by": "",
+            "closed_on": "",
+            "closed_by": "",
+            "created_on": "",
+            "created_by": "",
             "topics": [{
                 "id": 1,
                 "name": "Chemical Bonding"
             }],
             "skills": [{
-                "id": 2,
+                "id": 1,
                 "name": "Simple molecular structure",
                 "topic_id": 1 
             },{
-                "id": 3,
+                "id": 2,
                 "name": "Intermolecular forces",
                 "topic_id": 1 
             }]

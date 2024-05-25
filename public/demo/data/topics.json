@@ -1,0 +1,31 @@
+{
+    "topics": [{
+        "id": 1,
+        "name": "Chemical Bonding"
+        },{
+        "id": 2,
+        "name": "Atomic Structure"
+        },
+        {
+            "id": 3,
+            "name": "State of matter"
+        }
+    ],
+    "skills": [{
+        "id": 1,
+        "name": "Simple molecular structure",
+        "topic_id": 1 
+    },{
+        "id": 2,
+        "name": "Intermolecular forces",
+        "topic_id": 1 
+    },{
+        "id": 3,
+        "name": "Types of structure",
+        "topic_id": 1 
+    },{
+        "id": 4,
+        "name": "Comparing physical property",
+        "topic_id": 1 
+    }]
+}

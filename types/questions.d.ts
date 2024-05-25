@@ -7,13 +7,16 @@ declare namespace Questions {
         distractors: Answer[];
         topics: Topic[];
         skills: Skills[];
-        publish_on: Date ;
-        deletedOn?: Date;
+        status: string ;
+        published_on?: Date ;
+        published_by?: string ;
     }
 
-    interface Answer{
-        answer: string;
-        explanation: string;
+    interface Option{
+        no: number;
+        text: string;
+        explanation?: string;
+        isAnswer: boolean;
     }
 
     interface Topic{
@@ -21,7 +24,7 @@ declare namespace Questions {
         name: string;
     }
 
-    interface Skills{
+    interface Skill{
         id?: number;
         name: string;
         topic_id: number;
