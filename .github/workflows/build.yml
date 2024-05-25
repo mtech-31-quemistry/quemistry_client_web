@@ -85,7 +85,6 @@ jobs:
         with:
           name: quemistry-web-client
           path: dist_s3/
-          overwrite: true
 
       - name: Deploy to S3
         run: |
