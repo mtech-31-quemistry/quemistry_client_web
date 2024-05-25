@@ -14,7 +14,7 @@ export const QuestionsService = {
     getSkills() {
         return fetch('/demo/data/topics.json', { headers: { 'Cache-Control': 'no-cache' } })
             .then((res) => res.json())
-            .then((d) => d.skills as Questions.Skills[]);
+            .then((d) => d.skills as Questions.Skill[]);
     },
 
 };
