@@ -36,8 +36,8 @@ const QuestioSearchList = () => {
             <Tag value={skills.name}></Tag>
         )
         return (
-        <div className='card mb-1' key={rowData.id}>
-            <div className="grid">
+        <div className='card mb-1'>
+            <div className="grid" key={rowData.id}>
                     <div className="col-12">{rowData.stem}</div>
                     <div className="col-12 md:col-6"><label>Topics:</label>{topics}</div>
                     <div className="col-12 md:col-6"><label>Skills:</label>{skills}</div>
