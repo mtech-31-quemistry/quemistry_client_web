@@ -9,16 +9,13 @@ on:
   pull_request:
     branches: [ "main" ]
 #declare environment variables
+env:
+  AWS_REGION: ap-southeast-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 jobs:
-  audit:
-    name: Audit Packages
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Audit packages
-      run: npm audit --audit-level moderate
-      env:
-        CI: true
+  
   build:
 
     runs-on: ubuntu-latest
@@ -53,7 +50,6 @@ jobs:
       - name: Clean Install dependencies
         run: npm ci
 
-      #Run lint code scan
       #Run lint sonar cloud scan
       
       - name: Build
@@ -66,3 +62,26 @@ jobs:
           name: quemistry-web-client
           path: dist/
           overwrite: true
+  
+  audit:
+    needs: build
+    name: Audit Packages
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Audit packages
+      run: npm audit --audit-level moderate
+      env:
+        CI: true
+  
+  deploy_to_s3:
+    needs: [build, audit]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to S3
+          run: |
+            aws s3 sync dist/ s3://quemisty-client-web --delete
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
