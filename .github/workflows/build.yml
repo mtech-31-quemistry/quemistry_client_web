@@ -10,7 +10,16 @@ on:
     branches: [ "main" ]
 #declare environment variables
 jobs:
-  build_and_test:
+  audit:
+    name: Audit Packages
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Audit packages
+      run: npm audit --audit-level moderate
+      env:
+        CI: true
+  build:
 
     runs-on: ubuntu-latest
 
