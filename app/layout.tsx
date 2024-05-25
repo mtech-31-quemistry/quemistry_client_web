@@ -6,6 +6,7 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
+import { Suspense } from 'react';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </head>
             <body>
                 <PrimeReactProvider>
-                    <LayoutProvider>{children}</LayoutProvider>
+                    <Suspense><LayoutProvider>{children}</LayoutProvider></Suspense>
                 </PrimeReactProvider>
             </body>
         </html>
