@@ -79,9 +79,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      #Download artifact
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: quemistry-web-client
+          path: dist_s3/
+          overwrite: true
+
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/ s3://quemisty-client-web --delete
+          aws s3 sync dist_s3/ s3://quemisty-client-web --delete
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
