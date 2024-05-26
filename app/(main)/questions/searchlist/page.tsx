@@ -12,7 +12,6 @@ const QuestioSearchList = () => {
     const [MCQ, setMCQ] = useState<Questions.MCQ[]>([]);
     const [loading, setLoading] = useState(true);
 
-
     useEffect(() => {
         QuestionsService.getMCQ().then((data) => {
             setMCQ(data);

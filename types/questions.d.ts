@@ -2,15 +2,19 @@ declare namespace Questions {
 
     interface MCQ {
         id?: number;
-        stem?: string;
-        key: Answer;
-        distractors: Answer[];
+        stem: string;
+        option: Answer[];
+        isAnswer: number;
         topics: Topic[];
         skills: Skills[];
         status: string ;
         published_on?: Date ;
         published_by?: string ;
-    }
+        closed_on?: Date,
+        closed_by?: string,
+        created_on?: Date,
+        created_by?: string,
+}
 
     interface Option{
         no: number;
