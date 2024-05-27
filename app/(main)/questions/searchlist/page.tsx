@@ -57,7 +57,6 @@ const QuestioSearchList = () => {
     const startContent = (
         <React.Fragment>
             <Link href="/questions/edit"><Button icon="pi pi-plus" className="mr-2"  /></Link>
-            <Button icon="pi pi-print" className="mr-2" />
             <Button icon="pi pi-upload" />
         </React.Fragment>
     );
