@@ -10,10 +10,13 @@ import { Divider } from 'primereact/divider';
 import { LayoutContext } from '../../layout/context/layoutcontext';
 import { NodeRef } from '@/types';
 import { classNames } from 'primereact/utils';
+import { Dialog } from 'primereact/dialog';
 
 const LandingPage = () => {
     const [isHidden, setIsHidden] = useState(false);
     const { layoutConfig } = useContext(LayoutContext);
+    const [showSignIn, setShowSignIn] = useState(false);
+
     const menuRef = useRef<HTMLElement | null>(null);
 
     const toggleMenuItemClick = () => {
@@ -59,12 +62,31 @@ const LandingPage = () => {
                             </li>
                         </ul>
                         <div className="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
-                            <Button label="Login" text rounded className="border-none font-light line-height-2 text-blue-500"></Button>
+                            <Button label="Sign in" text rounded className="border-none font-light line-height-2 text-blue-500" onClick={()=>{setShowSignIn(true)}}></Button>
                             <Button label="Register" rounded className="border-none ml-5 font-light line-height-2 bg-blue-500 text-white"></Button>
                         </div>
                     </div>
                 </div>
-
+                <div>
+                    <Dialog showHeader={true} visible={showSignIn} modal onHide={() =>{if(!showSignIn) return; setShowSignIn(false)}} style={{ width: '30rem' }}>
+                        <p className='flex justify-content-center'>
+                            <b>Sign in / Sign up.</b>
+                        </p>
+                       
+                        <div className="flex gap-2 justify-content-center">
+                            <Button className="align-items-center" raised>
+                                <span className="flex align-items-center">
+                                    <i className="pi pi-google" style={{ fontSize: '1.5rem' }}></i>
+                                </span>
+                                <span className="flex align-items-center text-white" style={{ fontSize: '1.5rem' }}>oogle</span>
+                            </Button>
+                         </div>
+                         <div className='m-8'></div>
+                         <div className="flex gap-2 justify-content-center m-2">
+                             <Button onClick={()=> {setShowSignIn(false)}} text><u>Cancel</u></Button>
+                         </div>
+                    </Dialog>
+                </div>
                 <div
                     id="hero"
                     className="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
