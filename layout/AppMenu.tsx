@@ -15,14 +15,14 @@ const AppMenu = () => {
         {
             label: 'Home',
             items: [
-                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
-                { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/' }
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
+                { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz' }
             ]
         },
         {
             label: 'Manage',
             items: [{ label: 'Questions', icon: 'pi pi-fw pi-tag', to: '/questions/searchlist' },
-                    { label: 'Topics', icon: 'pi pi-fw pi-tag', to: '/questions/searchlist' }]
+                    { label: 'Topics', icon: 'pi pi-fw pi-tag', to: '/questions/topics' }]
         },
         {
             label: 'UI Components',
@@ -187,10 +187,6 @@ const AppMenu = () => {
                     {model.map((item, i) => {
                         return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
                     })}
-
-                    <Link href="https://blocks.primereact.org" target="_blank" style={{ cursor: 'pointer' }}>
-                        <img alt="Prime Blocks" className="w-full mt-3" src={`/layout/images/banner-primeblocks${layoutConfig.colorScheme === 'light' ? '' : '-dark'}.png`} />
-                    </Link>
                 </ul>
             </MenuProvider>
         </Suspense>
