@@ -25,8 +25,8 @@ const LandingPage = () => {
             <div id="home" className="landing-wrapper overflow-hidden">
                 <div className="py-4 px-4 mx-0 md:mx-6 lg:mx-8 lg:px-8 flex align-items-center justify-content-between relative lg:static">
                     <Link href="/" className="flex align-items-center">
-                        <img src={`/layout/images/${layoutConfig.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}.svg`} alt="Sakai Logo" height="50" className="mr-0 lg:mr-2" />
-                        <span className="text-900 font-medium text-2xl line-height-3 mr-8">SAKAI</span>
+                        <img src={`/layout/images/${layoutConfig.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}.png`} alt="Quemistry" height="50" className="mr-0 lg:mr-2" />
+                        <span className="text-900 font-medium text-2xl line-height-3 mr-8">Quemistry</span>
                     </Link>
                     <StyleClass nodeRef={menuRef as NodeRef} selector="@next" enterClassName="hidden" leaveToClassName="hidden" hideOnOutsideClick>
                         <i ref={menuRef} className="pi pi-bars text-4xl cursor-pointer block lg:hidden text-700"></i>
@@ -69,19 +69,19 @@ const LandingPage = () => {
                     id="hero"
                     className="flex flex-column pt-4 px-4 lg:px-8 overflow-hidden"
                     style={{
-                        background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #EEEFAF 0%, #C3E3FA 100%)',
+                        background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #910AE8 0%, #EFFF5A 100%)',
                         clipPath: 'ellipse(150% 87% at 93% 13%)'
                     }}
                 >
                     <div className="mx-4 md:mx-8 mt-0 md:mt-4">
                         <h1 className="text-6xl font-bold text-gray-900 line-height-2">
-                            <span className="font-light block">Eu sem integer</span>eget magna fermentum
+                            <span className="font-light block">MTECH SE 31</span>Quemistry
                         </h1>
-                        <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Sed blandit libero volutpat sed cras. Fames ac turpis egestas integer. Placerat in egestas erat... </p>
+                        <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Platform manages multiple choice questions to test and improve your knowlege in chemistry ... </p>
                         <Button type="button" label="Get Started" rounded className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button>
                     </div>
                     <div className="flex justify-content-center md:justify-content-end">
-                        <img src="/demo/images/landing/screen-1.png" alt="Hero Image" className="w-9 md:w-auto" />
+                        <img src="/demo/images/landing/landingImage.jpg" alt="Hero Image" height={300} className="w-9 md:w-auto" />
                     </div>
                 </div>
 
