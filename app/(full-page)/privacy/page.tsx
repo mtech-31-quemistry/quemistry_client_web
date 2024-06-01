@@ -10,7 +10,7 @@ const PrivacyPage = () => {
 
                     <p><b>Introduction</b><br/></p>
 
-                    This Privacy Policy describes how Quemistry ("we," "us," or "our") collects, uses, and discloses your personal information when you use our website (the "Service") 
+                    This Privacy Policy describes how Quemistry (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) collects, uses, and discloses your personal information when you use our website (the &quot;Service&quot;) 
                     and the choices you have associated with that data.
     <p></p>
     <p><b>Information We Collect</b><br/>
@@ -18,7 +18,7 @@ const PrivacyPage = () => {
     We collect several different types of information for various purposes to improve our Service to you.
     <p></p>
     <p><b>Personal Information:</b><br/></p>
-    When you create an account on our Service, you may provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Information"). This may include, but is not limited to:
+    When you create an account on our Service, you may provide us with certain personally identifiable information that can be used to contact or identify you (&quot;Personal Information&quot;). This may include, but is not limited to:
     <ul>
         <li>
             Email address
@@ -36,7 +36,7 @@ const PrivacyPage = () => {
 
     <p><b>Usage Data:</b><br/>
     </p>
-    We may also collect information about how you access and use the Service ("Usage Data"). This Usage Data may include:
+    We may also collect information about how you access and use the Service (&quot;Usage Data&quot;). This Usage Data may include:
     <ul>
         <li>Location information (general, not precise)</li>
         <li>IP address</li>
@@ -97,7 +97,7 @@ const PrivacyPage = () => {
     </ul>
 
     <p><b>
-    Children's Privacy
+    Children&apos;s Privacy
     </b><br />
     Our Service does not address anyone under the age of 13. We do not knowingly collect Personal Information from children under 13. If you are a parent or guardian and you are aware that your child has provided us with Personal Information, please contact us. If we become aware that we have collected Personal Information from a child under 13, we will take steps to remove that information from our servers.
     </p>
