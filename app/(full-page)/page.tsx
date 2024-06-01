@@ -7,7 +7,7 @@ import { StyleClass } from 'primereact/styleclass';
 import { Button } from 'primereact/button';
 import { Ripple } from 'primereact/ripple';
 import { Divider } from 'primereact/divider';
-import { LayoutContext } from '../../../layout/context/layoutcontext';
+import { LayoutContext } from '../../layout/context/layoutcontext';
 import { NodeRef } from '@/types';
 import { classNames } from 'primereact/utils';
 
@@ -78,7 +78,7 @@ const LandingPage = () => {
                             <span className="font-light block">MTECH SE 31</span>Quemistry
                         </h1>
                         <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Platform manages multiple choice questions to test and improve your knowlege in chemistry ... </p>
-                        <Button type="button" label="Get Started" rounded className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button>
+                        <Link href="/dashboard"><Button type="button" label="Get Started" rounded className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button></Link>
                     </div>
                     <div className="flex justify-content-center md:justify-content-end">
                         <img src="/demo/images/landing/landingImage.jpg" alt="Hero Image" height={300} className="w-9 md:w-auto" />
