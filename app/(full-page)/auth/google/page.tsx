@@ -25,16 +25,11 @@ const GoogleAuthPage = () => {
             console.log('redirection');
             //redirect('/auth/access');
         }
-        if(!GoogleSigninService.getAuthenticated(codeVerifier, authCode)){
-            console.log('google authentication fails');
-            redirect('/auth/access');
-        }
+        GoogleSigninService.getAuthenticated(codeVerifier, authCode)
     },[])
 
     return (<div>
                 <p>Google Response Success</p>
-                <p>{authCode}</p>
-                <p>{codeVerifier}</p>
             </div>);
 }
 
