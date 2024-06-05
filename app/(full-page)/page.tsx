@@ -1,6 +1,6 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
-import React, { useContext, useRef, useState } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import { StyleClass } from 'primereact/styleclass';
@@ -11,17 +11,42 @@ import { LayoutContext } from '../../layout/context/layoutcontext';
 import { NodeRef } from '@/types';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
+import { GoogleSigninService } from '../../service/GoogleSignInService';
+import { useCookies } from 'react-cookie'
 
 const LandingPage = () => {
     const [isHidden, setIsHidden] = useState(false);
     const { layoutConfig } = useContext(LayoutContext);
     const [showSignIn, setShowSignIn] = useState(false);
+    const [cookies, setCookies] = useCookies(['state', 'code_verifier']);
 
     const menuRef = useRef<HTMLElement | null>(null);
 
     const toggleMenuItemClick = () => {
         setIsHidden((prevState) => !prevState);
     };
+
+    async function signIn() {
+        var state = GoogleSigninService.generateRandomBytes();
+        
+        await GoogleSigninService.generateCodeChallenge()
+            .then((result:any)=>{
+                console.log(result);
+                setCookies('code_verifier', result.codeVerifier, {
+                    httpOnly: false,
+                    secure: false,
+                    maxAge: 60, //60 secs
+                    path: '/'
+                });
+                setCookies('state', state, {
+                    httpOnly: false,
+                    secure: false,
+                    maxAge: 60, //60 secs
+                    path: '/'
+                });    
+                GoogleSigninService.signIn(state, result.codeChallenge);     
+            });
+    }
 
     return (
         <div className="surface-0 flex justify-content-center">
@@ -74,7 +99,7 @@ const LandingPage = () => {
                         </p>
                        
                         <div className="flex gap-2 justify-content-center">
-                            <Button className="align-items-center" raised>
+                            <Button className="align-items-center" raised onClick={signIn}>
                                 <span className="flex align-items-center">
                                     <i className="pi pi-google" style={{ fontSize: '1.5rem' }}></i>
                                 </span>

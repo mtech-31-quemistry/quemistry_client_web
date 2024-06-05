@@ -59,5 +59,6 @@ export type {
     AppMailReplyProps,
     AppMailProps,
     AppMenuItem,
-    Questions
+    Questions,
+    PKCECodeChallenge
 };

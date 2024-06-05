@@ -20,6 +20,7 @@
     "primereact": "^10.6.5",
     "quill": "^2.0.2",
     "react": "18.3.1",
+    "react-cookie": "^7.1.4",
     "react-dom": "18.3.1",
     "typescript": "5.1.3"
   },
