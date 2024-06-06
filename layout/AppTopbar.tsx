@@ -6,18 +6,38 @@ import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'reac
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
 import { IS_LOGIN } from "../lib/constants"
+import { Menu } from 'primereact/menu';
+
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
+    const profilemenubuttonRef = useRef<Menu>(null);
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
         topbarmenu: topbarmenuRef.current,
-        topbarmenubutton: topbarmenubuttonRef.current
+        topbarmenubutton: topbarmenubuttonRef.current,
+        profilemenubutton: profilemenubuttonRef.current
     }));
+    const toggleProfileMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        profilemenubuttonRef.current?.toggle(event);
+    };
 
+    const overlayMenuItems = [
+        {
+            label: 'View Profile'
+        },
+        {
+            separator: true
+        },
+        {
+            label: 'Sign out',
+            icon: 'pi pi-sign-out'
+        }
+    ];
+    
     return (
         <div className="layout-topbar">
             <Link href="/" className="layout-topbar-logo">
@@ -34,15 +54,23 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
+                {localStorage.getItem(IS_LOGIN) === "true" || <button type="button" className="p-link layout-topbar-button">
+                    <i className="pi pi-sign-in"></i>
+                    <span>Sign in</span>
+                </button>
+                }
                 {localStorage.getItem(IS_LOGIN) !== "true" || <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-calendar"></i>
                     <span>Calendar</span>
                 </button>
                 }
-                {localStorage.getItem(IS_LOGIN) !== "true" || <button type="button" className="p-link layout-topbar-button">
+                {localStorage.getItem(IS_LOGIN) !== "true" || 
+                    <div>
+                        <Menu ref={profilemenubuttonRef} model={overlayMenuItems} popup />
+                        <button type="button" className="p-link layout-topbar-button" onClick={toggleProfileMenu}>
                     <i className="pi pi-user"></i>
                     <span>Profile</span>
-                </button>
+                </button></div>
                 }
                 <Link href="/documentation">
                     <button type="button" className="p-link layout-topbar-button">
