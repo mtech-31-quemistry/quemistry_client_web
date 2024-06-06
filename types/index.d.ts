@@ -60,5 +60,6 @@ export type {
     AppMailProps,
     AppMenuItem,
     Questions,
+    UserProfile,
     PKCECodeChallenge
 };

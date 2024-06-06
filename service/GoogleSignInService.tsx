@@ -54,35 +54,26 @@ export const GoogleSigninService = {
             'scope': 'email openid profile'
         });
 
-        fetch(idpTokendpoint, 
+        return fetch(idpTokendpoint, 
             { 
                 headers: {'Content-Type': 'application/x-www-form-urlencoded' },
                 method: 'POST',
                 body: formData
             })
             .then((res) => {
-                console.log(res)
-                //console.log("result:",res.json())
                 if(res.ok){
-                    res.json()
-                        .then((response)=>{
-                            console.log("Login successful");
-                        });
-                    return true;
+                    return res.json() //contains access tokens
                 }
                 else
                 {
-                    return false;
+                    throw new Error(res.status + " at signing with google account.")
                 }
             })
-            .catch((err) => {
-                console.log("getAccessToken", err);
-                return false;
-        });
+            .then((d) => d);
     },
     getAuthenticated(codeVerifier: string, authCode: string | any){
 
-        fetch(AuthSvcUrl, { 
+        return fetch(AuthSvcUrl, { 
                 headers: {'Content-Type': 'application/json' },
                 method: 'POST',
                 body: JSON.stringify({
@@ -94,14 +85,13 @@ export const GoogleSigninService = {
             })
             .then((res) => {
                 if(res.ok){
-                    res.json()
-                        .then((response)=>{
-                            console.log(response);
-                        });
+                    return res.json()
+                }
+                else
+                {
+                    throw new Error(res.status + " at signing with google account.")
                 }
             })
-            .catch((err) => {
-                console.log("getAccessToken", err);
-            });
+            .then((d) => d as UserProfile);;
     }
 };
