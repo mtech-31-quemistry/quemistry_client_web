@@ -235,7 +235,7 @@ const EditQuestion = () => {
                             <Column style={{ width: '90%' }} body={optionsItemTemplate}></Column>
                         </DataTable>
                     </div>
-                    <div className="col-11">&nbsp;</div>
+                    <div className="col-9 md:col-11">&nbsp;</div>
                     <div className="col-1">
                         <Button label="Done" onClick={handleOnClickDone}></Button>
                     </div>
