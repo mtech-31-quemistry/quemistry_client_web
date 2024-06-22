@@ -5,7 +5,6 @@ import { useCookies} from 'react-cookie'
 import  { redirect } from 'next/navigation'
 import { GoogleSigninService } from '@/service/GoogleSignInService'
 import { useContext , useEffect, useState } from 'react'
-import { IS_LOGIN } from '../../../../lib/constants'
 import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
@@ -45,7 +44,6 @@ const GoogleAuthPage = () => {
                     //clear cookies
                     removeCookie('state');
                     removeCookie('code_verifier');
-                    localStorage.setItem(IS_LOGIN, "true" );
                     setIsLogin(true);
                 })
                 .catch((err) => {

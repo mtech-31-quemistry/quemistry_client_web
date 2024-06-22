@@ -1,4 +1,5 @@
 import {PKCECodeChallenge} from '@/types';
+import { IS_LOGIN } from '../lib/constants'
 
 const clientId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID || ''
 const idpAuthorizeEndpoint = process.env.NEXT_PUBLIC_IDP_AuthorizeEndpoint || ''
@@ -8,21 +9,20 @@ const AuthSvcUrl = process.env.NEXT_PUBLIC_QUEMISTRY_AUTH_URL || ''
 
 const crypto = require('crypto');
 
-function generateRandomString(length: number):string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
+function generateRandomString():string {
+    var array = new Uint32Array(56 / 2);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, (value)=>{return ("0" + value.toString(16)).substr(-2);}).join("");
   }
 
   async function generateCodeChallenge(verifier: string):Promise<string> {
     const encoder = new TextEncoder();
     const base64urlEncoded = await crypto.createHash('sha256')
                     .update(encoder.encode(verifier))
-                    .digest('base64');
+                    .digest('base64')
+                    .replace(/\+/g, "-")
+                    .replace(/\//g, "_")
+                    .replace(/=+$/, "");
 
     return base64urlEncoded;
   }
@@ -30,8 +30,8 @@ function generateRandomString(length: number):string {
 export const GoogleSigninService = {
     signIn(state:string, codeChallenge: string) {
 
-        //window.location.href = `${idpAuthorizeEndpoint}?response_type=code&client_id=${clientId}&state=${state}&code_challenge_method=S256&code_challenge=${codeChallenge}&scope=openid+email&identity_provider=Google&redirect_uri=${redirectUrl}`;
-        window.location.href = `${idpAuthorizeEndpoint}?response_type=code&client_id=${clientId}&state=${state}&scope=openid+email&identity_provider=Google&redirect_uri=${redirectUrl}`;
+        window.location.href = `${idpAuthorizeEndpoint}?response_type=code&client_id=${clientId}&state=${state}&code_challenge_method=S256&code_challenge=${codeChallenge}&scope=openid+email&identity_provider=Google&redirect_uri=${redirectUrl}`;
+        //window.location.href = `${idpAuthorizeEndpoint}?response_type=code&client_id=${clientId}&state=${state}&scope=openid+email&identity_provider=Google&redirect_uri=${redirectUrl}`;
     },
     generateRandomBytes():string {
         const rand = crypto.randomBytes(8).toString('hex');
@@ -75,6 +75,7 @@ export const GoogleSigninService = {
 
         return fetch(AuthSvcUrl, { 
                 headers: {'Content-Type': 'application/json' },
+                credentials: "include",
                 method: 'POST',
                 body: JSON.stringify({
                     codeVerifier: codeVerifier,
@@ -85,6 +86,7 @@ export const GoogleSigninService = {
             })
             .then((res) => {
                 if(res.ok){
+                    localStorage.setItem(IS_LOGIN, "true" );
                     return res.json()
                 }
                 else
@@ -93,5 +95,26 @@ export const GoogleSigninService = {
                 }
             })
             .then((d) => d as UserProfile);;
+    },
+    signOut(){
+        return fetch(AuthSvcUrl+'/signout',{
+            headers: {'Content-Type': 'application/json' }, 
+            credentials: 'include',
+            method: 'POST',
+            body: JSON.stringify({
+                clientId: clientId
+            })
+        })
+        .then((res)=>{
+            if(res.ok){
+                localStorage.setItem(IS_LOGIN, "false" );
+                return;
+            }
+            else
+            {
+                localStorage.setItem(IS_LOGIN, "false" );
+                throw new Error(res.status + " at signing out.")
+            }
+        })
     }
 };

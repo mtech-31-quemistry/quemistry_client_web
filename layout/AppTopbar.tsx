@@ -2,11 +2,13 @@
 
 import Link from 'next/link';
 import { classNames } from 'primereact/utils';
-import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
 import { IS_LOGIN } from "../lib/constants"
 import { Menu } from 'primereact/menu';
+import { GoogleSigninService } from '@/service/GoogleSignInService'
+import  { redirect } from 'next/navigation'
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
@@ -14,6 +16,13 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
     const profilemenubuttonRef = useRef<Menu>(null);
+    const [isLogin, setIsLogin] = useState(localStorage == undefined || localStorage.getItem(IS_LOGIN) === "true");
+    
+    // useEffect(()=>{
+    //     if(!isLogin){
+    //         redirect("/");
+    //     }
+    // },[isLogin]);
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
@@ -34,7 +43,17 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         },
         {
             label: 'Sign out',
-            icon: 'pi pi-sign-out'
+            icon: 'pi pi-sign-out',
+            command: ()=> {
+                GoogleSigninService.signOut()
+                .then(()=>{
+                    setIsLogin(false);
+                })
+                .catch((err)=>{
+                    console.log("fail to logout.");
+                    console.log(err);
+                });
+            }
         }
     ];
     
@@ -54,17 +73,17 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                {localStorage.getItem(IS_LOGIN) === "true" || <button type="button" className="p-link layout-topbar-button">
+                {isLogin || <Link href="/auth/google" ><button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-sign-in"></i>
                     <span>Sign in</span>
-                </button>
+                </button></Link>
                 }
-                {localStorage.getItem(IS_LOGIN) !== "true" || <button type="button" className="p-link layout-topbar-button">
+                {!isLogin || <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-calendar"></i>
                     <span>Calendar</span>
                 </button>
                 }
-                {localStorage.getItem(IS_LOGIN) !== "true" || 
+                {!isLogin || 
                     <div>
                         <Menu ref={profilemenubuttonRef} model={overlayMenuItems} popup />
                         <button type="button" className="p-link layout-topbar-button" onClick={toggleProfileMenu}>

@@ -4,7 +4,6 @@ import React, { Suspense, useContext } from 'react';
 import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
-import Link from 'next/link';
 import { AppMenuItem } from '@/types';
 
 const AppMenu = () => {
@@ -24,7 +23,7 @@ const AppMenu = () => {
             items: [{ label: 'Questions', icon: 'pi pi-fw pi-tag', to: '/questions/searchlist' },
                     { label: 'Topics', icon: 'pi pi-fw pi-tag', to: '/questions/topics' }]
         },
-        {
+/*        {
             label: 'UI Components',
             items: [
                 { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
@@ -177,7 +176,7 @@ const AppMenu = () => {
                     target: '_blank'
                 }
             ]
-        }
+        }*/
     ];
 
     return (

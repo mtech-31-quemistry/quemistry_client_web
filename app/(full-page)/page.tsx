@@ -10,12 +10,10 @@ import { Divider } from 'primereact/divider';
 import { LayoutContext } from '../../layout/context/layoutcontext';
 import { NodeRef } from '@/types';
 import { classNames } from 'primereact/utils';
-import { Dialog } from 'primereact/dialog';
 
 const LandingPage = () => {
     const [isHidden, setIsHidden] = useState(false);
     const { layoutConfig } = useContext(LayoutContext);
-    const [showSignIn, setShowSignIn] = useState(false);
 
     const menuRef = useRef<HTMLElement | null>(null);
 
@@ -45,18 +43,6 @@ const LandingPage = () => {
                             <li>
                                 <a href="#features" onClick={toggleMenuItemClick} className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3">
                                     <span>Features</span>
-                                    <Ripple />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#highlights" onClick={toggleMenuItemClick} className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3">
-                                    <span>Highlights</span>
-                                    <Ripple />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#pricing" onClick={toggleMenuItemClick} className="p-ripple flex m-0 md:ml-5 px-0 py-3 text-900 font-medium line-height-3">
-                                    <span>Pricing</span>
                                     <Ripple />
                                 </a>
                             </li>
