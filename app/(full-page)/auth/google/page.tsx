@@ -57,7 +57,6 @@ const GoogleAuthPage = () => {
         
         await GoogleSigninService.generateCodeChallenge()
             .then((result:any)=>{
-                console.log(result);
                 setCookies('code_verifier', result.codeVerifier, {
                     httpOnly: false,
                     secure: false,
