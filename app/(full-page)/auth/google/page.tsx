@@ -40,7 +40,6 @@ const GoogleAuthPage = () => {
 
             GoogleSigninService.getAuthenticated(codeVerifier, authCode)
                 .then((data) => {
-                    console.log(data);
                     //clear cookies
                     removeCookie('state');
                     removeCookie('code_verifier');
