@@ -16,8 +16,9 @@ const QuestioSearchList = () => {
         QuestionsService.getMCQ().then((data) => {
             setMCQ(data);
             setLoading(false);
+        }).catch(()=>{
+            setLoading(false);
         });
-
     }, []);
     const formatDate = (value: Date | undefined) => {
         if(value == undefined)

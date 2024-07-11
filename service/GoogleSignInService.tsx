@@ -38,7 +38,7 @@ export const GoogleSigninService = {
         return rand;
     },
     async generateCodeChallenge():PKCECodeChallenge{
-        const code_verifier = generateRandomString(128);
+        const code_verifier = generateRandomString();
         const code_challenge = await generateCodeChallenge(code_verifier);
         
         return { codeVerifier: code_verifier, codeChallenge: code_challenge}

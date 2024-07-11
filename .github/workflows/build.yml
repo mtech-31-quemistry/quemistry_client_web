@@ -61,6 +61,7 @@ jobs:
         run: npm run build --if-present
         env:
           NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL: ${{ secrets.QUEMISTRY_GATEWAY_URL }}
       #Upload artifact
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
