@@ -123,4 +123,4 @@ jobs:
             -   name: ZAP Scan
                 uses: zaproxy/action-full-scan@v0.10.0
                 with:
-                    target: ${{env.PROD_URL}}
+                    target: https://dkraju438qs82.cloudfront.net
