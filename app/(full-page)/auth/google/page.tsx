@@ -68,7 +68,8 @@ const GoogleAuthPage = () => {
                     maxAge: 60, //60 secs
                     path: '/'
                 });    
-                GoogleSigninService.signIn(state, result.codeChallenge);     
+                GoogleSigninService.signIn(state, result.codeChallenge);   
+                console.log(result);  
             });
     }
     const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden', { 'p-input-filled': layoutConfig.inputStyle === 'filled' });
