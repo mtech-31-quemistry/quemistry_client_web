@@ -28,11 +28,7 @@ const GoogleAuthPage = () => {
     },[isDenyAccess, isLogin])
 
     useEffect(() => {
-        //console.debug(`client state ${clientState} received state ${state}`);
-        //console.debug(clientState != state);
-        //console.debug("authorisation code", authCode);
-        //console.debug("code verifier", codeVerifier);
-        if(state !== null || authCode !== null){
+          if(state !== null || authCode !== null){
             if(clientState != state || !authCode){
                 console.log('redirection');
                 setIsDenyAccess(true);
