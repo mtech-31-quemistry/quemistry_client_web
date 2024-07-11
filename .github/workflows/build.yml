@@ -13,9 +13,10 @@ env:
   AWS_REGION: ap-southeast-1
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  PROD_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  
+
   build:
 
     runs-on: ubuntu-latest
@@ -27,7 +28,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -69,7 +70,7 @@ jobs:
           name: quemistry-web-client
           path: dist/
           overwrite: true
-  
+
   audit:
     needs: build
     name: Audit Packages
@@ -80,7 +81,7 @@ jobs:
       run: npm audit --audit-level moderate
       env:
         CI: true
-  
+
   deploy_to_s3:
     needs: [build, audit]
     runs-on: ubuntu-latest
@@ -100,3 +101,29 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: 'ap-southeast-1'
+
+      # Invalidate Cloudfront (this action)
+      -   name: invalidate
+          uses: chetan/invalidate-cloudfront-action@master
+          env:
+              DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+              PATHS: '/*'
+              AWS_REGION: ${{ secrets.S3_BUCKET_REGION }}
+              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  zap_scan:
+        permissions: write-all
+        needs: deploy_to_s3
+        runs-on: ubuntu-latest
+        name: Zap Scan
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+                with:
+                    ref: main
+
+            -   name: ZAP Scan
+                uses: zaproxy/action-full-scan@v0.10.0
+                with:
+                    target: ${{env.PROD_URL}}
