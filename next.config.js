@@ -3,7 +3,7 @@ const nextConfig = {
     output: 'export',
     distDir: 'dist',
     reactStrictMode: false,
-    trailingSlash: false
+    trailingSlash: true
 }
 
 module.exports = nextConfig
