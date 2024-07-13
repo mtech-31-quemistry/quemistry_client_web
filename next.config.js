@@ -4,10 +4,7 @@ module.exports = {
     distDir: 'dist',
     reactStrictMode: false,
     trailingSlash: true,
-    exportPathMap: async function (
-      defaultPathMap,
-      { dev, dir, outDir, distDir, buildId }
-    ) {
+    exportPathMap: function () {
       return {
         '/': { page: '/' },
         '/dashboard': { page: '/dashboard' },
