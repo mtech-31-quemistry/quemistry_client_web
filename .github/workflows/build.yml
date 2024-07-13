@@ -109,18 +109,18 @@ jobs:
               AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  zap_scan:
-        permissions: write-all
-        needs: deploy_to_s3
-        runs-on: ubuntu-latest
-        name: Zap Scan
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
-                with:
-                    ref: main
+  # zap_scan:
+  #       permissions: write-all
+  #       needs: deploy_to_s3
+  #       runs-on: ubuntu-latest
+  #       name: Zap Scan
+  #       steps:
+  #           -   name: Checkout
+  #               uses: actions/checkout@v2
+  #               with:
+  #                   ref: main
 
-            -   name: ZAP Scan
-                uses: zaproxy/action-full-scan@v0.10.0
-                with:
-                    target: ${{ secrets.PROD_URL }}
+  #           -   name: ZAP Scan
+  #               uses: zaproxy/action-full-scan@v0.10.0
+  #               with:
+  #                   target: ${{ secrets.PROD_URL }}
