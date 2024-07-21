@@ -3,7 +3,7 @@ declare namespace Questions {
     interface MCQ {
         id?: number;
         stem: string;
-        option: Answer[];
+        option: Option[];
         isAnswer: number;
         topics: Topic[];
         skills: Skills[];
