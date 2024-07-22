@@ -16,13 +16,17 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const topbarmenuRef = useRef(null);
     const topbarmenubuttonRef = useRef(null);
     const profilemenubuttonRef = useRef<Menu>(null);
-    const [isLogin, setIsLogin] = useState(localStorage == undefined || localStorage.getItem(IS_LOGIN) === "true");
-    
-    // useEffect(()=>{
-    //     if(!isLogin){
-    //         redirect("/");
-    //     }
-    // },[isLogin]);
+    const [isLogin, setIsLogin] = useState(false);
+
+     useEffect(()=>{
+        if(localStorage != undefined && localStorage.getItem(IS_LOGIN) === "true"){
+            setIsLogin(true);
+        }
+
+        //if(!isLogin){
+        //     redirect("/");
+        // }
+    },[]);
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,

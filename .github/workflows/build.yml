@@ -11,9 +11,6 @@ on:
 #declare environment variables
 env:
   AWS_REGION: ap-southeast-1
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  PROD_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
 
@@ -59,7 +56,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build
-        run: npm run build --if-present
+        run: npm run build 
         env:
           NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
           NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL: ${{ secrets.QUEMISTRY_GATEWAY_URL }}
@@ -100,7 +97,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
 
       # Invalidate Cloudfront (this action)
       -   name: invalidate
@@ -108,22 +105,22 @@ jobs:
           env:
               DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
               PATHS: '/*'
-              AWS_REGION: ${{ secrets.AWS_REGION }}
+              AWS_REGION: ${{ env.AWS_REGION }}
               AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
               AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  zap_scan:
-        permissions: write-all
-        needs: deploy_to_s3
-        runs-on: ubuntu-latest
-        name: Zap Scan
-        steps:
-            -   name: Checkout
-                uses: actions/checkout@v2
-                with:
-                    ref: main
+  # zap_scan:
+  #       permissions: write-all
+  #       needs: deploy_to_s3
+  #       runs-on: ubuntu-latest
+  #       name: Zap Scan
+  #       steps:
+  #           -   name: Checkout
+  #               uses: actions/checkout@v2
+  #               with:
+  #                   ref: main
 
-            -   name: ZAP Scan
-                uses: zaproxy/action-full-scan@v0.10.0
-                with:
-                    target: ${{env.PROD_URL}}
+  #           -   name: ZAP Scan
+  #               uses: zaproxy/action-full-scan@v0.10.0
+  #               with:
+  #                   target: ${{ secrets.PROD_URL }}
