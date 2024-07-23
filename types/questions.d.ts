@@ -8,12 +8,12 @@ declare namespace Questions {
         topics: Topic[];
         skills: Skills[];
         status: string ;
-        published_on?: Date ;
-        published_by?: string ;
-        closed_on?: Date,
-        closed_by?: string,
-        created_on?: Date,
-        created_by?: string,
+        publishedOn?: Date ;
+        publishedBy?: string ;
+        closedOn?: Date,
+        closedBy?: string,
+        createdOn?: Date,
+        createdBy?: string,
 }
 
     interface Option{
@@ -31,7 +31,7 @@ declare namespace Questions {
     interface Skill{
         id?: number;
         name: string;
-        topic_id: number;
+        topicId: number;
     }
 }
 

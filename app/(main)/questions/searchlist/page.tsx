@@ -39,11 +39,11 @@ const QuestioSearchList = () => {
         <div className='card mb-1'>
             <div className="grid" key={rowData.id}>
                     <div className="col-12">{rowData.stem}</div>
-                    <div className="col-12 md:col-6"><label>Topics:</label>{topics}</div>
-                    <div className="col-12 md:col-6"><label>Skills:</label>{skills}</div>
-                    <div className="col-12 md:col-3"><label>Status:</label>{rowData.status}</div>
-                    <div className="col-12 md:col-3"><label>Publised on:</label>{formatDate(rowData.published_on)}</div>
-                    <div className="col-12 md:col-6"><label>Publised by:</label>{rowData.published_by}</div>
+                    <div className="col-12 md:col-6"><label>Topics: </label>{topics}</div>
+                    <div className="col-12 md:col-6"><label>Skills: </label>{skills}</div>
+                    <div className="col-12 md:col-3"><label>Status: </label>{rowData.status}</div>
+                    <div className="col-12 md:col-3"><label>Published on: </label>{formatDate(rowData.publishedOn)}</div>
+                    <div className="col-12 md:col-6"><label>Published by: </label>{rowData.publishedBy}</div>
                     <div className="col-12 md:col-10">&nbsp;</div>
                     <div className="col-12 md:col-2">
                         <span></span>
