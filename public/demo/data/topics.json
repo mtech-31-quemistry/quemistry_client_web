@@ -1,31 +1,84 @@
 {
     "topics": [{
         "id": 1,
-        "name": "Chemical Bonding"
-        },{
-        "id": 2,
-        "name": "Atomic Structure"
+        "name": "Chemical Bonding",
+        "active": true,
+        "skills": [
+            {
+                "id": 1,
+                "active": true,
+                "name": "Simple molecular structure"
+            },
+            {
+                "id": 2,
+                "active": true,
+                "name": "Intermolecular forces"
+            },
+            {
+                "id": 3,
+                "active": true,
+                "name": "Types of structure"
+            },
+            {
+                "id": 4,
+                "active": true,
+                "name": "Comparing physical property"
+            }
+        ]
+        },
+        {
+            "id": 2,
+            "name": "Atomic Structure",
+            "active": true,
+            "skills": [
+                {
+                    "id": 5,
+                    "active": true,
+                    "name": "Atomic and proton number, mass and nucleon number"
+                },
+                {
+                    "id": 6,
+                    "active": true,
+                    "name": "Distribution of mass and charge"
+               }
+    
+            ]
         },
         {
             "id": 3,
+            "active": true,
             "name": "State of matter"
+        },
+        {
+            "id": 4,
+            "active": true,
+            "name": "Atoms, molecules and stoichiometry"
+        },
+        {
+            "id": 5,
+            "active": true,
+            "name": "Chemical energetics"
         }
     ],
     "skills": [{
         "id": 1,
         "name": "Simple molecular structure",
+        "active": true,
         "topic_id": 1 
     },{
         "id": 2,
         "name": "Intermolecular forces",
+        "active": true,
         "topic_id": 1 
     },{
         "id": 3,
         "name": "Types of structure",
+        "active": true,
         "topic_id": 1 
     },{
         "id": 4,
         "name": "Comparing physical property",
+        "active": true,
         "topic_id": 1 
     }]
 }
