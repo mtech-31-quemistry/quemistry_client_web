@@ -26,11 +26,15 @@ declare namespace Questions {
     interface Topic{
         id?: number;
         name: string;
+        active: boolean;
+        skills: Skill[];
     }
 
     interface Skill{
         id?: number;
         name: string;
+        active: boolean;
+        topic_id: number;
         topicId: number;
     }
 
