@@ -8,12 +8,12 @@ declare namespace Questions {
         topics: Topic[];
         skills: Skills[];
         status: string ;
-        published_on?: Date ;
-        published_by?: string ;
-        closed_on?: Date,
-        closed_by?: string,
-        created_on?: Date,
-        created_by?: string,
+        publishedOn?: Date ;
+        publishedBy?: string ;
+        closedOn?: Date,
+        closedBy?: string,
+        createdOn?: Date,
+        createdBy?: string,
 }
 
     interface Option{
@@ -35,6 +35,12 @@ declare namespace Questions {
         name: string;
         active: boolean;
         topic_id: number;
+        topicId: number;
+    }
+
+    interface RetrieveQuestionRequest {
+        pageNumber?: number;
+        pageSize?: number
     }
 }
 
