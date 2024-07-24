@@ -27,9 +27,11 @@ const EditQuestion = () => {
 
     useEffect(()=>{
         QuestionsService.getTopics().then((data) => {
+            console.log("topics initialized: ", data);
             setListOfTopics(data);
         });
         QuestionsService.getSkills().then((data) => {
+            console.log("skills initialized: ", data);
             setListOfSkills(data);
         });
     }, [])
@@ -116,6 +118,7 @@ const EditQuestion = () => {
         setShowOptionDialog(false);
     };
     const handleOnClickDone =() => {
+        console.log("handleOnClickDone")
         //validate
         const answer = addedOptions.filter((option: Questions.Option)=>{
             return option.isAnswer
@@ -127,13 +130,19 @@ const EditQuestion = () => {
         //instantiate MCQ object before adding 
         let mcq = {
             stem: stem,
-            option: addedOptions,
-            isAnswer: answer[0].no,
-            status: "Draft",
+            options: addedOptions,
             topics: selectedTopics,
-            skills: selectedSkills
+            skills: selectedSkills,
+            // isAnswer: answer[0].no,
+            status: "Draft",
+
         }
-        console.log(mcq)
+        console.log("mcq to be created ", mcq);
+        QuestionsService.addMCQ(mcq).then((data) => {
+            console.log("saveQuestion response: ", data);
+        }).catch((e)=>{
+            console.log("saveQuestion error: ", e);
+        });
     }
     return (
         <>

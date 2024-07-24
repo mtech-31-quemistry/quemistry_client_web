@@ -1,9 +1,27 @@
 import { Questions } from '@/types';
 
 const QuesionsSvcUrl = process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL || ''
-const retrieveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions/retrieve` || ''
+const retrieveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions/retrieve`
+const saveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions`
 
 export const QuestionsService = {
+    addMCQ(data : any) {
+        console.log("calling saveQuestion ", saveQuestionUrl, data);
+        return fetch(saveQuestionUrl, { 
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                credentials: "include",
+                body: JSON.stringify(data)
+            })
+            .then((res) => {
+                return res.json();
+            })
+            .then((data) => {
+                return data as Questions.MCQ}
+            );
+    },
     getMCQ() {
         return fetch(QuesionsSvcUrl, { 
                 headers: { 
