@@ -14,7 +14,6 @@ const ManageTopics = () => {
     useEffect(()=>{
         QuestionsService.getTopics().then((t) => {
             var nodes = t.map( item => {
-                    console.log(item.skills);
                     let  childnode: any[] = [];
                     if(item.skills){
                         childnode = item.skills.map( skill => {
