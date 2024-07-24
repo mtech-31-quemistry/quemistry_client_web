@@ -13,13 +13,26 @@ const QuestioSearchList = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        QuestionsService.getMCQ().then((data) => {
+        const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
+            "pageNumber": 0,
+            "pageSize": 10
+        }
+        QuestionsService.retrieveMCQ(retrieveQuestionRequest).then((data) => {
             setMCQ(data);
             setLoading(false);
         }).catch(()=>{
             setLoading(false);
         });
     }, []);
+
+    // useEffect(() => {
+    //     QuestionsService.getMCQ().then((data) => {
+    //         setMCQ(data);
+    //         setLoading(false);
+    //     }).catch(()=>{
+    //         setLoading(false);
+    //     });
+    // }, []);
     const formatDate = (value: Date | undefined) => {
         if(value == undefined)
             return "";

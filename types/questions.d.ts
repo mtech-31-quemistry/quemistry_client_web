@@ -33,5 +33,10 @@ declare namespace Questions {
         name: string;
         topicId: number;
     }
+
+    interface RetrieveQuestionRequest {
+        pageNumber?: number;
+        pageSize?: number
+    }
 }
 
