@@ -28,14 +28,15 @@ declare namespace Questions {
         name: string;
         active: boolean;
         skills: Skill[];
+        edited: boolean = false; //false by default (only used by UI)
     }
 
     interface Skill{
         id?: number;
         name: string;
         active: boolean;
-        topic_id: number;
         topicId: number;
+        edited: boolean = false; //false by default (only used by UI)
     }
 
     interface RetrieveQuestionRequest {
