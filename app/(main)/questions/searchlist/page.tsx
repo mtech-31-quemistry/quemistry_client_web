@@ -10,7 +10,7 @@ import { Tag } from 'primereact/tag';
 
 const QuestioSearchList = () => {
     const [MCQ, setMCQ] = useState<Questions.MCQ[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // what is this for
 
     useEffect(() => {
         const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
