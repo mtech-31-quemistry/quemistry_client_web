@@ -13,7 +13,7 @@ const ManageTopics = () => {
     const [topicNodes, setTopicNodes] = useState<any[]>([]);
     const [topics, setTopics] = useState<Questions.Topic[]>([]);
     const [edited, setEdited] = useState(false);
-    const [expandedKeys, setExpandedKeys] = useState();
+    const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>();
 
     const reload = () => {
         QuestionsService.getTopics().then((t) => {
@@ -31,7 +31,7 @@ const ManageTopics = () => {
                 if(item.skills){
                     childnode = item.skills.map( skill => {
                         return { "key": item.id+"-"+skill.id,
-                                "data": { "id": skill.id,"name": skill.name , "active": skill.active, "type": "skill", "edited": skill.edited}
+                                "data": { "id": skill.id,"name": skill.name , "active": skill.active, "type": "skill", "edited": skill.edited, "topicId": item.id}
                                 };
                         });
                 }
@@ -50,9 +50,15 @@ const ManageTopics = () => {
         );
     };
     const activeTemplate = (node: any) => {
-        return(
+        return(<>
+            {!node.data.id ||
             <ToggleButton onLabel="Active" offLabel="Inactive"
                 checked={node.data.active} onChange={(e) => onActiveStatusChange(node, e.target.value)}/>
+            }
+            {node.data.id != undefined ||
+            <Button label='Undo' icon="pi pi-undo" onClick={(e)=> undoAddSkill(node)}/>
+            }
+            </>
         );
     }
     //edit active status
@@ -111,7 +117,6 @@ const ManageTopics = () => {
     //add skill
     const addSkill = (node: any)=> {
         var found = false;
-        console.log("Add skills for ", node.key)
         let updatedTopics = topics.map( (t)=> {
             if(t.id === node.key){
                 found = true;
@@ -138,6 +143,24 @@ const ManageTopics = () => {
             _expandkey[node.key] = true;
             setExpandedKeys(_expandkey)
 
+        }
+    }
+    //undo add skill
+    const undoAddSkill = (node: any)=> {
+        var found = false;
+        console.log("for topic:", node.data.topicId)
+        let updatedTopics = topics.map( (t)=> {
+            if(t.id === node.data.topicId){
+                found = true;
+                                //add skill
+                if(t.skills && t.skills[0].id == undefined){
+                    t.skills.shift();
+                }                  
+            }
+            return t;
+        });
+        if(found){
+            setTopics(updatedTopics);
         }
     }
     //footer
