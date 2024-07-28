@@ -7,13 +7,16 @@ import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { ToggleButton } from 'primereact/togglebutton';
-import { warnOptionHasBeenMovedOutOfExperimental } from 'next/dist/server/config';
+import { Toolbar } from 'primereact/toolbar';
+import { Dialog } from 'primereact/dialog';
 
 const ManageTopics = () => {
     const [topicNodes, setTopicNodes] = useState<any[]>([]);
     const [topics, setTopics] = useState<Questions.Topic[]>([]);
     const [edited, setEdited] = useState(false);
     const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>();
+    const [addTopic, setAddTopic] = useState(false);
+    const [newTopicName, setNewTopicName] = useState("");
 
     const reload = () => {
         QuestionsService.getTopics().then((t) => {
@@ -163,6 +166,32 @@ const ManageTopics = () => {
             setTopics(updatedTopics);
         }
     }
+    //Add Topic 
+    const saveTopic = () => {
+        //hide add topic dialog
+        setAddTopic(false);
+        let newTopic: Questions.Topic = {
+            name: newTopicName,
+            active: true,
+            skills: [],
+            edited: true
+        }
+        console.log("Add topic", newTopic)    
+    }
+    //toolbar
+    const startContent = (
+        <React.Fragment>
+            <Button icon="pi pi-plus" className="mr-2" onClick={(e) =>{setAddTopic(true)}}  />
+            <Button icon="pi pi-upload" />
+        </React.Fragment>
+    );
+    //add topic footer
+    const addTopicFooter = (
+        <div>
+            <Button label="Cancel" icon="pi pi-times" onClick={() => setAddTopic(false)} className="p-button-text" />
+            <Button label="Save" icon="pi pi-save" onClick={() => saveTopic()} autoFocus />
+        </div>
+    )
     //footer
     const footer = (
         <div className='grid'>
@@ -184,6 +213,11 @@ const ManageTopics = () => {
         <div className="grid">
             <div className="col-12">
                 <div className="card">
+                    <Toolbar start={startContent} />
+                    <Dialog header="Add Topic" visible={addTopic} onHide={()=>{if(!addTopic) return; setAddTopic(false)}} 
+                        style={{ width: '50vw' }} footer={addTopicFooter} >
+                        <InputText placeholder='topic name' style={{ width: '30vw' }} value={newTopicName} onChange={(e) => setNewTopicName(e.target.value)} />
+                    </Dialog>
                     <h5>Manage Topics</h5>
                     <TreeTable value={topicNodes} columnResizeMode="fit" footer={footer} rowClassName={rowClassName}
                         expandedKeys={expandedKeys} onToggle={(e) => setExpandedKeys(e.value)} >
