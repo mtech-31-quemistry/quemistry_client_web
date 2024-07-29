@@ -1,8 +1,8 @@
 {
-    "data": [
+    "mcqs": [
         {
             "id": 1000, 
-            "stem": "In which of the following do all three compounds have giant lattice structure?",                
+            "stem": "<p>In which of the following do all three compounds have giant lattice structure?</p>",                
             "options": [
                 {
                     "no": 1,

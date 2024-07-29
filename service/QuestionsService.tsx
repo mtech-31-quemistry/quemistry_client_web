@@ -52,6 +52,22 @@ export const QuestionsService = {
                 return data.mcqs as Questions.MCQ[]}
             );
     },
+    // for LOCAL dev
+    // retrieveMCQ(data : Questions.RetrieveQuestionRequest) {
+    //     console.log("retrieving mock data mcq")
+    //     return fetch('/demo/data/questions.json', { 
+    //             headers: { 
+    //                 'Content-Type': 'application/json' 
+    //             }})
+    //         .then((res) => {
+    //             let json = res.json();
+    //             console.log("json", json);
+    //             return json;
+    //         })
+    //         .then((data) => {
+    //             return data.mcqs as Questions.MCQ[]}
+    //         );
+    // },
     getTopics() {
         return fetch('/demo/data/topics.json', { headers: { 'Cache-Control': 'no-cache' } })
             .then((res) => res.json())

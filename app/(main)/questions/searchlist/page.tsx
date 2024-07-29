@@ -5,8 +5,9 @@ import { DataScroller } from 'primereact/datascroller';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Toolbar } from 'primereact/toolbar';
-
 import { Tag } from 'primereact/tag';
+import { Editor } from "primereact/editor";
+import './searchlist.css'; // Custom styles
 
 const QuestioSearchList = () => {
     const [MCQ, setMCQ] = useState<Questions.MCQ[]>([]);
@@ -51,7 +52,8 @@ const QuestioSearchList = () => {
         return (
         <div className='card mb-1'>
             <div className="grid" key={rowData.id}>
-                    <div className="col-12">{rowData.stem}</div>
+                    {/* <div className="col-12">{rowData.stem}</div>  */}
+                    <div className="col-12" style={{margin:0,padding:0}}><Editor value={rowData.stem} showHeader={false} readOnly style={{border:0 }}/></div>
                     <div className="col-12 md:col-6"><label>Topics: </label>{topics}</div>
                     <div className="col-12 md:col-6"><label>Skills: </label>{skills}</div>
                     <div className="col-12 md:col-3"><label>Status: </label>{rowData.status}</div>

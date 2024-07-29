@@ -1,0 +1,21 @@
+/* General targeting for PrimeReact Editor */
+.p-editor-container .p-editor-content {
+    /* width: 100%;
+    display: block; */
+    border: 0px solid black;
+    padding: 0 0 0 0 !important;
+    margin: 0 0 0 !important;
+    font-size: 1em !important; /* Custom font size */
+    line-height: 1.5 !important; /* Custom line spacing */
+    padding-left: 0 !important; /* Remove left padding */
+    margin-left: 0 !important;  /* Remove left margin */
+}
+
+/* Additional styling if needed */
+.p-editor-container .p-editor-content p {
+    border: 0px solid black;
+    margin: 0 0 0 0 !important; /* Adjust paragraph spacing */
+    padding: 0 0 0 0 !important;
+    padding-left: 0 !important; /* Remove left padding */
+    margin-left: 0 !important;  /* Remove left margin */
+}
