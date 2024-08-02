@@ -20,8 +20,10 @@ const AppMenu = () => {
         },
         {
             label: 'Manage',
-            items: [{ label: 'Questions', icon: 'pi pi-fw pi-tag', to: '/questions/searchlist' },
-                    { label: 'Topics', icon: 'pi pi-fw pi-tag', to: '/questions/topics' }]
+            items: [{ label: 'Questions', icon: 'pi pi-fw pi-question-circle', to: '/questions/searchlist' },
+                { label: 'Topics', icon: 'pi pi-fw pi-tags', to: '/questions/topics' },
+                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes' },
+            ]
         },
 /*        {
             label: 'UI Components',
@@ -189,7 +191,7 @@ const AppMenu = () => {
                 </ul>
             </MenuProvider>
         </Suspense>
-       
+
     );
 };
 
