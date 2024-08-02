@@ -26,7 +26,7 @@ declare namespace Questions {
     interface Topic{
         id?: number;
         name: string;
-        active: boolean;
+        status: string;
         skills: Skill[];
         edited: boolean = false; //false by default (only used by UI)
     }
@@ -34,7 +34,7 @@ declare namespace Questions {
     interface Skill{
         id?: number;
         name: string;
-        active: boolean;
+        status: string;
         topicId: number;
         edited: boolean = false; //false by default (only used by UI)
     }

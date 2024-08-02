@@ -2,26 +2,26 @@
     "topics": [{
         "id": 1,
         "name": "Chemical Bonding",
-        "active": true,
+        "status": "ACTIVE",
         "skills": [
             {
                 "id": 1,
-                "active": true,
+                "status": "ACTIVE",
                 "name": "Simple molecular structure"
             },
             {
                 "id": 2,
-                "active": true,
+                "status": "ACTIVE",
                 "name": "Intermolecular forces"
             },
             {
                 "id": 3,
-                "active": true,
+                "status": "ACTIVE",
                 "name": "Types of structure"
             },
             {
                 "id": 4,
-                "active": true,
+                "status": "ACTIVE",
                 "name": "Comparing physical property"
             }
         ]
@@ -29,16 +29,16 @@
         {
             "id": 2,
             "name": "Atomic Structure",
-            "active": true,
+            "status": "ACTIVE",
             "skills": [
                 {
                     "id": 5,
-                    "active": true,
+                    "status": "ACTIVE",
                     "name": "Atomic and proton number, mass and nucleon number"
                 },
                 {
                     "id": 6,
-                    "active": true,
+                    "status": "ACTIVE",
                     "name": "Distribution of mass and charge"
                }
     
@@ -46,39 +46,39 @@
         },
         {
             "id": 3,
-            "active": true,
+            "status": "ACTIVE",
             "name": "State of matter"
         },
         {
             "id": 4,
-            "active": true,
+            "status": "ACTIVE",
             "name": "Atoms, molecules and stoichiometry"
         },
         {
             "id": 5,
-            "active": true,
+            "status": "ACTIVE",
             "name": "Chemical energetics"
         }
     ],
     "skills": [{
         "id": 1,
         "name": "Simple molecular structure",
-        "active": true,
+        "status": "ACTIVE",
         "topic_id": 1 
     },{
         "id": 2,
         "name": "Intermolecular forces",
-        "active": true,
+        "status": "ACTIVE",
         "topic_id": 1 
     },{
         "id": 3,
         "name": "Types of structure",
-        "active": true,
+        "status": "ACTIVE",
         "topic_id": 1 
     },{
         "id": 4,
         "name": "Comparing physical property",
-        "active": true,
+        "status": "ACTIVE",
         "topic_id": 1 
     }]
 }

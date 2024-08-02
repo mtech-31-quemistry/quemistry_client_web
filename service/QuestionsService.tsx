@@ -3,6 +3,7 @@ import { Questions } from '@/types';
 const QuesionsSvcUrl = process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL || ''
 const retrieveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions/retrieve`
 const saveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions`
+const QuestionsTopicsUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/topics`
 
 export const QuestionsService = {
     addMCQ(data : any) {
@@ -69,7 +70,12 @@ export const QuestionsService = {
     //         );
     // },
     getTopics() {
-        return fetch('/demo/data/topics.json', { headers: { 'Cache-Control': 'no-cache' } })
+        return fetch(QuestionsTopicsUrl, { 
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                credentials: 'include'
+            })
             .then((res) => res.json())
             .then((d) => d.topics as Questions.Topic[]);
     },

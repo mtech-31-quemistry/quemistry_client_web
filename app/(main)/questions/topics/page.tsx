@@ -6,9 +6,9 @@ import { TreeTable } from 'primereact/treetable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { ToggleButton } from 'primereact/togglebutton';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
+import { SelectButton } from 'primereact/selectbutton';
 
 const ManageTopics = () => {
     const [topicNodes, setTopicNodes] = useState<any[]>([]);
@@ -34,11 +34,11 @@ const ManageTopics = () => {
                 if(item.skills){
                     childnode = item.skills.map( skill => {
                         return { "key": item.id+"-"+skill.id,
-                                "data": { "id": skill.id,"name": skill.name , "active": skill.active, "type": "skill", "edited": skill.edited, "topicId": item.id}
+                                "data": { "id": skill.id,"name": skill.name , "status": skill.status, "type": "skill", "edited": skill.edited, "topicId": item.id}
                                 };
                         });
                 }
-                return { "key" : item.id, "data" : { "id":item.id, "name": item.name, "active": item.active, "type": "topic", "edited": item.edited}, children : childnode }
+                return { "key" : item.id, "data" : { "id":item.id, "name": item.name, "status": item.status, "type": "topic", "edited": item.edited}, children : childnode }
             });
             setTopicNodes(nodes);
 
@@ -52,11 +52,10 @@ const ManageTopics = () => {
             </div>
         );
     };
-    const activeTemplate = (node: any) => {
+    const statusTemplate = (node: any) => {
         return(<>
             {!node.data.id ||
-            <ToggleButton onLabel="Active" offLabel="Inactive"
-                checked={node.data.active} onChange={(e) => onActiveStatusChange(node, e.target.value)}/>
+            <SelectButton value={node.data.status} onChange={(e) => onStatusChange(node, e.target.value)} options={['ACTIVE','INACTIVE']}/>
             }
             {node.data.id != undefined ||
             <Button label='Undo' icon="pi pi-undo" onClick={(e)=> undoAddSkill(node)}/>
@@ -65,18 +64,18 @@ const ManageTopics = () => {
         );
     }
     //edit active status
-    const onActiveStatusChange = (node: any, value: boolean) => {
+    const onStatusChange = (node: any, value: string) => {
         var found = false;
         let updatedTopics = topics.map( (t)=> {
             if(node.data.type === 'topic' && t.id === node.key){
-                t.active = value;
+                t.status = value;
                 t.edited = true;
                 found = true;
             }
             else if(node.data.type === 'skill' && t.skills){
                 t.skills.map((s) => {
                     if(s.id === node.data.id){
-                        s.active = value;
+                        s.status = value;
                         s.edited = true;
                         found = true;
                     }
@@ -125,7 +124,7 @@ const ManageTopics = () => {
                 found = true;
                 let newSkill: Questions.Skill = {
                     name: "",
-                    active: true,
+                    status: "ACTIVE",
                     edited: true,
                     topicId: node.key
                 }
@@ -172,7 +171,7 @@ const ManageTopics = () => {
         setAddTopic(false);
         let newTopic: Questions.Topic = {
             name: newTopicName,
-            active: true,
+            status: "ACTIVE",
             skills: [],
             edited: true
         }
@@ -223,8 +222,8 @@ const ManageTopics = () => {
                         expandedKeys={expandedKeys} onToggle={(e) => setExpandedKeys(e.value)} >
                         <Column field="name" header="Name" expander 
                             editor={nameEditor} style={{ height: '3.5rem' }} className="w-20rem"/>
-                        <Column body={activeTemplate} field="active" header="Active" className="w-4rem"/>
-                        <Column body={actionTemplate} className="w-4rem" />
+                        <Column body={statusTemplate} field="status" header="Status" className="w-16rem"/>
+                        <Column body={actionTemplate} className="w-8rem" />
                     </TreeTable>
                 </div>
             </div>
