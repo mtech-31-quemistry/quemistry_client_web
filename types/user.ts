@@ -2,7 +2,7 @@ interface UserProfile {
     email: string;
 }
 
-interface Class{
+interface Class {
     code: string;
     description: string;
     educationLevel: string;

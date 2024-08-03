@@ -9,20 +9,20 @@ import { LayoutContext } from '@/layout/context/layoutcontext';
 
 const Classes = () => {
     const [addClass, setAddClass] = useState(false);
-    const [newClassCode, setNewClassCode] = useState("");
-    const [newClassDescription, setNewClassDescription] = useState("");
-    const [newClassEducationLevel, setNewClassEducationLevel] = useState("");
-    const [newClassSubject, setNewClassSubject] = useState("");
+    const [newClassCode, setNewClassCode] = useState('');
+    const [newClassDescription, setNewClassDescription] = useState('');
+    const [newClassEducationLevel, setNewClassEducationLevel] = useState('');
+    const [newClassSubject, setNewClassSubject] = useState('');
 
     const { layoutConfig } = useContext(LayoutContext);
 
     const clearNewClass = () => {
-        setAddClass(false)
-        setNewClassCode("")
-        setNewClassDescription("")
-        setNewClassEducationLevel("")
-        setNewClassSubject("")
-    }
+        setAddClass(false);
+        setNewClassCode('');
+        setNewClassDescription('');
+        setNewClassEducationLevel('');
+        setNewClassSubject('');
+    };
     const applyLightTheme = () => {
         const lineOptions: ChartOptions = {
             plugins: {
@@ -51,7 +51,6 @@ const Classes = () => {
                 }
             }
         };
-
     };
 
     const applyDarkTheme = () => {
@@ -85,25 +84,25 @@ const Classes = () => {
     };
 
     const saveClass = () => {
-        clearNewClass()
-        const newClass:Class = {
+        clearNewClass();
+        const newClass: Class = {
             code: newClassCode,
             description: newClassDescription,
             educationLevel: newClassEducationLevel,
             subject: newClassSubject
-        }
+        };
 
-        console.log(newClass)
-    }
+        console.log(newClass);
+    };
 
     const addClassFooter = (
         <div>
-            <Button label="Cancel" icon="pi pi-times" onClick={(()=>clearNewClass())} className="p-button-text" />
+            <Button label="Cancel" icon="pi pi-times" onClick={() => clearNewClass()} className="p-button-text" />
             <Button label="Save" icon="pi pi-save" onClick={() => saveClass()} autoFocus />
         </div>
-    )
+    );
 
-    const renderField = (labelTextName: string,  value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => (
+    const renderField = (labelTextName: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => (
         <div className="field grid">
             <label htmlFor={labelTextName} className="col-12 mb-2 md:col-2 md:mb-0">
                 {labelTextName}
@@ -127,13 +126,21 @@ const Classes = () => {
             <div className="col-12 xl:col-6">
                 <div className="card">
                     <Fragment>
-                        <Button label="New" icon="pi pi-plus" onClick={(e) => setAddClass(true)}  />
+                        <Button label="New" icon="pi pi-plus" onClick={(e) => setAddClass(true)} />
                     </Fragment>
-                    <Dialog header="Add Class"  style={{ width: '50vw' }} visible={addClass} onHide={() => {addClass && clearNewClass()}} footer={addClassFooter}>
-                        {renderField("Class Code",  newClassCode, (e) => setNewClassCode(e.target.value))}
-                        {renderField("Class Description",  newClassDescription, (e) => setNewClassDescription(e.target.value))}
-                        {renderField("Class Education Level",  newClassEducationLevel,  (e) => setNewClassEducationLevel(e.target.value))}
-                        {renderField("Class Subject",   newClassSubject, (e) => setNewClassSubject(e.target.value))}
+                    <Dialog
+                        header="Add Class"
+                        style={{ width: '50vw' }}
+                        visible={addClass}
+                        onHide={() => {
+                            addClass && clearNewClass();
+                        }}
+                        footer={addClassFooter}
+                    >
+                        {renderField('Class Code', newClassCode, (e) => setNewClassCode(e.target.value))}
+                        {renderField('Class Description', newClassDescription, (e) => setNewClassDescription(e.target.value))}
+                        {renderField('Class Education Level', newClassEducationLevel, (e) => setNewClassEducationLevel(e.target.value))}
+                        {renderField('Class Subject', newClassSubject, (e) => setNewClassSubject(e.target.value))}
                     </Dialog>
                     <h5>Manage Classes</h5>
                 </div>
