@@ -38,7 +38,7 @@ const Classes = () => {
             }
         };
 
-        setLineOptions(lineOptions);
+        //setLineOptions(lineOptions);
     };
 
     const applyDarkTheme = () => {
@@ -70,7 +70,7 @@ const Classes = () => {
             }
         };
 
-        setLineOptions(lineOptions);
+        //setLineOptions(lineOptions);
     };
 
     // useEffect(() => {
