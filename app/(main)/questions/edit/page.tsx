@@ -1,7 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MultiSelect } from "primereact/multiselect";
-import { FloatLabel } from "primereact/floatlabel";
 import { Questions } from '@/types';
 import { QuestionsService } from '../../../../service/QuestionsService';
 import { TabView, TabPanel } from 'primereact/tabview';
@@ -11,17 +9,17 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-
+import { TreeSelect, TreeSelectSelectionKeysType } from "primereact/treeselect";
 
 const EditQuestion = () => {
-    const [selectedTopics, setSelectedTopics] = useState(null);
-    const [selectedSkills, setSelectedSkills] = useState(null);
+    const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
+    const [topicNodes, setTopicNodes] = useState<any>(null);
+
     const [addedOptions, setAddedOptions] = useState<Questions.Option[]>([]);
     const [stem, setStem] = useState<string>('');
     const [answer, setAnswer] = useState<string>('');
     const [isAnswer, setIsAnswer] = useState<boolean>(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
-    const [listOfSkills, setListOfSkills] = useState<Questions.Skill[]>([]);
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<number>(0);
 
@@ -29,12 +27,25 @@ const EditQuestion = () => {
         QuestionsService.getTopics().then((data) => {
             console.log("topics initialized: ", data);
             setListOfTopics(data);
-        });
-        QuestionsService.getSkills().then((data) => {
-            console.log("skills initialized: ", data);
-            setListOfSkills(data);
+            
         });
     }, [])
+
+    useEffect(()=>{
+        var nodes = listOfTopics.map( topic => {
+                let  childnode: any[] = [];
+                if(topic.skills){
+                    childnode = topic.skills.map( skill => {
+                        return { "key": topic.id+"-"+skill.id,
+                                "label": skill.name,
+                                "data": { "id": skill.id,"name": skill.name , "type": "skill", "topicId": topic.id}
+                                };
+                        });
+                }
+                return { "key" : topic.id, "label": topic.name, "data" : { "id":topic.id, "name": topic.name, "type": "topic"}, children : childnode }
+            });
+            setTopicNodes(nodes);
+    }, [listOfTopics])
 
     const optionsItemTemplate = (option: Questions.Option) => {
         return(
@@ -118,7 +129,8 @@ const EditQuestion = () => {
         setShowOptionDialog(false);
     };
     const handleOnClickDone =() => {
-        console.log("handleOnClickDone")
+        console.log("handleOnClickDone");
+        console.log(selectedTopicNodes);
         //validate
         const answer = addedOptions.filter((option: Questions.Option)=>{
             return option.isAnswer
@@ -126,12 +138,21 @@ const EditQuestion = () => {
         if(!answer || answer.length <= 0 )
             throw "No answer selected"
         console.log(answer)
-
+        //populate skills for mcq
+        let selectedSkills: number[] = [];     
+        if(selectedTopicNodes){
+            Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                let topic_skill = key.split("-");
+                if(topic_skill.length>1){
+                selectedSkills.push(parseInt(topic_skill[1]));     
+                }
+            });
+        }
         //instantiate MCQ object before adding 
         let mcq = {
             stem: stem,
             options: addedOptions,
-            topics: selectedTopics,
+            topics: null,
             skills: selectedSkills,
             // isAnswer: answer[0].no,
             status: "Draft",
@@ -152,7 +173,10 @@ const EditQuestion = () => {
             <TabPanel header="General Information">
                 <div className="grid"> 
                     <div className="col-12 md:col-6 mb-5">
-                        <FloatLabel>
+                        <TreeSelect value={selectedTopicNodes} onChange={(e)=> setSelectedTopicNodes(e.value)} options={topicNodes}
+                            className="md:w-50rem w-full"  metaKeySelection={false} selectionMode="checkbox" display="chip" placeholder="Select Topics / Skills"
+                            showClear></TreeSelect>
+                        {/* <FloatLabel>
                             <MultiSelect id="ms-topics"
                                         value={selectedTopics}
                                         onChange={(e) => setSelectedTopics(e.value)}
@@ -165,10 +189,10 @@ const EditQuestion = () => {
                                         maxSelectedLabels={3}
                                     />
                             <label htmlFor="ms-topics">Topics</label>
-                        </FloatLabel>
+                        </FloatLabel> */}
                     </div>
                     <div className="col-12 md:col-6 mb-5">
-                        <FloatLabel>
+                        {/* <FloatLabel>
                             <MultiSelect
                                         id="ms-skills"
                                         value={selectedSkills}
@@ -181,7 +205,7 @@ const EditQuestion = () => {
                                         className="w-full md:w-50rem"
                             />
                             <label htmlFor="ms-skills">Skills</label>
-                        </FloatLabel>
+                        </FloatLabel> */}
                     </div> 
                     <div className="col-12">
                         Other information like publised date
@@ -259,3 +283,7 @@ const EditQuestion = () => {
 
 
 export default EditQuestion;
+
+function Nullable<T>(arg0: {}) {
+    throw new Error("Function not implemented.");
+}
