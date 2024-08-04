@@ -6,6 +6,7 @@ import { ChartOptions } from 'chart.js';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { LayoutContext } from '@/layout/context/layoutcontext';
+import { UserService } from '../../../service/UserService';
 
 const Classes = () => {
     const [addClass, setAddClass] = useState(false);
@@ -83,8 +84,7 @@ const Classes = () => {
         };
     };
 
-    const saveClass = () => {
-        clearNewClass();
+    const saveClass = async () => {
         const newClass: Class = {
             code: newClassCode,
             description: newClassDescription,
@@ -92,8 +92,9 @@ const Classes = () => {
             subject: newClassSubject
         };
 
-        console.log(newClass);
-    };
+        await UserService.addClass("user-id", newClass)
+        clearNewClass();
+    }
 
     const addClassFooter = (
         <div>
