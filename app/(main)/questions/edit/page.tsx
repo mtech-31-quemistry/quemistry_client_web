@@ -10,8 +10,10 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from "primereact/treeselect";
+import { useRouter } from 'next/navigation';
 
 const EditQuestion = () => {
+    const router = useRouter();
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
     const [topicNodes, setTopicNodes] = useState<any>(null);
 
@@ -128,6 +130,7 @@ const EditQuestion = () => {
         setIsAnswer(false);
         setShowOptionDialog(false);
     };
+
     const handleOnClickDone =() => {
         console.log("handleOnClickDone");
         console.log(selectedTopicNodes);
@@ -152,7 +155,7 @@ const EditQuestion = () => {
         let mcq = {
             stem: stem,
             options: addedOptions,
-            topics: null,
+            // topics: null,
             skills: selectedSkills,
             // isAnswer: answer[0].no,
             status: "Draft",
@@ -161,9 +164,13 @@ const EditQuestion = () => {
         console.log("mcq to be created ", mcq);
         QuestionsService.addMCQ(mcq).then((data) => {
             console.log("saveQuestion response: ", data);
-        }).catch((e)=>{
-            console.log("saveQuestion error: ", e);
-        });
+            // router.push('/questions/searchlist');
+        })
+        // .catch((e)=>{
+        //     console.log("saveQuestion error: ", e);
+        //     e.
+        // })
+        ;
     }
     return (
         <>

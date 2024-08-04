@@ -1,90 +1,197 @@
 {
     "mcqs": [
         {
-            "id": 1000, 
-            "stem": "<p>In which of the following do all three compounds have giant lattice structure?</p>",                
+            "id": 1,
+            "stem": "<p>Which of the following statements about covalent bonding is correct?</p>",
             "options": [
                 {
                     "no": 1,
-                    "text": "BaO, AlF3, SiO2",
-                    "explanation": "optional explanation"
+                    "text": "<p>Covalent bonds are formed by the transfer of electrons from one atom to another.</p>",
+                    "explanation": "This statement is incorrect. Covalent bonds involve the sharing of electron pairs between atoms, not the transfer of electrons.",
+                    "isAnswer": false
                 },
                 {
                     "no": 2,
-                    "text": "K2O, BCl3, Cr2O3",
-                    "explanation": "optional explanation"
+                    "text": "<p>Covalent bonds are formed between metals and nonmetals.</p>",
+                    "explanation": "This statement is incorrect. Covalent bonds are typically formed between nonmetals.",
+                    "isAnswer": false
                 },
                 {
                     "no": 3,
-                    "text": "MgO, Fe2O3, P4O10"
+                    "text": "<p>In a covalent bond, electrons are shared between atoms.</p>",
+                    "explanation": "This statement is correct. Covalent bonds involve the sharing of electron pairs between atoms.",
+                    "isAnswer": true
                 },
                 {
                     "no": 4,
-                    "text": "Na2O, SiO2, SO3"
+                    "text": "<p>Covalent bonds can only occur in molecules with symmetrical shapes.</p>",
+                    "explanation": "This statement is incorrect. Covalent bonds can occur in molecules with various shapes, not just symmetrical ones.",
+                    "isAnswer": false
                 }
             ],
-            "isAnswer": 1,
-            "status":"publised",
-            "published_on": "2024-01-31",
-            "published_by": "Sheau Shin",
-            "closed_on": "",
-            "closed_by": "",
-            "created_on": "",
-            "created_by": "",
-            "topics": [{
-                "id": 1,
-                "name": "Chemical Bonding"
-            }],
-            "skills": [{
-                "id": 1,
-                "name": "Types of structure",
-                "topic_id": 1 
-            }]
+            "topics": [
+                {
+                    "id": 2,
+                    "name": "Chemical Bonding",
+                    "status": "ACTIVE",
+                    "skills": [
+                        {
+                            "id": 3,
+                            "name": "Ionic Bonding",
+                            "status": "ACTIVE"
+                        },
+                        {
+                            "id": 4,
+                            "name": "Covalent Bonding",
+                            "status": "ACTIVE"
+                        }
+                    ]
+                }
+            ],
+            "skills": [
+                {
+                    "id": 4,
+                    "name": "Covalent Bonding",
+                    "status": "ACTIVE"
+                }
+            ],
+            "status": "Draft",
+            "publishedOn": 1721692800000,
+            "publishedBy": "Mr. Lee",
+            "closedOn": null,
+            "closedBy": null,
+            "createdOn": 1721692800000,
+            "createdBy": "Mr. Lee"
         },
         {
-            "id": 2000,
-            "stem": "Ice is the crystalline form of water. The diagram below shows part of the structure of ice. Which of the following statements is not true about ice?",
+            "id": 2,
+            "stem": "<p>Which of the following statements about electron configuration is correct?</p>",
             "options": [
                 {
                     "no": 1,
-                    "text": "Ice has a giant covalent structure.",
-                    "explanation": "optional explanation"
+                    "text": "<p>The 3d subshell is filled before the 4s subshell.</p>",
+                    "explanation": "This statement is incorrect. The 4s subshell is filled before the 3d subshell.",
+                    "isAnswer": false
                 },
                 {
                     "no": 2,
-                    "text": "Ice has a lower density than water at 0 oC due to its open structure.",
-                    "explanation": "optional explanation"
+                    "text": "<p>Electrons in the same orbital must have opposite spins.</p>",
+                    "explanation": "This statement is correct. Electrons in the same orbital must have opposite spins according to the Pauli Exclusion Principle.",
+                    "isAnswer": true
                 },
                 {
                     "no": 3,
-                    "text": "Ice does not conduct electricity."
+                    "text": "<p>An orbital can hold a maximum of three electrons.</p>",
+                    "explanation": "This statement is incorrect. An orbital can hold a maximum of two electrons.",
+                    "isAnswer": false
                 },
                 {
                     "no": 4,
-                    "text": "The bond angle about oxygen in ice is 109.5o."
+                    "text": "<p>The 2p subshell can hold a maximum of four electrons.</p>",
+                    "explanation": "This statement is incorrect. The 2p subshell can hold a maximum of six electrons.",
+                    "isAnswer": false
                 }
             ],
-            "isAnswer": 1,
-            "status":"draft",
-            "published_on": "",
-            "published_by": "",
-            "closed_on": "",
-            "closed_by": "",
-            "created_on": "",
-            "created_by": "",
-            "topics": [{
-                "id": 1,
-                "name": "Chemical Bonding"
-            }],
-            "skills": [{
-                "id": 1,
-                "name": "Simple molecular structure",
-                "topic_id": 1 
-            },{
-                "id": 2,
-                "name": "Intermolecular forces",
-                "topic_id": 1 
-            }]
+            "topics": [
+                {
+                    "id": 1,
+                    "name": "Atomic Structure",
+                    "status": "ACTIVE",
+                    "skills": [
+                        {
+                            "id": 1,
+                            "name": "Electron Configuration",
+                            "status": "ACTIVE"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Ionisation Energy",
+                            "status": "ACTIVE"
+                        }
+                    ]
+                }
+            ],
+            "skills": [
+                {
+                    "id": 1,
+                    "name": "Electron Configuration",
+                    "status": "ACTIVE"
+                }
+            ],
+            "status": "Draft",
+            "publishedOn": 1721692800000,
+            "publishedBy": "Mr. Lee",
+            "closedOn": null,
+            "closedBy": null,
+            "createdOn": 1721692800000,
+            "createdBy": "Mr. Lee"
+        },
+        {
+            "id": 3,
+            "stem": "<p>Which of the following statements about enthalpy changes is correct?</p>",
+            "options": [
+                {
+                    "no": 1,
+                    "text": "<p>The enthalpy change of a reaction is independent of the route taken.</p>",
+                    "explanation": "This statement is correct. According to Hess's Law, the enthalpy change of a reaction is independent of the route taken.",
+                    "isAnswer": true
+                },
+                {
+                    "no": 2,
+                    "text": "<p>Exothermic reactions absorb heat from the surroundings.</p>",
+                    "explanation": "This statement is incorrect. Exothermic reactions release heat to the surroundings.",
+                    "isAnswer": false
+                },
+                {
+                    "no": 3,
+                    "text": "<p>The enthalpy change of formation is always negative.</p>",
+                    "explanation": "This statement is incorrect. The enthalpy change of formation can be positive or negative.",
+                    "isAnswer": false
+                },
+                {
+                    "no": 4,
+                    "text": "<p>The enthalpy change of neutralization is the enthalpy change when one mole of water is formed from the reaction between an acid and a base.</p>",
+                    "explanation": "This statement is correct.",
+                    "isAnswer": true
+                }
+            ],
+            "topics": [
+                {
+                    "id": 4,
+                    "name": "Chemical Energetics",
+                    "status": "ACTIVE",
+                    "skills": [
+                        {
+                            "id": 7,
+                            "name": "Enthalpy Changes",
+                            "status": "ACTIVE"
+                        },
+                        {
+                            "id": 8,
+                            "name": "Hess's Law",
+                            "status": "ACTIVE"
+                        }
+                    ]
+                }
+            ],
+            "skills": [
+                {
+                    "id": 7,
+                    "name": "Enthalpy Changes",
+                    "status": "ACTIVE"
+                }
+            ],
+            "status": "Draft",
+            "publishedOn": 1721692800000,
+            "publishedBy": "Mr. Lee",
+            "closedOn": null,
+            "closedBy": null,
+            "createdOn": 1721692800000,
+            "createdBy": "Mr. Lee"
         }
-    ]
+    ],
+    "pageNumber": 0,
+    "pageSize": 10,
+    "totalPages": 1,
+    "totalRecords": 3
 }
