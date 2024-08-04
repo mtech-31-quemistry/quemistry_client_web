@@ -164,7 +164,7 @@ const EditQuestion = () => {
         console.log("mcq to be created ", mcq);
         QuestionsService.addMCQ(mcq).then((data) => {
             console.log("saveQuestion response: ", data);
-            // router.push('/questions/searchlist');
+            router.push('/questions/searchlist');
         })
         // .catch((e)=>{
         //     console.log("saveQuestion error: ", e);
