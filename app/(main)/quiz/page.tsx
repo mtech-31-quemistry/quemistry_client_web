@@ -1,227 +1,153 @@
-import React from 'react';
+// app/quiz/page.tsx
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
-import { MegaMenu } from 'primereact/megamenu';
-import { SplitButton } from 'primereact/splitbutton';
+import axios from 'axios';
 
-const items = [
-    {
-        label: 'Delete',
-        icon: 'pi pi-times'
-    }
-];
+interface Option {
+  no: number;
+  text: string;
+  explanation: string;
+  isAnswer: boolean;
+}
 
-const megamenuItems = [
-    {
-      label: 'States of Matter',
-      icon: 'pi pi-fw pi-asterisk', // Use a generic icon for categories
-      items: [
-        [
-          {
-            label: 'Solids',
-            items: [
-              { label: 'Crystal Structures' },
-              { label: 'Intermolecular Forces' },
-            ],
-          },
-          {
-            label: 'Liquids',
-            items: [{ label: 'Intermolecular Interactions' }, { label: 'Viscosity' }],
-          },
-        ],
-        [
-          {
-            label: 'Gases',
-            items: [
-              { label: 'Kinetic Molecular Theory' },
-              { label: 'Ideal Gas Law' },
-            ],
-          },
-          {
-            label: 'Phase Changes',
-            items: [{ label: 'Melting Point' }, { label: 'Boiling Point' }],
-          },
-        ],
-      ],
-    },
-    {
-      label: 'Atomic Structure',
-      icon: 'pi pi-fw pi-atom',
-      items: [
-        [
-          {
-            label: 'Elements',
-            items: [{ label: 'Periodic Table' }, { label: 'Electron Configuration' }],
-          },
-          {
-            label: 'Atoms',
-            items: [{ label: 'Subatomic Particles' }, { label: 'Atomic Number & Mass' }],
-          },
-        ],
-        [
-          {
-            label: 'Isotopes',
-            items: [{ label: 'Radioactivity' }, { label: 'Nuclear Stability' }],
-          },
-        ],
-      ],
-    },
-    {
-      label: 'Chemical Reactions',
-      icon: 'pi pi-fw pi-beaker',
-      items: [
-        [
-          {
-            label: 'Types of Reactions',
-            items: [
-              { label: 'Combination' },
-              { label: 'Decomposition' },
-              { label: 'Single Replacement' },
-              { label: 'Double Replacement' },
-            ],
-          },
-          {
-            label: 'Balancing Equations',
-            items: [{ label: 'Stoichiometry' }, { label: 'Limiting Reagents' }],
-          },
-        ],
-        [
-          {
-            label: 'Energy Changes',
-            items: [{ label: 'Enthalpy' }, { label: 'Exothermic & Endothermic' }],
-          },
-        ],
-      ],
-    },
-    {
-      label: 'Solutions',
-      icon: 'pi pi-fw pi-flask',
-      items: [
-        [
-          {
-            label: 'Concentration',
-            items: [
-              { label: 'Molarity' },
-              { label: 'Molality' },
-              { label: 'Dilution' },
-            ],
-          },
-          {
-            label: 'Solutes & Solvents',
-            items: [{ label: 'Types of Solutions' }, { label: 'Solubility' }],
-          },
-        ],
-        [
-          {
-            label: 'Colligative Properties',
-            items: [
-              { label: 'Boiling Point Elevation' },
-              { label: 'Freezing Point Depression' },
-              { label: 'Osmosis' },
-            ],
-          },
-        ],
-      ],
-    },
-    {
-        label: 'Organic Chemistry',
-        icon: 'pi pi-fw pi-dna', // Use a DNA icon for Organic Chemistry
-        items: [
-          [
-            {
-              label: 'Functional Groups',
-              items: [
-                { label: 'Hydrocarbons (Alkanes, Alkenes, Alkynes)' },
-                { label: 'Haloalkanes' },
-                { label: 'Alcohols' },
-                { label: 'Ethers' },
-              ],
-            },
-            {
-              label: 'Isomers',
-              items: [{ label: 'Structural Isomers' }, { label: 'Stereoisomers' }],
-            },
-          ],
-          [
-            {
-              label: 'Chemical Reactions',
-              items: [
-                { label: 'Combustion Reactions' },
-                { label: 'Substitution Reactions' },
-                { label: 'Addition Reactions' },
-                { label: 'Elimination Reactions' },
-              ],
-            },
-            {
-              label: 'Naming Organic Compounds',
-              items: [
-                { label: 'IUPAC Nomenclature' },
-                { label: 'Common Names' },
-              ],
-            },
-          ],
-        ],
-      },
-      {
-        label: 'Acids and Bases',
-        icon: 'pi pi-fw pi-balance', // Use a balance icon for Acids and Bases
-        items: [
-          [
-            {
-              label: 'Brønsted-Lowry Theory',
-              items: [{ label: 'Conjugate Acid-Base Pairs' }, { label: 'Strength of Acids & Bases' }],
-            },
-            {
-              label: 'Lewis Theory',
-              items: [{ label: 'Electron Donors & Acceptors' }, { label: 'Lewis Acids & Bases' }],
-            },
-          ],
-          [
-            {
-              label: 'pH',
-              items: [{ label: 'Definition and Scale' }, { label: 'Calculations' }],
-            },
-            {
-              label: 'Indicators',
-              items: [{ label: 'Types of Indicators' }, { label: 'Acid-Base Titrations' }],
-            },
-          ],
-        ],
-      },
-  ];
-  
+interface Topic {
+  id: number;
+  name: string;
+}
 
-const EmptyPage = () => {
-    return (
-        <div className="grid">
-            <div className="col-12">
-                <div className="card">
-                    <h5>Take Quiz</h5>
-                    <p>Use this page to start from scratch and place your custom content.</p>
-                    <div className="card">
-                    <h5>Select Topic</h5>
-                    <div className="col-12 md:col-8">
-                    <div className="card">
-                    <h5>Chemistry Topics</h5>
-                    <MegaMenu model={megamenuItems} orientation="vertical" breakpoint="767px" />
-                    <div style={{ marginTop: '1.55em' }} className="flex flex-wrap gap-2">
-                        <SplitButton label="Crystal Structures" icon="pi pi-check" model={items}></SplitButton>
-                        <SplitButton label="Periodic Table" icon="pi pi-check" model={items}></SplitButton>
-                        <SplitButton label="Combination" icon="pi pi-check" model={items}></SplitButton>
-                        <SplitButton label="Molarity" icon="pi pi-check" model={items}></SplitButton>
-                        {/* <SplitButton label="Conjugate Acid-Base Pairs" icon="pi pi-check" model={items}></SplitButton> */}
+interface Skill {
+  id: number;
+  name: string;
+  topicId: number | null;
+}
+
+interface Mcq {
+  id: number;
+  stem: string;
+  options: Option[];
+  topics: Topic[];
+  skills: Skill[];
+  status: string;
+  publishedOn: number;
+  publishedBy: string;
+  closedOn: number | null;
+  closedBy: string | null;
+  createdOn: number;
+  createdBy: string;
+}
+
+interface ApiResponse {
+  id: number;
+  mcqs: Mcq[];
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalRecords: number;
+}
+
+const QuizPage: React.FC = () => {
+  const [data, setData] = useState<ApiResponse | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log('Fetching data from API...');
+        const response = await axios.get<ApiResponse>(
+          'http://localhost:80/v1/quizzes/2',
+          {
+            params: {
+              pageNumber: 0,
+              pageSize: 60,
+            },
+            headers: {
+              'x-user-id': '12asd',
+            },
+          }
+        );
+        console.log('Data fetched successfully:', response.data);
+        setData(response.data);
+
+        // Initialize selectedOptions with keys for each mcq.id set to null
+        const initialSelectedOptions: { [key: number]: number | null } = {};
+        response.data.mcqs.forEach((mcq) => {
+          initialSelectedOptions[mcq.id] = null;
+        });
+        setSelectedOptions(initialSelectedOptions);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="grid">
+      <div className="col-12">
+        <div className="card">
+          <h5>Quizzes</h5>
+          <p>You currently have an ongoing quiz.</p>
+          {data.mcqs.map((mcq) => (
+            <div key={mcq.id}>
+              <div className="card">
+                <span className="question-id">Question {mcq.id}: </span>
+                <span dangerouslySetInnerHTML={{ __html: mcq.stem }}></span>
+              </div>
+              <div className="card">
+                {mcq.options.map((option) => (
+                  <div key={option.no} className="card">
+                    <label className="option-label">
+                      <input
+                        type="radio"
+                        name={`mcq-${mcq.id}`}
+                        checked={selectedOptions[mcq.id] === option.no}
+                        onChange={() =>
+                          setSelectedOptions({
+                            ...selectedOptions,
+                            [mcq.id]: option.no,
+                          })
+                        }
+                      />
+                      <span className="option-no">Option {option.no}: </span>
+                      <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
+                    </label>
+                    <div className={`explanation-container ${selectedOptions[mcq.id] === option.no ? 'visible' : 'hidden'}`}>
+                      {option.isAnswer && <strong>Correct Answer</strong>}
+                      <p>{option.explanation}</p>
                     </div>
-                    </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        <Button label="Submit"></Button>
-                        <Button label="Disabled" disabled></Button>
-                        {/* <Button label="Link" link></Button> */}
-                    </div>
+                  </div>
+                ))}
+              </div>
+              {selectedOptions[mcq.id] !== null && (
+                <div className="flex flex-wrap gap-2">
+                  <Button label="Next Question"></Button>
                 </div>
-                </div>
+              )}
+              <h5>Topics</h5>
+              <ul>
+                {mcq.topics.map((topic) => (
+                  <li key={topic.id}>{topic.name}</li>
+                ))}
+              </ul>
+              <h5>Skills</h5>
+              <ul>
+                {mcq.skills.map((skill) => (
+                  <li key={skill.id}>{skill.name}</li>
+                ))}
+              </ul>
             </div>
+          ))}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
-export default EmptyPage;
+export default QuizPage;
