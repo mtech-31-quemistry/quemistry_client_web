@@ -1,9 +1,7 @@
-// app/quiz/page.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
-import axios from 'axios';
 
 interface Option {
   no: number;
@@ -56,24 +54,21 @@ const QuizPage: React.FC = () => {
     const fetchData = async () => {
       try {
         console.log('Fetching data from API...');
-        const response = await axios.get<ApiResponse>(
-          'http://localhost:80/v1/quizzes/2',
+        const response = await fetch(
+          'http://localhost:80/v1/quizzes/2?pageNumber=0&pageSize=60',
           {
-            params: {
-              pageNumber: 0,
-              pageSize: 60,
-            },
             headers: {
               'x-user-id': '12asd',
             },
           }
         );
-        console.log('Data fetched successfully:', response.data);
-        setData(response.data);
+        const responseData: ApiResponse = await response.json();
+        console.log('Data fetched successfully:', responseData);
+        setData(responseData);
 
         // Initialize selectedOptions with keys for each mcq.id set to null
         const initialSelectedOptions: { [key: number]: number | null } = {};
-        response.data.mcqs.forEach((mcq) => {
+        responseData.mcqs.forEach((mcq) => {
           initialSelectedOptions[mcq.id] = null;
         });
         setSelectedOptions(initialSelectedOptions);
@@ -87,15 +82,17 @@ const QuizPage: React.FC = () => {
 
   const submitAttempt = async (mcqId: number) => {
     try {
-      await axios.put(
+      await fetch(
         `http://localhost/v1/quizzes/2/mcqs/${mcqId}/attempt`,
         {
-          attempt: 1,
-        },
-        {
+          method: 'PUT',
           headers: {
+            'Content-Type': 'application/json',
             'x-user-id': '12asd',
           },
+          body: JSON.stringify({
+            attempt: 1,
+          }),
         }
       );
       console.log(`Attempt submitted for MCQ ID: ${mcqId}`);
@@ -166,7 +163,7 @@ const QuizPage: React.FC = () => {
                     <>
                       <div>
                         <p>No more questions in this quiz. Do you want to submit?</p>
-                        <Button label="Submit Quiz" onClick={submitAttempt}></Button>
+                        <Button label="Submit Quiz" onClick={() => submitAttempt(currentQuestion.id)}></Button>
                       </div>
                     </>
                   )}
