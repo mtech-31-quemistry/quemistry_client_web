@@ -50,6 +50,7 @@ interface ApiResponse {
 const QuizPage: React.FC = () => {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,9 +85,36 @@ const QuizPage: React.FC = () => {
     fetchData();
   }, []);
 
+  const submitAttempt = async (mcqId: number) => {
+    try {
+      await axios.put(
+        `http://localhost/v1/quizzes/2/mcqs/${mcqId}/attempt`,
+        {
+          attempt: 1,
+        },
+        {
+          headers: {
+            'x-user-id': '12asd',
+          },
+        }
+      );
+      console.log(`Attempt submitted for MCQ ID: ${mcqId}`);
+    } catch (error) {
+      console.error(`Error submitting attempt for MCQ ID: ${mcqId}`, error);
+    }
+  };
+
   if (!data) {
     return <div>Loading...</div>;
   }
+
+  const currentQuestion = data.mcqs[currentQuestionIndex];
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex < data.mcqs.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
 
   return (
     <div className="grid">
@@ -94,56 +122,70 @@ const QuizPage: React.FC = () => {
         <div className="card">
           <h5>Quizzes</h5>
           <p>You currently have an ongoing quiz.</p>
-          {data.mcqs.map((mcq) => (
-            <div key={mcq.id}>
+          {!data && (
+            <div className="flex flex-wrap gap-2">
+              <Button label="Resume Quiz" onClick={() => window.location.reload()}></Button>
+            </div>
+          )}
+          {currentQuestion && (
+            <div key={currentQuestion.id}>
               <div className="card">
-                <span className="question-id">Question {mcq.id}: </span>
-                <span dangerouslySetInnerHTML={{ __html: mcq.stem }}></span>
+                <span className="question-id">Question {currentQuestion.id}: </span>
+                <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
               </div>
               <div className="card">
-                {mcq.options.map((option) => (
+                {currentQuestion.options.map((option) => (
                   <div key={option.no} className="card">
                     <label className="option-label">
                       <input
                         type="radio"
-                        name={`mcq-${mcq.id}`}
-                        checked={selectedOptions[mcq.id] === option.no}
+                        name={`mcq-${currentQuestion.id}`}
+                        checked={selectedOptions[currentQuestion.id] === option.no}
                         onChange={() =>
                           setSelectedOptions({
                             ...selectedOptions,
-                            [mcq.id]: option.no,
+                            [currentQuestion.id]: option.no,
                           })
                         }
                       />
                       <span className="option-no">Option {option.no}: </span>
                       <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                     </label>
-                    <div className={`explanation-container ${selectedOptions[mcq.id] === option.no ? 'visible' : 'hidden'}`}>
+                    <div className={`explanation-container ${selectedOptions[currentQuestion.id] === option.no ? 'visible' : 'hidden'}`}>
                       {option.isAnswer && <strong>Correct Answer</strong>}
                       <p>{option.explanation}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              {selectedOptions[mcq.id] !== null && (
+              {selectedOptions[currentQuestion.id] !== null && (
                 <div className="flex flex-wrap gap-2">
-                  <Button label="Next Question"></Button>
+                  {currentQuestionIndex < data.mcqs.length - 1 ? (
+                    <Button label="Next Question" onClick={handleNextQuestion}></Button>
+                  ) : (
+                    <>
+                      <div>
+                        <p>No more questions in this quiz. Do you want to submit?</p>
+                        <Button label="Submit Quiz" onClick={submitAttempt}></Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
               <h5>Topics</h5>
               <ul>
-                {mcq.topics.map((topic) => (
+                {currentQuestion.topics.map((topic) => (
                   <li key={topic.id}>{topic.name}</li>
                 ))}
               </ul>
               <h5>Skills</h5>
               <ul>
-                {mcq.skills.map((skill) => (
+                {currentQuestion.skills.map((skill) => (
                   <li key={skill.id}>{skill.name}</li>
                 ))}
               </ul>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>
