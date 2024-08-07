@@ -1,69 +1,19 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Quiz } from '@/types';
+import { QuizService } from '../../../service/QuizService';
 import { Button } from 'primereact/button';
 
-interface Option {
-  no: number;
-  text: string;
-  explanation: string;
-  isAnswer: boolean;
-}
-
-interface Topic {
-  id: number;
-  name: string;
-}
-
-interface Skill {
-  id: number;
-  name: string;
-  topicId: number | null;
-}
-
-interface Mcq {
-  id: number;
-  stem: string;
-  options: Option[];
-  topics: Topic[];
-  skills: Skill[];
-  status: string;
-  publishedOn: number;
-  publishedBy: string;
-  closedOn: number | null;
-  closedBy: string | null;
-  createdOn: number;
-  createdBy: string;
-}
-
-interface ApiResponse {
-  id: number;
-  mcqs: Mcq[];
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  totalRecords: number;
-}
-
 const QuizPage: React.FC = () => {
-  const [data, setData] = useState<ApiResponse | null>(null);
+  const [data, setData] = useState<Quiz.ApiResponse | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log('Fetching data from API...');
-        const response = await fetch(
-          'http://localhost:80/v1/quizzes/2?pageNumber=0&pageSize=60',
-          {
-            headers: {
-              'x-user-id': '12asd',
-            },
-          }
-        );
-        const responseData: ApiResponse = await response.json();
-        console.log('Data fetched successfully:', responseData);
+        const responseData = await QuizService.fetchData();
         setData(responseData);
 
         // Initialize selectedOptions with keys for each mcq.id set to null
@@ -82,20 +32,7 @@ const QuizPage: React.FC = () => {
 
   const submitAttempt = async (mcqId: number) => {
     try {
-      await fetch(
-        `http://localhost/v1/quizzes/2/mcqs/${mcqId}/attempt`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-user-id': '12asd',
-          },
-          body: JSON.stringify({
-            attempt: 1,
-          }),
-        }
-      );
-      console.log(`Attempt submitted for MCQ ID: ${mcqId}`);
+      await QuizService.submitAttempt(mcqId);
     } catch (error) {
       console.error(`Error submitting attempt for MCQ ID: ${mcqId}`, error);
     }
