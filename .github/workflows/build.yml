@@ -91,7 +91,7 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: quemistry-web-client
+          name: quemistry-client-web
           path: dist_s3/
 
       - name: Deploy to S3
