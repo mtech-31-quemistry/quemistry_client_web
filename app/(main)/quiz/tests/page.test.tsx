@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import QuizPage from './page';
-import { QuizService } from '../../../service/QuizService';
+import QuizPage from '../page';
+import { QuizService } from '../../../../service/QuizService';
 import { Quiz } from '@/types'; // Ensure you import the Quiz namespace correctly
 
 
 // Mock the QuizService
-jest.mock('../../../service/QuizService', () => ({
+jest.mock('../../../../service/QuizService', () => ({
   QuizService: {
     fetchData: jest.fn(),
     submitAttempt: jest.fn(),
