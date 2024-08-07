@@ -67,7 +67,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: quemistry-web-client
+          name: quemistry-client-web
           path: dist/
           overwrite: true
 
