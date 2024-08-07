@@ -1,6 +1,5 @@
 'use client';
-
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
 import { Button } from 'primereact/button';
