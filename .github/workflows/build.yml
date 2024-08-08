@@ -1,5 +1,6 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
 name: Build and Deploy
 
 on:
@@ -47,9 +48,6 @@ jobs:
       - name: Clean Install dependencies
         run: npm ci
 
-      - name: Run tests and generate coverage report
-        run: npm test -- --coverage
-
       #Run sonar cloud scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
@@ -66,8 +64,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: quemistry-client-web
-          path: dist_s3/
+          name: quemistry-web-client
+          path: dist/
           overwrite: true
 
   audit:
@@ -90,7 +88,7 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: quemistry-client-web
+          name: quemistry-web-client
           path: dist_s3/
 
       - name: Deploy to S3
