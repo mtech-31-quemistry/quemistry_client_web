@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { QuestionsService } from '../../../../service/QuestionsService';
 import { TreeTable } from 'primereact/treetable';
 import { Column } from 'primereact/column';
@@ -9,23 +9,45 @@ import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { SelectButton } from 'primereact/selectbutton';
+import { Toast } from 'primereact/toast';
 
 const ManageTopics = () => {
-    const [topicNodes, setTopicNodes] = useState<any[]>([]);
-    const [topics, setTopics] = useState<Questions.Topic[]>([]);
-    const [edited, setEdited] = useState(false);
-    const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>();
-    const [addTopic, setAddTopic] = useState(false);
-    const [newTopicName, setNewTopicName] = useState("");
+    const [topicNodes, setTopicNodes] = useState<any[]>([]); //for display
+    const [topics, setTopics] = useState<Questions.Topic[]>([]); //list of topics with edited value and edit status
+    const [edited, setEdited] = useState(false); //whether there is edits
+    const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>(); //for expanding and collapsing nodes in tree table
+    const [addTopic, setAddTopic] = useState(false); //for adding new topics dialog
+    const [newTopicName, setNewTopicName] = useState(""); //for adding new topics dialog
+    const toast = useRef<Toast>(null);
 
+    const saveSuccess = () => {
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Changes have been saved',
+            life: 3000 //3 secs
+        });
+    };
+    const reloadSuccess = () => {
+        toast.current?.show({
+            severity: 'info',
+            summary: 'Reloaded',
+            detail: 'Changes undone',
+            life: 3000 //3 secs
+        });
+    };
     const reload = () => {
         QuestionsService.getTopics().then((t) => {
+            reloadSuccess();
+            setEdited(false);
             setTopics(t);
         });
     }
 
     useEffect(()=>{
-        reload();
+        QuestionsService.getTopics().then((t) => {
+            setTopics(t);
+        });
     },[]);
  
     useEffect(()=>{
@@ -88,7 +110,7 @@ const ManageTopics = () => {
             setTopics(updatedTopics);
         }
     }
-    //edit name
+    //edit topic or skill name
     const onNameChange = (options: any, value: string) => {
         var found = false;
         let updatedTopics = topics.map( (t)=> {
@@ -98,13 +120,21 @@ const ManageTopics = () => {
                 found = true;
             }
             else if(options.node.data.type === 'skill' && t.skills){
-                t.skills.map((s) => {
-                    if(s.id === options.node.data.id){
-                        s.name = value;
-                        s.edited = true;
+                if(options.node.data.id == undefined ){
+                    if(t.skills[0].id == undefined){
+                        t.skills[0].name = value;
+                        t.skills[0].edited = true;
                         found = true;
                     }
-                })
+                }else{   
+                    t.skills.map((s) => {
+                        if(s.id === options.node.data.id){
+                            s.name = value;
+                            s.edited = true;
+                            found = true;
+                        }
+                    });
+                }
             }
             return t;
         });
@@ -128,7 +158,7 @@ const ManageTopics = () => {
                     edited: true,
                     topicId: node.key
                 }
-                //add skill
+                //insert skill to first element of array
                 if(t.skills){
                     t.skills.unshift(newSkill)
                 }
@@ -154,7 +184,7 @@ const ManageTopics = () => {
         let updatedTopics = topics.map( (t)=> {
             if(t.id === node.data.topicId){
                 found = true;
-                                //add skill
+                //delete first skill to undo add
                 if(t.skills && t.skills[0].id == undefined){
                     t.skills.shift();
                 }                  
@@ -177,6 +207,21 @@ const ManageTopics = () => {
         }
         console.log("Add topic", newTopic)    
     }
+    //Add Topic
+    const saveChanges = () => {
+        //populate edited topics and skills
+        //topic is edited or topic has skills edited
+        let topicsChanges: Questions.Topic[] = topics.filter( t => {
+            return t.edited || t.skills.filter(s => { return s.edited}).length > 0
+        });
+        //console.log("Add topic", topicsChanges);    
+        QuestionsService.saveTopics(topicsChanges).then((t) => {
+            saveSuccess();
+            setTopics(t);
+            setEdited(false);
+        });
+    }
+
     //toolbar
     const startContent = (
         <React.Fragment>
@@ -192,13 +237,13 @@ const ManageTopics = () => {
         </div>
     )
     //footer
-    const footer = (
+    const treeTablefooter = (
         <div className='grid'>
                 <div className="flex justify-content-start col-8">
-                    <Button icon="pi pi-refresh" label="Reload" severity="warning" onClick={(e)=> {reload}} />
+                    <Button icon="pi pi-refresh" label="Reload" severity="warning" onClick={()=> {reload()}} />
                 </div>
                 {!edited || <div className="flex justify-content-end col-4">
-                    <Button icon="pi pi-save" label="Save" severity="success" />
+                    <Button icon="pi pi-save" label="Save" severity="success" onClick={()=> saveChanges()} />
                 </div>}
         </div>
     );
@@ -210,6 +255,7 @@ const ManageTopics = () => {
 
     return (
         <div className="grid">
+            <Toast ref={toast} position="bottom-left" />
             <div className="col-12">
                 <div className="card">
                     <Toolbar start={startContent} />
@@ -218,7 +264,7 @@ const ManageTopics = () => {
                         <InputText placeholder='topic name' style={{ width: '30vw' }} value={newTopicName} onChange={(e) => setNewTopicName(e.target.value)} />
                     </Dialog>
                     <h5>Manage Topics</h5>
-                    <TreeTable value={topicNodes} columnResizeMode="fit" footer={footer} rowClassName={rowClassName}
+                    <TreeTable value={topicNodes} columnResizeMode="fit" footer={treeTablefooter} rowClassName={rowClassName}
                         expandedKeys={expandedKeys} onToggle={(e) => setExpandedKeys(e.value)} >
                         <Column field="name" header="Name" expander 
                             editor={nameEditor} style={{ height: '3.5rem' }} className="w-20rem"/>

@@ -1,14 +1,13 @@
 import { Questions } from '@/types';
 
 const QuesionsSvcUrl = process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL || ''
-const retrieveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions/retrieve`
-const saveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL}/questions`
+const retrieveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/retrieve`
 const QuestionsTopicsUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/topics`
 
 export const QuestionsService = {
     addMCQ(data : any) {
-        console.log("calling saveQuestion ", saveQuestionUrl, data);
-        return fetch(saveQuestionUrl, { 
+        console.log("calling saveQuestion ", QuesionsSvcUrl, data);
+        return fetch(QuesionsSvcUrl, { 
                 method: 'POST', 
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -18,8 +17,7 @@ export const QuestionsService = {
             })
             .then((res) => {
                 return res.json();
-            })
-            .then((data) => {
+            })            .then((data) => {
                 return data as Questions.MCQ}
             );
     },
@@ -76,7 +74,14 @@ export const QuestionsService = {
                 },
                 credentials: 'include'
             })
-            .then((res) => res.json())
+            .then((res) => {
+                if(res.status === 200)
+                    return res.json();
+                else{
+                    console.log("res", res);
+                    throw new Error(res.status + " at retrieving topics.");
+               }
+            })
             .then((d) => d.topics as Questions.Topic[]);
     },
     getSkills() {
@@ -84,5 +89,24 @@ export const QuestionsService = {
             .then((res) => res.json())
             .then((d) => d.skills as Questions.Skill[]);
     },
+    saveTopics(data: Questions.Topic[]){
+        return fetch(QuestionsTopicsUrl, { 
+            method: 'POST', 
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            credentials: 'include',
+            body: JSON.stringify({topics : data})
+        })
+        .then((res) =>{
+            if(res.status === 200)
+                return res.json();
+            else{
+                console.log("res", res);
+                throw new Error(res.status + " at saving topics.");
+           }            
+        })
+        .then((d) => d.topics as Questions.Topic[]);
+    }
 
 };
