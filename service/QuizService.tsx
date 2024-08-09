@@ -5,11 +5,12 @@ export const QuizService = {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(
-        'http://localhost:80/v1/quizzes/2?pageNumber=0&pageSize=60',
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/2?pageNumber=0&pageSize=60`,
         {
           headers: {
             'x-user-id': '12asd',
           },
+          credentials: "include"
         }
       );
       const responseData: Quiz.ApiResponse = await response.json();
@@ -24,7 +25,7 @@ export const QuizService = {
   submitAttempt: async (mcqId: number): Promise<void> => {
     try {
       await fetch(
-        `http://localhost/v1/quizzes/2/mcqs/${mcqId}/attempt`,
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/2/mcqs/${mcqId}/attempt`,
         {
           method: 'PUT',
           headers: {
