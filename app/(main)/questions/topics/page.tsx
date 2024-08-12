@@ -205,7 +205,13 @@ const ManageTopics = () => {
             skills: [],
             edited: true
         }
+        let topicsChanges: Questions.Topic[] = [newTopic];
         console.log("Add topic", newTopic)    
+        QuestionsService.saveTopics(topicsChanges).then((t) => {
+            saveSuccess();
+            setTopics(t);
+            setEdited(false);
+        });
     }
     //Add Topic
     const saveChanges = () => {
