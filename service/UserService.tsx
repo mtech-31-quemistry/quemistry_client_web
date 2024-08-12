@@ -1,8 +1,8 @@
-const userServiceUrl = process.env.NEXT_PUBLIC_QUEMISTRY_USER_URL || ''
-const saveUserServiceUrl =`${userServiceUrl}/class`
+const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
+const saveUserServiceUrl = `${classUrl}`
 
 export const UserService = {
-  async addClass(userId: string, data: Class) {
+  async addClass(data: Class) {
     console.log("calling saveClass ", saveUserServiceUrl);
     const res = await fetch(saveUserServiceUrl, {
       method: 'POST',
