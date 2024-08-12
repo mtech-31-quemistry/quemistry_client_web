@@ -1,5 +1,5 @@
 const userServiceUrl = process.env.NEXT_PUBLIC_QUEMISTRY_USER_URL || ''
-const saveUserServiceUrl =`${userServiceUrl}/v1/class`
+const saveUserServiceUrl =`${userServiceUrl}/class`
 
 export const UserService = {
   async addClass(userId: string, data: Class) {
@@ -7,8 +7,7 @@ export const UserService = {
     const res = await fetch(saveUserServiceUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-USER-ID': userId
+        'Content-Type': 'application/json'
       },
       credentials: "include",
       body: JSON.stringify(data)
