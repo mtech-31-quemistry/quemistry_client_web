@@ -44,10 +44,10 @@ const QuestioSearchList = () => {
     const itemTemplate = (rowData: Questions.MCQ) => {
 
         const topics = rowData.topics.map((topic) =>
-            <Tag severity="info" value={topic.name} key={topic.id}></Tag>
+            <Tag style={{marginRight:'1em'}} severity="info" value={topic.name} key={topic.id}></Tag>
         )
         const skills = rowData.skills.map((skills) =>
-            <Tag value={skills.name} key={skills.id}></Tag>
+            <Tag style={{marginRight:'1em'}}value={skills.name} key={skills.id}></Tag> 
         )
         return (
         <div className='card mb-1'>

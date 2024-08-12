@@ -142,12 +142,16 @@ const EditQuestion = () => {
             throw "No answer selected"
         console.log(answer)
         //populate skills for mcq
+        let selectedTopics: number[] = []; 
         let selectedSkills: number[] = [];     
         if(selectedTopicNodes){
             Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                console.log("key", key, "data", data);
                 let topic_skill = key.split("-");
                 if(topic_skill.length>1){
-                selectedSkills.push(parseInt(topic_skill[1]));     
+                    selectedSkills.push(parseInt(topic_skill[1]));     
+                } else {
+                    selectedTopics.push(parseInt(topic_skill[0]));     
                 }
             });
         }
@@ -155,10 +159,10 @@ const EditQuestion = () => {
         let mcq = {
             stem: stem,
             options: addedOptions,
-            // topics: null,
+            topics: selectedTopics,
             skills: selectedSkills,
             // isAnswer: answer[0].no,
-            status: "Draft",
+            // status: "Draft",
 
         }
         console.log("mcq to be created ", mcq);
