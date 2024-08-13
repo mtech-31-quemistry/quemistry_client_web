@@ -6,6 +6,7 @@ export const UserService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Cookie': 'QUESESSION=f1d94def-900a-4643-bce9-df86cc8b1d7c'
       },
       credentials: 'include',
       body: JSON.stringify(data)
