@@ -1,18 +1,16 @@
-const userServiceUrl = process.env.NEXT_PUBLIC_QUEMISTRY_USER_URL || ''
-const saveUserServiceUrl =`${userServiceUrl}/v1/class`
+const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 
 export const UserService = {
-  async addClass(userId: string, data: Class) {
-    console.log("calling saveClass ", saveUserServiceUrl);
-    const res = await fetch(saveUserServiceUrl, {
+  async addClass(data: Class) {
+    const res = await fetch(classUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-USER-ID': userId
+        'Cookie': 'QUESESSION=f1d94def-900a-4643-bce9-df86cc8b1d7c'
       },
-      credentials: "include",
+      credentials: 'include',
       body: JSON.stringify(data)
     });
-    console.log("res", res);
+    console.log('res', res);
   }
-}
+};

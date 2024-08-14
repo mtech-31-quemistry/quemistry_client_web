@@ -57,8 +57,8 @@ const QuestioSearchList = () => {
                     <div className="col-12 md:col-6"><label>Topics: </label>{topics}</div>
                     <div className="col-12 md:col-6"><label>Skills: </label>{skills}</div>
                     <div className="col-12 md:col-3"><label>Status: </label>{rowData.status}</div>
-                    <div className="col-12 md:col-3"><label>Published on: </label>{formatDate(rowData.publishedOn)}</div>
-                    <div className="col-12 md:col-6"><label>Published by: </label>{rowData.publishedBy}</div>
+                    <div className="col-12 md:col-3"><label>Created on: </label>{formatDate(rowData.createdTs)}</div>
+                    <div className="col-12 md:col-6"><label>Created by: </label>{rowData.createdBy}</div>
                     <div className="col-12 md:col-10">&nbsp;</div>
                     <div className="col-12 md:col-2">
                         <span></span>

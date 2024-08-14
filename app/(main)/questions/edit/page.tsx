@@ -20,6 +20,7 @@ const EditQuestion = () => {
     const [addedOptions, setAddedOptions] = useState<Questions.Option[]>([]);
     const [stem, setStem] = useState<string>('');
     const [answer, setAnswer] = useState<string>('');
+    const [explanation, setExplanation] = useState<string>('');
     const [isAnswer, setIsAnswer] = useState<boolean>(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
@@ -51,8 +52,15 @@ const EditQuestion = () => {
 
     const optionsItemTemplate = (option: Questions.Option) => {
         return(
-            <Editor readOnly value={option.text} showHeader={false}>
+            <>
+            <div style={{margin:'1em 0em 0.3em 0.1em', fontSize:'.9em'}}>option</div>
+            <Editor style={{marginBottom:'0.5em'}} readOnly value={option.text} showHeader={false}>
             </Editor>
+            <div></div>
+            <div style={{margin:'1em 0em 0.3em 0.1em', fontSize:'.9em'}}>explanation</div>
+            <Editor readOnly value={option.explanation} showHeader={false}>
+            </Editor>
+            </>
         )
     }
     const optionItemActionTemplate = (option: Questions.Option) => {
@@ -87,7 +95,8 @@ const EditQuestion = () => {
             return {
                 no: index + 1,
                 text: option.text,
-                isAnswer: option.isAnswer
+                isAnswer: option.isAnswer,
+                explanation: option.explanation
             }
         })
        setAddedOptions(reOrderedOptions);
@@ -100,7 +109,8 @@ const EditQuestion = () => {
                     return {
                         no: option.no,
                         text: option.text,
-                        isAnswer: option.no === selectedNo
+                        isAnswer: option.no === selectedNo,
+                        explanation: option.explanation
                     }
                 }) 
         }
@@ -116,17 +126,20 @@ const EditQuestion = () => {
             return {
                 no: index + 1,
                 text: option.text,
-                isAnswer: option.isAnswer
+                isAnswer: option.isAnswer,
+                explanation: option.explanation
             }
         })
         options.push({
             no: options.length +1,
-                text: answer,
-                isAnswer: isAnswer
+            text: answer,
+            isAnswer: isAnswer,
+            explanation: explanation
         })
 
         setAddedOptions(options);
         setAnswer("");
+        setExplanation("");
         setIsAnswer(false);
         setShowOptionDialog(false);
     };
@@ -218,10 +231,10 @@ const EditQuestion = () => {
                             <label htmlFor="ms-skills">Skills</label>
                         </FloatLabel> */}
                     </div> 
-                    <div className="col-12">
-                        Other information like publised date
-                    </div>
-                    <div className="col-12">
+                    {/* <div className="col-12">
+                        <Button label="Next" onClick={()=> {setActiveTab(1)}}></Button>
+                    </div> */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button label="Next" onClick={()=> {setActiveTab(1)}}></Button>
                     </div>
                 </div>
@@ -233,19 +246,27 @@ const EditQuestion = () => {
                         <Editor value={stem} onTextChange={(e: EditorTextChangeEvent) => setStem(e.htmlValue || '')} style={{ height: '320px' }} />
                         </div>
                     </div>
-                    <div className="col-12">
+                    {/* <div className="col-12">
+                        <Button label="Next" onClick={()=> {setActiveTab(2)}}></Button>
+                    </div> */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button label="Next" onClick={()=> {setActiveTab(2)}}></Button>
                     </div>
             </TabPanel>
             <TabPanel header="Options">
                     <Dialog visible={showOptionDialog} style={{ width: '80vw' }} modal={false} position="bottom" onHide={() => {if (!showOptionDialog) return; setShowOptionDialog(false); }}>
                         <div className="grid">
-                            <div className="col-10">Fill in the options of the question and indicate answer.</div>
-                            <div className="col-2">
-                                <Button label="Add" onClick={handleOnClickAdd} size="small"/>
-                            </div>
+                            <div className="col-10">Add an option for the question</div>
+
                             <div className="col-12">
                                 <Editor value={answer} onTextChange={(e: EditorTextChangeEvent) => setAnswer(e.htmlValue || '')} style={{ height: '100px' }} />
+                            </div>
+                            <div className="col-10">Explain why this option is correct or wrong</div>
+                            <div className="col-12">
+                                <Editor value={explanation} onTextChange={(e: EditorTextChangeEvent) => setExplanation(e.htmlValue || '')} style={{ height: '100px' }} />
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
+                                <Button label="Add" onClick={handleOnClickAdd} size="small"/>
                             </div>
                             <div className="col-10">
                             </div>
@@ -262,25 +283,31 @@ const EditQuestion = () => {
                                 <Column style={{ width: '5%' }} body={optionItemActionTemplate}></Column>
                             </DataTable>
                         </div>
-                        <div className="col-12">
+                        {/* <div className="col-12">
                             <Button label="Next" onClick={()=> {setActiveTab(3)}}></Button>
-                         </div>
+                         </div> */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
+                            <Button label="Next" onClick={()=> {setActiveTab(3)}}></Button>
+                        </div>
                    </div>
             </TabPanel>
             <TabPanel header="Review">
                 <div className="grid">
                     <div className="col-12">
-                        <Editor readOnly value={stem} showHeader={false} style={{ height: '400px' }}>
+                        <Editor readOnly value={stem} showHeader={false} style={{ height: '320px' }}>
                         </Editor>
                     </div>
                     <div className="col-12">
                         <DataTable value={addedOptions} emptyMessage="No options added">
-                            <Column field="no" style={{ width: '5%' }}></Column>
+                            <Column field="no" style={{ width: '5%'}}></Column>
                             <Column style={{ width: '90%' }} body={optionsItemTemplate}></Column>
                         </DataTable>
                     </div>
                     <div className="col-9 md:col-11">&nbsp;</div>
-                    <div className="col-1">
+                    {/* <div className="col-1">
+                        <Button label="Done" onClick={handleOnClickDone}></Button>
+                    </div> */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button label="Done" onClick={handleOnClickDone}></Button>
                     </div>
  

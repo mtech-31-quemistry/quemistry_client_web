@@ -10,9 +10,10 @@ declare namespace Questions {
         status: string ;
         publishedOn?: Date ;
         publishedBy?: string ;
-        closedOn?: Date,
-        closedBy?: string,
-        createdOn?: Date,
+        archivedOn?: Date,
+        archivedBy?: string,
+        createdTs?: Date,
+        updatedTs?: Date,
         createdBy?: string,
 }
 
