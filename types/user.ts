@@ -1,5 +1,6 @@
 interface UserProfile {
     email: string;
+    roles: string[];
 }
 
 interface Class {

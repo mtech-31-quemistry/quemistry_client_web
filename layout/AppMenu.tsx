@@ -1,29 +1,45 @@
 /* eslint-disable @next/next/no-img-element */
-
-import React, { Suspense, useContext } from 'react';
+'use client';
+import React, { Suspense, useContext, useEffect, useState } from 'react';
 import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
 import { AppMenuItem } from '@/types';
+import { IS_LOGIN, USER } from '../lib/constants'
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
+    const [user, setUser] = useState<UserProfile | null>();
+    const [isLogin, setIsLogin] = useState<boolean>(false);
 
+    useEffect(()=>{
+        if(sessionStorage != undefined){
+            setIsLogin(sessionStorage.getItem(IS_LOGIN) == "true");
+        }else{
+            setIsLogin(false);
+        }
+        if(isLogin){
+            setUser(JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile);
+        }else{
+            setUser(null);
+        }
+    },[]);
     //customise list of menu items for quemistry
     const model: AppMenuItem[] = [
         {
             label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
-                { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz' }
+                { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz', visible: isLogin && user?.roles.some(role => role ==='student') }
             ]
         },
         {
             label: 'Manage',
-            items: [{ label: 'Questions', icon: 'pi pi-fw pi-question-circle', to: '/questions/searchlist' },
-                { label: 'Topics', icon: 'pi pi-fw pi-tags', to: '/questions/topics' },
-                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes' },
-            ]
+            items: [{ label: 'Questions', icon: 'pi pi-fw pi-question-circle', to: '/questions/searchlist', visible: isLogin && user?.roles.some(role => role ==='admin'|| role === 'tutor') },
+                { label: 'Topics', icon: 'pi pi-fw pi-tags', to: '/questions/topics', visible: isLogin && user?.roles.some(role => role ==='admin'|| role === 'tutor') },
+                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: isLogin && user?.roles.some( role => role === 'tutor') },
+            ],
+            visible: isLogin && user?.roles.some(role => role ==='admin'|| role === 'tutor')
         },
 /*        {
             label: 'UI Components',

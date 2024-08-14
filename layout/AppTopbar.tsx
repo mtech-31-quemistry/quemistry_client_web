@@ -8,7 +8,7 @@ import { LayoutContext } from './context/layoutcontext';
 import { IS_LOGIN } from "../lib/constants"
 import { Menu } from 'primereact/menu';
 import { GoogleSigninService } from '@/service/GoogleSignInService'
-import  { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
@@ -17,12 +17,12 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const topbarmenubuttonRef = useRef(null);
     const profilemenubuttonRef = useRef<Menu>(null);
     const [isLogin, setIsLogin] = useState(false);
+    const router = useRouter();
 
      useEffect(()=>{
-        if(localStorage != undefined && localStorage.getItem(IS_LOGIN) === "true"){
+        if(sessionStorage != undefined && sessionStorage.getItem(IS_LOGIN) === "true"){
             setIsLogin(true);
         }
-
         //if(!isLogin){
         //     redirect("/");
         // }
@@ -48,12 +48,15 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         {
             label: 'Sign out',
             icon: 'pi pi-sign-out',
-            command: ()=> {
+            command: (e: any)=> {
                 GoogleSigninService.signOut()
                 .then(()=>{
                     setIsLogin(false);
+                    router.push("/");
                 })
                 .catch((err)=>{
+                    setIsLogin(false);
+                    router.push("/");
                     console.log("fail to logout.");
                     console.log(err);
                 });

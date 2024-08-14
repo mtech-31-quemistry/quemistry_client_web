@@ -1,5 +1,5 @@
 import {PKCECodeChallenge} from '@/types';
-import { IS_LOGIN } from '../lib/constants'
+import { IS_LOGIN, USER } from '../lib/constants'
 
 const clientId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID || ''
 const idpAuthorizeEndpoint = process.env.NEXT_PUBLIC_IDP_AuthorizeEndpoint || ''
@@ -86,7 +86,7 @@ export const GoogleSigninService = {
             })
             .then((res) => {
                 if(res.ok){
-                    localStorage.setItem(IS_LOGIN, "true" );
+                    sessionStorage.setItem(IS_LOGIN, "true" );
                     return res.json()
                 }
                 else
@@ -94,7 +94,10 @@ export const GoogleSigninService = {
                     throw new Error(res.status + " at signing with google account.")
                 }
             })
-            .then((d) => d as UserProfile);;
+            .then((d) =>{ 
+                d as UserProfile
+                sessionStorage.setItem(USER, JSON.stringify(d) );
+            });
     },
     signOut(){
         return fetch(AuthSvcUrl+'/signout',{
@@ -107,12 +110,14 @@ export const GoogleSigninService = {
         })
         .then((res)=>{
             if(res.ok){
-                localStorage.setItem(IS_LOGIN, "false" );
+                sessionStorage.setItem(IS_LOGIN, "false" );
+                sessionStorage.removeItem(USER);
                 return;
             }
             else
             {
-                localStorage.setItem(IS_LOGIN, "false" );
+                sessionStorage.setItem(IS_LOGIN, "false" );
+                sessionStorage.removeItem(USER);
                 throw new Error(res.status + " at signing out.")
             }
         })
