@@ -42,11 +42,6 @@ const QuizPage: React.FC = () => {
       try {
         const responseData = await QuizService.getQuizInProgress();
         setData(responseData);
-        // console.log('responseData.message', responseData.message)
-          if (responseData.message === 'Quiz not found') {
-          setData(null);
-          return;
-          }
           // Initialize selectedOptions with keys for each mcq.id set to null
         const initialSelectedOptions: { [key: number]: number | null } = {};
         responseData.mcqs.forEach((mcq) => {
