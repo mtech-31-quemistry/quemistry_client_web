@@ -23,6 +23,7 @@ const QuizPage: React.FC = () => {
   const [topicNodes, setTopicNodes] = useState<any>(null);
 
   const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
+  const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -43,7 +44,7 @@ const QuizPage: React.FC = () => {
       try {
         const responseData = await QuizService.getQuizInProgress();
         if (responseData.message === "Quiz not found") {
-          setQuiz(false);return;
+          setIsQuizOngoing(false);return;
         }
         setQuiz(responseData);
           // Initialize selectedOptions with keys for each mcq.id set to null
@@ -132,8 +133,8 @@ const confirmExit = () => {
   // Logic to handle exiting the quiz and saving progress
   console.log("Quiz exited. Progress saved.");
   setVisible(false);
-  abandonQuiz(quiz?.id);
-  setQuiz(false);
+  if (quiz) {abandonQuiz() } else { console.error('Quiz is null, cannot abandon quiz.');}
+  setIsQuizOngoing(false);
   window.location.reload();
 };
 
@@ -168,7 +169,7 @@ const [visible, setVisible] = useState(false);
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <h5>Quizzes</h5>
           <Fragment>
-          <Button icon='pi pi-times'text  style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={quiz}/>
+          <Button icon='pi pi-times'text  style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={isQuizOngoing}/>
           </Fragment>
           <Dialog header='Exit Quiz' style={{ width: '20vw' }} visible={visible} onHide={() => { visible && cancelExit(); }} footer={cancelFooter}>
             Are you sure you want to exit the quiz?
