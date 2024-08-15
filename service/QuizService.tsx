@@ -1,11 +1,37 @@
 import { Quiz } from '@/types';
 
 export const QuizService = {
-  fetchData: async (): Promise<Quiz.ApiResponse> => {
+  startNewQuiz: async (topics: number[]): Promise<Quiz.ApiResponse> => {
+    try {
+      console.log('Fetching data from API...');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-user-id': '12asd',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          topics: topics,
+          skills: null,
+          totalSize: 60,
+          pageSize: 60,
+        }),
+      });
+      const responseData: Quiz.ApiResponse = await response.json();
+      console.log('Data fetched successfully:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  },
+
+  getQuizInProgress: async (): Promise<Quiz.ApiResponse> => {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/2?pageNumber=0&pageSize=60`,
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=60`,
         {
           headers: {
             'x-user-id': '12asd',
