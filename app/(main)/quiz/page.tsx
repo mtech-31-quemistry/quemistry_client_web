@@ -8,6 +8,7 @@ import { Questions } from '@/types';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Editor, EditorTextChangeEvent } from "primereact/editor";
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
+import { InputText } from 'primereact/inputtext';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
@@ -42,7 +43,7 @@ const QuizPage: React.FC = () => {
       try {
         const responseData = await QuizService.getQuizInProgress();
         if (responseData.message === "Quiz not found") {
-          setQuiz(null);return;
+          setQuiz(false);return;
         }
         setQuiz(responseData);
           // Initialize selectedOptions with keys for each mcq.id set to null
@@ -59,6 +60,7 @@ const QuizPage: React.FC = () => {
     fetchData();
   }, []);
 
+ 
   const submitAttempt = async (mcqId: number) => {
     try {
       await QuizService.submitAttempt(mcqId);
@@ -76,7 +78,31 @@ const QuizPage: React.FC = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   }
-}
+};
+
+const abandonQuiz = async () => {
+  if (!quiz) {
+    console.error('No quiz to abandon');
+    return;
+  }
+  try {
+    await QuizService.abandonQuiz(quiz.id);
+    console.log(`Attempt abandoned for Quiz ID: ${quiz.id}`);
+    // Optionally, you can update the state to reflect the abandoned status
+    setQuiz((prevQuiz: any) => ({
+      ...prevQuiz,
+      status: 'abandoned', // Assuming 'status' is a field in your quiz object
+    }));
+    // Reset selected options
+    const initialSelectedOptions: { [key: number]: number | null } = {};
+    quiz.mcqs.forEach((mcq: any) => {
+      initialSelectedOptions[mcq.id] = null;
+    });
+    setSelectedOptions(initialSelectedOptions);
+  } catch (error) {
+    console.error('Error abandoning quiz:', error);
+  }
+};
  
 useEffect(()=>{
   QuestionsService.getTopics().then((data) => {
@@ -106,7 +132,9 @@ const confirmExit = () => {
   // Logic to handle exiting the quiz and saving progress
   console.log("Quiz exited. Progress saved.");
   setVisible(false);
+  abandonQuiz(quiz?.id);
   setQuiz(false);
+  window.location.reload();
 };
 
 const cancelExit = () => {
@@ -116,7 +144,7 @@ const cancelExit = () => {
 const cancelFooter = (
   <div>
       <Button label='Cancel' icon='pi pi-times' onClick={cancelExit} className='p-button-text' />
-      <Button label='Save' icon='pi pi-save' onClick={confirmExit} autoFocus />
+      <Button label='Quit' icon='pi pi-save' onClick={confirmExit} autoFocus />
   </div>
 );
 
@@ -143,7 +171,7 @@ const [visible, setVisible] = useState(false);
           <Button icon='pi pi-times'text  style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={quiz}/>
           </Fragment>
           <Dialog header='Exit Quiz' style={{ width: '20vw' }} visible={visible} onHide={() => { visible && cancelExit(); }} footer={cancelFooter}>
-            Are you sure you want to save and exit?
+            Are you sure you want to exit the quiz?
           </Dialog>
         </div>
           {!quiz && (
@@ -167,7 +195,7 @@ const [visible, setVisible] = useState(false);
                             <TabPanel header="Options">
                                 <div className="grid"> 
                                     <div className="col-12 md:col-6 mb-5">
-                                      <p>Default question count will be two.</p>
+                                      <p>Default question count will be two.<br/></p>
                                     </div>
                                     <div className="col-12 md:col-6 mb-5">
                                     </div> 
@@ -198,7 +226,7 @@ const [visible, setVisible] = useState(false);
                                               }
                                           });
                                       };
-                                        setIsDisabled(true);QuizService.startNewQuiz(selectedTopics);setTimeout(()=>{window.location.reload();},1500) } } 
+                                        setIsDisabled(true);QuizService.startNewQuiz(selectedTopics,selectedSkills);setTimeout(()=>{window.location.reload();},1500) } } 
                                 disabled={isDisabled}>
                                 {isDisabled ? 'Loading Quiz...' : 'Submit'}
                                 </Button>

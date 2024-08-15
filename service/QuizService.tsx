@@ -1,7 +1,7 @@
 import { Quiz } from '@/types';
 
 export const QuizService = {
-  startNewQuiz: async (topics: number[]): Promise<Quiz.ApiResponse> => {
+  startNewQuiz: async (topics: number[], skills: number[]): Promise<Quiz.ApiResponse> => {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
@@ -13,7 +13,7 @@ export const QuizService = {
         credentials: 'include',
         body: JSON.stringify({
           topics: topics,
-          skills: null,
+          skills: skills,
           totalSize: 60,
           pageSize: 60,
         }),
@@ -69,4 +69,23 @@ export const QuizService = {
       throw error;
     }
   },
+
+  abandonQuiz: async (quizId: number): Promise<void> => {
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/${quizId}/abandon`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-id': '12asd',
+          }
+        }
+      );
+      console.log(`Attempt abandoned for Quiz ID: ${quizId}`);
+    } catch (error) {
+      console.error(`Error abandoning quiz for Quiz ID: ${quizId}`, error);
+      throw error;
+    }
+  }
 };
