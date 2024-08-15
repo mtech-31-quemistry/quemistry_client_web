@@ -57,7 +57,7 @@ const QuestioSearchList = () => {
                     <div className="col-12 md:col-6"><label>Topics: </label>{topics}</div>
                     <div className="col-12 md:col-6"><label>Skills: </label>{skills}</div>
                     <div className="col-12 md:col-3"><label>Status: </label>{rowData.status}</div>
-                    <div className="col-12 md:col-3"><label>Created on: </label>{formatDate(rowData.createdTs)}</div>
+                    <div className="col-12 md:col-3"><label>Created on: </label>{formatDate(rowData.createdOn)}</div>
                     <div className="col-12 md:col-6"><label>Created by: </label>{rowData.createdBy}</div>
                     <div className="col-12 md:col-10">&nbsp;</div>
                     <div className="col-12 md:col-2">
@@ -72,7 +72,7 @@ const QuestioSearchList = () => {
 
     const startContent = (
         <React.Fragment>
-            <Link href="/questions/edit"><Button icon="pi pi-plus" className="mr-2"  /></Link>
+            <Link href="/questions/create"><Button icon="pi pi-plus" className="mr-2"  /></Link>
             <Button icon="pi pi-upload" />
         </React.Fragment>
     );
