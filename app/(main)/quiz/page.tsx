@@ -13,6 +13,7 @@ import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from "primereact/treeselect";
 import { useRouter } from 'next/navigation';
+import React, { Fragment } from 'react';
 
 
 const QuizPage: React.FC = () => {
@@ -41,7 +42,7 @@ const QuizPage: React.FC = () => {
       try {
         const responseData = await QuizService.getQuizInProgress();
         if (responseData.message === "Quiz not found") {
-          setQuiz(false);return;
+          setQuiz(null);return;
         }
         setQuiz(responseData);
           // Initialize selectedOptions with keys for each mcq.id set to null
@@ -101,14 +102,52 @@ useEffect(()=>{
       setTopicNodes(nodes);
 }, [listOfTopics])
 
+const confirmExit = () => {
+  // Logic to handle exiting the quiz and saving progress
+  console.log("Quiz exited. Progress saved.");
+  setVisible(false);
+  setQuiz(false);
+};
+
+const cancelExit = () => {
+  setVisible(false);
+};
+
+const cancelFooter = (
+  <div>
+      <Button label='Cancel' icon='pi pi-times' onClick={cancelExit} className='p-button-text' />
+      <Button label='Save' icon='pi pi-save' onClick={confirmExit} autoFocus />
+  </div>
+);
+
+const renderField = (labelTextName: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => (
+  <div className='field grid'>
+      <label htmlFor={labelTextName} className='col-12 mb-2 md:col-2 md:mb-0'>
+          {labelTextName}
+      </label>
+      <div className='col-12 md:col-10'>
+          <InputText placeholder={labelTextName} style={{ width: '30vw' }} value={value} onChange={onChange} />
+      </div>
+  </div>
+);
+
+const [visible, setVisible] = useState(false);
+
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <h5>Quizzes</h5>
+          <Fragment>
+          <Button icon='pi pi-times'text  style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={quiz}/>
+          </Fragment>
+          <Dialog header='Exit Quiz' style={{ width: '20vw' }} visible={visible} onHide={() => { visible && cancelExit(); }} footer={cancelFooter}>
+            Are you sure you want to save and exit?
+          </Dialog>
+        </div>
           {!quiz && (
             <div>
-                     <h5>Take Quiz</h5>
                         <br/>
                         <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
                             <TabPanel header="General Information">

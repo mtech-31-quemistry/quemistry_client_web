@@ -40,6 +40,7 @@ interface Option {
     pageSize: number;
     totalPages: number;
     totalRecords: number;
+    message?: string;
   }
 }
 
