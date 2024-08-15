@@ -63,21 +63,18 @@ const QuizPage: React.FC = () => {
       console.error(`Error submitting attempt for MCQ ID: ${mcqId}`, error);
     }
   };
-
-var currentQuestion = false;
-  try {
-    currentQuestion = data.mcqs[currentQuestionIndex];
-    
-  } catch (error) {
-    console.log('Error, try to start a quiz?');
-  }
-
+  
+  const currentQuestion = data?.mcqs?.[currentQuestionIndex];
+  const currentQuestionLength = data?.mcqs?.length ?? 0;
+ 
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < data.mcqs.length - 1) {
+    if (currentQuestionLength > 0) {
+     if (currentQuestionIndex < currentQuestionLength - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
-  };
-
+  }
+}
+ 
   return (
     <div className="grid">
       <div className="col-12">
