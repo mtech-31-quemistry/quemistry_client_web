@@ -12,9 +12,10 @@ declare namespace Questions {
         publishedBy?: string ;
         archivedOn?: Date,
         archivedBy?: string,
-        createdTs?: Date,
-        updatedTs?: Date,
+        updatedBy?: string,
+        updatedOn?: Date,
         createdBy?: string,
+        createdOn?: Date
 }
 
     interface Option{
