@@ -42,7 +42,7 @@ const QuizPage: React.FC = () => {
       try {
         const responseData = await QuizService.getQuizInProgress();
         setData(responseData);
-        console.log('responseData.message', responseData.message)
+        // console.log('responseData.message', responseData.message)
           if (responseData.message === 'Quiz not found') {
           setData(null);
           return;
