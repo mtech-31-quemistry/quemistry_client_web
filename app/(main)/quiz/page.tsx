@@ -20,7 +20,7 @@ const QuizPage: React.FC = () => {
   const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
   const [topicNodes, setTopicNodes] = useState<any>(null);
 
-  const [data, setData] = useState<Quiz.ApiResponse | null>(null);
+  const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
   const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -36,12 +36,14 @@ const QuizPage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<number>(0);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseData = await QuizService.getQuizInProgress();
-        setData(responseData);
+        if (responseData.message === "Quiz not found") {
+          setQuiz(false);return;
+        }
+        setQuiz(responseData);
           // Initialize selectedOptions with keys for each mcq.id set to null
         const initialSelectedOptions: { [key: number]: number | null } = {};
         responseData.mcqs.forEach((mcq) => {
@@ -64,8 +66,8 @@ const QuizPage: React.FC = () => {
     }
   };
   
-  const currentQuestion = data?.mcqs?.[currentQuestionIndex];
-  const currentQuestionLength = data?.mcqs?.length ?? 0;
+  const currentQuestion = quiz?.mcqs?.[currentQuestionIndex];
+  const currentQuestionLength = quiz?.mcqs?.length ?? 0;
  
   const handleNextQuestion = () => {
     if (currentQuestionLength > 0) {
@@ -75,24 +77,48 @@ const QuizPage: React.FC = () => {
   }
 }
  
+useEffect(()=>{
+  QuestionsService.getTopics().then((data) => {
+      console.log("topics initialized: ", data);
+      setListOfTopics(data);
+      
+  });
+}, [])
+
+useEffect(()=>{
+  var nodes = listOfTopics.map( topic => {
+          let  childnode: any[] = [];
+          if(topic.skills){
+              childnode = topic.skills.map( skill => {
+                  return { "key": topic.id+"-"+skill.id,
+                          "label": skill.name,
+                          "data": { "id": skill.id,"name": skill.name , "type": "skill", "topicId": topic.id}
+                          };
+                  });
+          }
+          return { "key" : topic.id, "label": topic.name, "data" : { "id":topic.id, "name": topic.name, "type": "topic"}, children : childnode }
+      });
+      setTopicNodes(nodes);
+}, [listOfTopics])
+
   return (
     <div className="grid">
       <div className="col-12">
         <div className="card">
           <h5>Quizzes</h5>
-          {!data && (
-            <div className="flex flex-wrap gap-2">
+          {!quiz && (
+            <div>
                      <h5>Take Quiz</h5>
                         <br/>
                         <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
                             <TabPanel header="General Information">
                                 <div className="grid"> 
-                                    <div className="col-12 md:col-12 mb-5">
+                                    <div className="col-12 md:col-6 mb-5">
                                         <TreeSelect value={selectedTopicNodes} onChange={(e)=> setSelectedTopicNodes(e.value)} options={topicNodes}
                                             className="md:w-50rem w-full"  metaKeySelection={false} selectionMode="checkbox" display="chip" placeholder="Select Topics / Skills"
                                             showClear></TreeSelect>
                                     </div>
-                                    <div className="col-12 md:col-12 mb-5">
+                                    <div className="col-12 md:col-6 mb-5">
                                     </div> 
                                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                         <Button label="Next" onClick={()=> {setActiveTab(1)}}></Button>
@@ -101,33 +127,53 @@ const QuizPage: React.FC = () => {
                             </TabPanel>
                             <TabPanel header="Options">
                                 <div className="grid"> 
-                                    <div className="col-12 md:col-12 mb-5">
+                                    <div className="col-12 md:col-6 mb-5">
                                       <p>Default question count will be two.</p>
                                     </div>
-                                    <div className="col-12 md:col-12 mb-5">
+                                    <div className="col-12 md:col-6 mb-5">
                                     </div> 
                                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                        <Button label="Next" onClick={()=> {setActiveTab(1)}}></Button>
+                                        <Button label="Next" onClick={()=> {setActiveTab(2)}}></Button>
+                                    </div>
+                                </div>
+                            </TabPanel>
+                            <TabPanel header="Review">
+                                <div className="grid"> 
+                                    <div className="col-12 md:col-6 mb-5">
+                                      <p>Default question count will be two.</p>
+                                    </div>
+                                    <div className="col-12 md:col-6 mb-5">
+                                    </div> 
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
+                                        <Button onClick={() => { 
+                                        let selectedTopics: number[] = [2]; 
+                                        let selectedSkills: number[] = [];   
+                                        if(selectedTopicNodes){
+                                          Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                                              console.log("key", key, "data", data);
+                                              let topic_skill = key.split("-");
+                                              if(topic_skill.length>1){
+                                                  selectedSkills.push(parseInt(topic_skill[1]));     
+                                              } else {
+                                                  selectedTopics.push(parseInt(topic_skill[0]));     
+                                              }
+                                          });
+                                      };
+                                        setIsDisabled(true);QuizService.startNewQuiz(selectedTopics);setTimeout(()=>{window.location.reload();},1500) } } 
+                                disabled={isDisabled}>
+                                {isDisabled ? 'Loading Quiz...' : 'Submit'}
+                                </Button>
                                     </div>
                                 </div>
                             </TabPanel>
                           </TabView>
-            <Button onClick={() => { setIsDisabled(true);QuizService.startNewQuiz([2]);setTimeout(()=>{window.location.reload();},1500) } } 
-            disabled={isDisabled}>
-            {isDisabled ? 'Reloading Page...' : 'Start a new Quiz'}
-            </Button>
+
             </div>
           )}
-          {/* {!data && (
-            <div className="flex flex-wrap gap-2">
-            <p>You currently have an ongoing quiz.</p>
-            <Button label="Resume Quiz" onClick={() => window.location.reload()}></Button>
-            </div>
-          )} */}
           {currentQuestion && (
             <div key={currentQuestion.id}>
               <div className="card">
-                <span className="question-id">Question {currentQuestion.id}: </span>
+                <span className="question-id">Question {currentQuestionIndex+1}: </span>
                 <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
               </div>
               <div className="card">
@@ -157,7 +203,7 @@ const QuizPage: React.FC = () => {
               </div>
               {selectedOptions[currentQuestion.id] !== null && (
                 <div className="flex flex-wrap gap-2">
-                  {currentQuestionIndex < data.mcqs.length - 1 ? (
+                  {currentQuestionIndex < quiz.mcqs.length - 1 ? (
                     <Button label="Next Question" onClick={handleNextQuestion}></Button>
                   ) : (
                     <>
