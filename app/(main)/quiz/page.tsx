@@ -174,7 +174,7 @@ const [visible, setVisible] = useState(false);
             Are you sure you want to exit the quiz?
           </Dialog>
         </div>
-          {!quiz && (
+          {!isQuizOngoing && (
             <div>
                         <br/>
                         <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
