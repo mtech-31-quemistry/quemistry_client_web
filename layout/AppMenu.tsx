@@ -13,20 +13,25 @@ const AppMenu = () => {
     const [isLogin, setIsLogin] = useState<boolean>(false);
 
     useEffect(()=>{
+        console.log("session login:", sessionStorage.getItem(IS_LOGIN));
         if(sessionStorage != undefined){
-            setIsLogin(sessionStorage.getItem(IS_LOGIN) == "true");
+            console.log("set login:",(sessionStorage.getItem(IS_LOGIN) == "true"));
+            if(sessionStorage.getItem(IS_LOGIN) == "true"){
+                setIsLogin(true);
+                console.log("session store",sessionStorage.getItem(USER));
+                setUser(JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile);
+            }else{
+                setUser(null);
+            }
         }else{
             setIsLogin(false);
-        }
-        if(isLogin){
-            setUser(JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile);
-        }else{
-            setUser(null);
         }
     },[]);
 
     const accessibleBy = (roles: string[]) => {
-        if(process.env.NODE_ENV === 'development') return true;
+        //if(process.env.NODE_ENV === 'development') return true;
+        console.log(roles);
+        console.log("user role:", user?.roles);
         return isLogin && user?.roles.some(role => roles.includes(role));
     }
     //customise list of menu items for quemistry
