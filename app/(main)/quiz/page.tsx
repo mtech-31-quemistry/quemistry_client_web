@@ -133,7 +133,7 @@ const confirmExit = () => {
   // Logic to handle exiting the quiz and saving progress
   console.log("Quiz exited. Progress saved.");
   setVisible(false);
-  if (quiz) {abandonQuiz() } else { console.error('Quiz is null, cannot abandon quiz.');}
+  abandonQuiz();
   setIsQuizOngoing(false);
   window.location.reload();
 };
@@ -214,7 +214,7 @@ const [visible, setVisible] = useState(false);
                                     </div> 
                                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                         <Button onClick={() => { 
-                                        let selectedTopics: number[] = [2]; 
+                                        let selectedTopics: number[] = []; 
                                         let selectedSkills: number[] = [];   
                                         if(selectedTopicNodes){
                                           Object.entries(selectedTopicNodes).forEach(([key, data]) => {
