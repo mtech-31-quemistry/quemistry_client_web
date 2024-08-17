@@ -27,8 +27,6 @@ const AppMenu = () => {
 
     const accessibleBy = (roles: string[]) => {
         if(process.env.NODE_ENV === 'development') return true;
-        console.log(roles);
-        console.log("user role:", user?.roles);
         return isLogin && user?.roles.some(role => roles.includes(role));
     }
     //customise list of menu items for quemistry
