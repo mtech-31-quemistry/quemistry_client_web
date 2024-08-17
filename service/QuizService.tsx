@@ -8,7 +8,7 @@ export const QuizService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': '12asd',
+          // 'x-user-id': '12asd',
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -34,7 +34,7 @@ export const QuizService = {
         `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=60`,
         {
           headers: {
-            'x-user-id': '12asd',
+            // 'x-user-id': '12asd',
           },
           credentials: "include"
         }
@@ -56,7 +56,7 @@ export const QuizService = {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'x-user-id': '12asd',
+            // 'x-user-id': '12asd',
           },
           body: JSON.stringify({
             attempt: 1,
@@ -78,7 +78,7 @@ export const QuizService = {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'x-user-id': '12asd',
+            // 'x-user-id': '12asd',
           }
         }
       );

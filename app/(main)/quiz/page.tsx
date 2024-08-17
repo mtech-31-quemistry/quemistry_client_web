@@ -170,7 +170,7 @@ const [visible, setVisible] = useState(false);
           <Fragment>
           <Button icon='pi pi-times'text  style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={isQuizOngoing}/>
           </Fragment>
-          <Dialog header='Exit Quiz' style={{ width: '20vw' }} visible={visible} onHide={() => { visible && cancelExit(); }} footer={cancelFooter}>
+          <Dialog header='Exit Quiz' style={{ width: '50vw' }} visible={visible} onHide={() => { visible && cancelExit(); }} footer={cancelFooter}>
             Are you sure you want to exit the quiz?
           </Dialog>
         </div>
