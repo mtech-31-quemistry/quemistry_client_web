@@ -77,8 +77,8 @@ export const QuizService = {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-             credentials: "include",
-          }
+          },
+          credentials: "include",
         }
       );
       console.log(`Attempt abandoned for Quiz ID: ${quizId}`);
