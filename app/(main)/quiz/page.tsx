@@ -135,6 +135,7 @@ const confirmExit = () => {
   setVisible(false);
   abandonQuiz();
   setIsQuizOngoing(false);
+  window.location.reload();
 };
 
 const cancelExit = () => {

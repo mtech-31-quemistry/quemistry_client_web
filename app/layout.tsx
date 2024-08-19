@@ -7,12 +7,19 @@ import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import { Suspense } from 'react';
+import { usePathname } from 'next/navigation';
+import { RouteGuard } from '@/lib/RouteGuard';
+import  { redirect } from 'next/navigation'
 
 interface RootLayoutProps {
     children: React.ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+    const pathname = usePathname();
+    if(!RouteGuard.apply(pathname)){
+        redirect('/');
+    }
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
