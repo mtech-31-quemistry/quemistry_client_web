@@ -2,11 +2,12 @@ import { Questions } from '@/types';
 
 const QuesionsSvcUrl = process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL || ''
 const retrieveQuestionUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/retrieve`
+const retrieveQuestionByIdUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/retrieve-by-ids`
 const QuestionsTopicsUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/topics`
 
 export const QuestionsService = {
     addMCQ(data : any) {
-        console.log("calling saveQuestion ", QuesionsSvcUrl, data);
+        console.log("calling API", QuesionsSvcUrl, data);
         return fetch(QuesionsSvcUrl, { 
                 method: 'POST', 
                 headers: { 
@@ -22,6 +23,7 @@ export const QuestionsService = {
             );
     },
     getMCQ() {
+        console.log("calling API", QuesionsSvcUrl);
         return fetch(QuesionsSvcUrl, { 
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -36,7 +38,30 @@ export const QuestionsService = {
             );
     },
     retrieveMCQ(data : Questions.RetrieveQuestionRequest) {
+        console.log("calling API", retrieveQuestionUrl, data);
         return fetch(retrieveQuestionUrl, { 
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                credentials: "include",
+                body: JSON.stringify(data)
+            })
+            .then((res) => {
+                if(res.status === 200)
+                    return res.json();
+                else{
+                    console.log("res", res);
+                    throw new Error(res.status + " retrieveMCQ");
+                }
+            })
+            .then((data) => {
+                return data.mcqs as Questions.MCQ[]}
+            );
+    },
+    retrieveMCQByIds(data : Questions.RetrieveQuestionRequest) {
+        console.log("calling API", retrieveQuestionByIdUrl, data);
+        return fetch(retrieveQuestionByIdUrl, { 
                 method: 'POST', 
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -49,6 +74,28 @@ export const QuestionsService = {
             })
             .then((data) => {
                 return data.mcqs as Questions.MCQ[]}
+            );
+    },
+    saveMCQ(data : any) {
+        console.log("calling API", QuesionsSvcUrl, data);
+        return fetch(QuesionsSvcUrl, { 
+                method: 'PATCH', 
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
+                credentials: "include",
+                body: JSON.stringify(data)
+            })
+            .then((res) => {
+                if(res.status === 200)
+                    return res.json();
+                else{
+                    console.log("res", res);
+                    throw new Error(res.status + " while saving MCQ");
+               }
+
+            }).then((data) => {
+                return data as Questions.MCQ}
             );
     },
     // for LOCAL dev

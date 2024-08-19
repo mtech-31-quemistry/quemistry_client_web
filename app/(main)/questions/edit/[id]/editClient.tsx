@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Questions } from '@/types';
-import { QuestionsService } from '../../../../service/QuestionsService';
+import { QuestionsService } from '../../../../../service/QuestionsService';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Editor, EditorTextChangeEvent } from "primereact/editor";
 import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
@@ -10,14 +10,20 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from "primereact/treeselect";
+import { useRouter } from 'next/navigation';
 // import { GetStaticPaths, GetStaticProps } from 'next';
-// import { useQuestion } from '../context/QuestionContext';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation'
+
+// import { usePathname, useSearchParams } from 'next/navigation'
 // import { useParams } from 'next/navigation'
 import { NextPage } from 'next';
 
-const EditQuestion = () => {
 
+interface MyComponentProps {
+    id: string;
+}
+  
+
+const EditQuestionClient: NextPage<MyComponentProps> = ({ id }) => {
 //     function generateStaticParams() {
 //     const posts = await fetch('https://.../posts').then((res) => res.json())
    
@@ -26,17 +32,43 @@ const EditQuestion = () => {
 //     }))
 //   }
 
-    // const { question }  = useQuestion();
-    // if (!question) {
-    //     console.log("No question selected");
-    //   }
-
     // const params = useParams<{ tag: string; id: string }>()
     const router = useRouter();
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
+    // const pathname = usePathname()
+    // const searchParams = useSearchParams()
    
-    // const { id } = router.query;
+    // useEffect(() => {
+    //   const url = `${pathname}?${searchParams}`
+    //   console.log(url)
+    // }, [pathname, searchParams])
+
+    // useEffect(() => {
+    //     console.log("params ", params)
+    //     console.log("id ", params.id)
+    //     const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
+    //         "ids":[Number(params.id)]
+    //     }
+    //     QuestionsService.retrieveMCQByIds(retrieveQuestionRequest).then((data) => {
+    //         console.log(data);
+    //         var mcq = data[0];
+    //         setStem(mcq.stem);
+    //     }).catch(()=>{
+    //     });
+    // }, [params]);
+
+    useEffect(() => {
+        // console.log("params ", params)
+        console.log("id ", id)
+        const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
+            "ids":[Number(id)]
+        }
+        QuestionsService.retrieveMCQByIds(retrieveQuestionRequest).then((data) => {
+            console.log(data);
+            var mcq = data[0];
+            setStem(mcq.stem);
+        }).catch(()=>{
+        });
+    }, [id]);
 
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
     const [topicNodes, setTopicNodes] = useState<any>(null);
@@ -48,11 +80,7 @@ const EditQuestion = () => {
     const [isAnswer, setIsAnswer] = useState<boolean>(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
-    const [questionStatus, setQuestionStatus] = useState<string>('');
-    const [questionId, setQuestionId] = useState<number>(0);
     const [activeTab, setActiveTab] = useState<number>(0);
-
-
 
     useEffect(()=>{
         QuestionsService.getTopics().then((data) => {
@@ -78,94 +106,7 @@ const EditQuestion = () => {
             setTopicNodes(nodes);
     }, [listOfTopics])
 
-    useEffect(() => {
-        const url = `${pathname}?${searchParams}`
-        console.log("url is", url)
-        
-  
-        
-        const params = new URLSearchParams(url.split('?')[1]);
-  
-        // Get the value of the 'id' parameter
-        const id = params.get('id');
-        setQuestionId(Number(id));
-      //   console.log("params ", params);
-      //   console.log("id ", params.id)
-        const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
-            "ids":[questionId]
-        }
-        QuestionsService.retrieveMCQByIds(retrieveQuestionRequest).then((data) => {
-            console.log("question to be edited is",data);
-            var mcq : Questions.MCQ= data[0];
-            setStem(mcq.stem);
-            setAddedOptions(mcq.options);
-            setQuestionStatus(mcq.status);
-            let currentTopicNodes : any = {};
-  
-              // var nodes = mcq.topics.map( topic => {
-              // let  childnode: any[] = [];
-  
-              // if(topic.skills){
-  
-              //     childnode = topic.skills.map( skill => {
-              //         return { "key": topic.id+"-"+skill.id,
-              //                 "label": skill.name,
-              //                 "data": { "id": skill.id,"name": skill.name , "type": "skill", "topicId": topic.id}
-              //                 };
-              //         });
-              // }
-              // return { "key" : topic.id, "label": topic.name, "data" : { "id":topic.id, "name": topic.name, "type": "topic"}, children : childnode }
-              // });
-              // setTopicNodes(nodes);
-          if(topicNodes){
-            console.log("ern topicNodes", topicNodes);
 
-            let skillList = mcq.skills.map(s => s.id);
-            mcq.topics.forEach(
-              t => {
-                    let topicId : number = t.id ?? 0;
-                    let topicSkillList = [];
-
-                    // let currentSkillNodes = [];
-                    t.skills.forEach(
-                        s => {
-                            let skillId : number = s.id ?? 0;
-                            if (skillList.includes(skillId)){
-                                topicSkillList.push(skillId);
-                                let key : String = `${topicId}-${skillId}`;
-                                currentTopicNodes[`${key}`] = {checked: true, partialChecked: false};
-                            }
-                        }
-                      
-                  );
-                //   console.log("ern topicNode", topicNodes[topicId].children);
-                //   console.log("length total",topicNodes[topicId].children.length, "length actual", topicSkillList.length);
-                  let isChecked = topicNodes[topicId].children.length === topicSkillList.length ;
-                  console.log("ern isTopicPartialChecked", isChecked);
-                  currentTopicNodes[`${topicId}`] = {checked: isChecked, partialChecked: !isChecked};
-              
-              }
-            )
-            console.log("topicNodes to be set", currentTopicNodes);
-            setSelectedTopicNodes(currentTopicNodes);
-          }
-  
-        })
-      //   .catch(()=>{
-      //   });
-      }, [pathname, searchParams, topicNodes]);
-
-    // useEffect(()=>{
-    //     console.log("question from context", question);
-    //     // console.log("selected topic", selectedTopicNodes);
-        
-    // }, [])
-
-    // useEffect(()=>{
-    //     console.log("question from context", question);
-    //     console.log("selected topic", selectedTopicNodes);
-        
-    // }, [selectedTopicNodes])
 
     const optionsItemTemplate = (option: Questions.Option) => {
         return(
@@ -263,7 +204,7 @@ const EditQuestion = () => {
 
     const handleOnClickDone =() => {
         console.log("handleOnClickDone");
-        console.log("selectedTopicNodes", selectedTopicNodes);
+        console.log(selectedTopicNodes);
         //validate
         const answer = addedOptions.filter((option: Questions.Option)=>{
             return option.isAnswer
@@ -274,7 +215,6 @@ const EditQuestion = () => {
         //populate skills for mcq
         let selectedTopics: number[] = []; 
         let selectedSkills: number[] = [];     
-  
         if(selectedTopicNodes){
             Object.entries(selectedTopicNodes).forEach(([key, data]) => {
                 console.log("key", key, "data", data);
@@ -288,22 +228,21 @@ const EditQuestion = () => {
         }
         //instantiate MCQ object before adding 
         let mcq = {
-            id: questionId,
             stem: stem,
             options: addedOptions,
             topics: selectedTopics,
             skills: selectedSkills,
-            status: questionStatus
         }
-
-        console.log("mcq to be updated ", mcq);
-        QuestionsService.saveMCQ(mcq).then((data) => {
+        console.log("mcq to be created ", mcq);
+        QuestionsService.addMCQ(mcq).then((data) => {
             console.log("saveQuestion response: ", data);
             router.push('/questions/searchlist');
-        });
+        })
         // .catch((e)=>{
         //     console.log("saveQuestion error: ", e);
-        // });
+        //     e.
+        // })
+        ;
     }
     return (
         <>
@@ -316,40 +255,9 @@ const EditQuestion = () => {
                         <TreeSelect value={selectedTopicNodes} onChange={(e)=> setSelectedTopicNodes(e.value)} options={topicNodes}
                             className="md:w-50rem w-full"  metaKeySelection={false} selectionMode="checkbox" display="chip" placeholder="Select Topics / Skills"
                             showClear></TreeSelect>
-                        {/* <FloatLabel>
-                            <MultiSelect id="ms-topics"
-                                        value={selectedTopics}
-                                        onChange={(e) => setSelectedTopics(e.value)}
-                                        options={listOfTopics}
-                                        optionLabel="name"
-                                        placeholder="Select Topics"
-                                        filter
-                                        display="chip"
-                                        className="w-full md:w-50rem"
-                                        maxSelectedLabels={3}
-                                    />
-                            <label htmlFor="ms-topics">Topics</label>
-                        </FloatLabel> */}
                     </div>
                     <div className="col-12 md:col-6 mb-5">
-                        {/* <FloatLabel>
-                            <MultiSelect
-                                        id="ms-skills"
-                                        value={selectedSkills}
-                                        onChange={(e) => setSelectedSkills(e.value)}
-                                        options={listOfSkills}
-                                        optionLabel="name"
-                                        placeholder="Select Skills"
-                                        filter
-                                        display="chip"
-                                        className="w-full md:w-50rem"
-                            />
-                            <label htmlFor="ms-skills">Skills</label>
-                        </FloatLabel> */}
                     </div> 
-                    {/* <div className="col-12">
-                        <Button label="Next" onClick={()=> {setActiveTab(1)}}></Button>
-                    </div> */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button label="Next" onClick={()=> {setActiveTab(1)}}></Button>
                     </div>
@@ -362,9 +270,6 @@ const EditQuestion = () => {
                         <Editor value={stem} onTextChange={(e: EditorTextChangeEvent) => setStem(e.htmlValue || '')} style={{ height: '320px' }} />
                         </div>
                     </div>
-                    {/* <div className="col-12">
-                        <Button label="Next" onClick={()=> {setActiveTab(2)}}></Button>
-                    </div> */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button label="Next" onClick={()=> {setActiveTab(2)}}></Button>
                     </div>
@@ -399,9 +304,6 @@ const EditQuestion = () => {
                                 <Column style={{ width: '5%' }} body={optionItemActionTemplate}></Column>
                             </DataTable>
                         </div>
-                        {/* <div className="col-12">
-                            <Button label="Next" onClick={()=> {setActiveTab(3)}}></Button>
-                         </div> */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button label="Next" onClick={()=> {setActiveTab(3)}}></Button>
                         </div>
@@ -436,17 +338,15 @@ const EditQuestion = () => {
 }
 
 
-export default EditQuestion;
-
-// function Nullable<T>(arg0: {}) {
-//     throw new Error("Function not implemented.");
-// }
+export default EditQuestionClient;
 
 // export  function generateStaticParams() {
-//     return [ { slug: [""] } ]
+//     return [ { id: [""] } ]
 //   }
 
-
+// export function generateStaticParams() {
+//     return [{ id: '1' }, { id: '2' }, { id: '3' }]
+//   }
 
 // export const getStaticPaths: GetStaticPaths = async () => {
 //     // Define some initial paths to be statically generated at build time

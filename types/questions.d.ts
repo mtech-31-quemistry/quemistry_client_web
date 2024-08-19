@@ -3,7 +3,7 @@ declare namespace Questions {
     interface MCQ {
         id?: number;
         stem: string;
-        option: Option[];
+        options: Option[];
         isAnswer: number;
         topics: Topic[];
         skills: Skills[];
@@ -42,8 +42,9 @@ declare namespace Questions {
     }
 
     interface RetrieveQuestionRequest {
+        ids?: number[];
         pageNumber?: number;
-        pageSize?: number
+        pageSize?: number;
     }
 }
 
