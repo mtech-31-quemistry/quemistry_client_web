@@ -1,13 +1,16 @@
 import { Quiz } from '@/types';
 
 export const QuizService = {
-  startNewQuiz: async (topics: number[], skills: number[]): Promise<Quiz.ApiResponse> => {
+  startNewQuiz: async (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-user-id': '12asd',
+          'x-user-email': 'andrewjtgh@gmail.com',
+          'x-user-roles': 'student',
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -17,6 +20,12 @@ export const QuizService = {
           pageSize: 60,
         }),
       });
+
+      if (response.status === 409) {
+        console.log('Conflict: Quiz could not be started due to a conflict.');
+        return false;
+      }
+
       const responseData: Quiz.ApiResponse = await response.json();
       console.log('Data fetched successfully:', responseData);
       return responseData;
@@ -34,6 +43,33 @@ export const QuizService = {
         {
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
+          },
+          credentials: "include"
+        }
+      );
+      const responseData: Quiz.ApiResponse = await response.json();
+      console.log('Data fetched successfully:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  },
+
+  getQuizCompleted: async (): Promise<Quiz.ApiResponse> => {
+    try {
+      console.log('Fetching data from API...');
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/completed?pageNumber=0&pageSize=60`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include"
         }
@@ -55,6 +91,9 @@ export const QuizService = {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include",
           body: JSON.stringify({
@@ -77,6 +116,9 @@ export const QuizService = {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include",
         }

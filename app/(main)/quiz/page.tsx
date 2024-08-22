@@ -15,7 +15,9 @@ import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from "primereact/treeselect";
 import { useRouter } from 'next/navigation';
 import React, { Fragment } from 'react';
-
+import { InputNumber } from 'primereact/inputnumber';
+import { TreeTable } from 'primereact/treetable';
+import { InputTextarea } from 'primereact/inputtextarea'; // Correct import statement
 
 const QuizPage: React.FC = () => {
   const router = useRouter();
@@ -162,6 +164,34 @@ const renderField = (labelTextName: string, value: string, onChange: (e: React.C
 
 const [visible, setVisible] = useState(false);
 
+const [questionCount, setQuestionCount] = useState<number | null>(null);
+
+const getNodeName = (key) => {
+  const findNode = (nodes, key) => {
+      for (const node of nodes) {
+          if (node.key == key) {
+              return node.data.name;
+          }
+          if (node.children) {
+              const result = findNode(node.children, key);
+              if (result) return result;
+          }
+      }
+      return null;
+  };
+
+  return findNode(topicNodes, key);
+};
+
+const renderSelectedNodes = () => {
+  if (!selectedTopicNodes) return '';
+
+  return Object.entries(selectedTopicNodes).map(([key, data]) => {
+      const name = getNodeName(key);
+      return `${name}\n`;
+  }).join('');
+};
+
   return (
     <div className="grid">
       <div className="col-12">
@@ -194,23 +224,37 @@ const [visible, setVisible] = useState(false);
                                 </div>
                             </TabPanel>
                             <TabPanel header="Options">
-                                <div className="grid"> 
-                                    <div className="col-12 md:col-6 mb-5">
-                                      <p>Default question count will be two.<br/></p>
-                                    </div>
-                                    <div className="col-12 md:col-6 mb-5">
-                                    </div> 
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                        <Button label="Next" onClick={()=> {setActiveTab(2)}}></Button>
-                                    </div>
-                                </div>
-                            </TabPanel>
+                  <div className="grid">
+                    <div className="col-12 md:col-6 mb-5">
+                      <p>Default question count will be two.<br /></p>
+                    </div>
+                    <div className="col-12 md:col-6 mb-5">
+                      <InputNumber
+                        value={questionCount}
+                        onValueChange={(e) => setQuestionCount(e.value)}
+                        placeholder="Enter count (0-100)"
+                      />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
+                      <Button label="Next" onClick={() => setActiveTab(2)}></Button>
+                    </div>
+                  </div>
+                </TabPanel>
                             <TabPanel header="Review">
                                 <div className="grid"> 
                                     <div className="col-12 md:col-6 mb-5">
-                                      <p>Default question count will be two.</p>
+                                      <p>Question count:<br /></p>
                                     </div>
                                     <div className="col-12 md:col-6 mb-5">
+                                      <InputNumber
+                                        value={questionCount}
+                                        onValueChange={(e) => setQuestionCount(e.value)}
+                                        placeholder="2"
+                                        disabled
+                                      />
+                                    </div>
+                                    <div className="col-12 md:col-6 mb-5">
+                                      <InputTextarea value={renderSelectedNodes()} rows={5} cols={30} autoResize disabled />
                                     </div> 
                                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                         <Button onClick={() => { 
