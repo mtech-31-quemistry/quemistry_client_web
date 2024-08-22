@@ -1,5 +1,9 @@
 declare namespace Questions {
-
+    interface DropDownOption{
+        name: String
+        code: String
+    }
+    
     interface MCQ {
         id?: number;
         stem: string;

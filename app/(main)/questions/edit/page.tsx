@@ -15,6 +15,7 @@ import { TreeSelect, TreeSelectSelectionKeysType } from "primereact/treeselect";
 import { usePathname, useSearchParams, useRouter } from 'next/navigation'
 // import { useParams } from 'next/navigation'
 import { NextPage } from 'next';
+import { Dropdown } from "primereact/dropdown";
 
 const EditQuestion = () => {
 
@@ -48,11 +49,19 @@ const EditQuestion = () => {
     const [isAnswer, setIsAnswer] = useState<boolean>(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
-    const [questionStatus, setQuestionStatus] = useState<string>('');
+    const questionStatuses = [
+        {name:"DRAFT", code:"DRAFT"},
+        {name:"PUBLISHED", code:"PUBLISHED"},
+        {name:"ARCHIVED", code:"ARCHIVED"}
+    ];
+    const [questionStatus, setQuestionStatus] = useState<Questions.DropDownOption>({name:"",code:""});
     const [questionId, setQuestionId] = useState<number>(0);
     const [activeTab, setActiveTab] = useState<number>(0);
-
-
+    
+    const onChangeStatus = (e) => {
+        console.log("change status ", e);
+        setQuestionStatus(e.value);
+    };
 
     useEffect(()=>{
         QuestionsService.getTopics().then((data) => {
@@ -94,29 +103,17 @@ const EditQuestion = () => {
         const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
             "ids":[questionId]
         }
-        QuestionsService.retrieveMCQByIds(retrieveQuestionRequest).then((data) => {
+        QuestionsService.retrieveMCQByIds(retrieveQuestionRequest).then((data : Questions.MCQ[]) => {
+            if(data === null || data.length === 0){
+                return null;
+            }
             console.log("question to be edited is",data);
             var mcq : Questions.MCQ= data[0];
             setStem(mcq.stem);
             setAddedOptions(mcq.options);
-            setQuestionStatus(mcq.status);
+            setQuestionStatus(questionStatuses.filter(s => s.code === mcq.status)[0]);
             let currentTopicNodes : any = {};
   
-              // var nodes = mcq.topics.map( topic => {
-              // let  childnode: any[] = [];
-  
-              // if(topic.skills){
-  
-              //     childnode = topic.skills.map( skill => {
-              //         return { "key": topic.id+"-"+skill.id,
-              //                 "label": skill.name,
-              //                 "data": { "id": skill.id,"name": skill.name , "type": "skill", "topicId": topic.id}
-              //                 };
-              //         });
-              // }
-              // return { "key" : topic.id, "label": topic.name, "data" : { "id":topic.id, "name": topic.name, "type": "topic"}, children : childnode }
-              // });
-              // setTopicNodes(nodes);
           if(topicNodes){
             console.log("ern topicNodes", topicNodes);
 
@@ -140,7 +137,7 @@ const EditQuestion = () => {
                   );
                 //   console.log("ern topicNode", topicNodes[topicId].children);
                 //   console.log("length total",topicNodes[topicId].children.length, "length actual", topicSkillList.length);
-                  let isChecked = topicNodes[topicId].children.length === topicSkillList.length ;
+                  let isChecked = topicNodes[topicId] && (topicNodes[topicId].children.length === topicSkillList.length) ;
                   console.log("ern isTopicPartialChecked", isChecked);
                   currentTopicNodes[`${topicId}`] = {checked: isChecked, partialChecked: !isChecked};
               
@@ -155,17 +152,6 @@ const EditQuestion = () => {
       //   });
       }, [pathname, searchParams, topicNodes]);
 
-    // useEffect(()=>{
-    //     console.log("question from context", question);
-    //     // console.log("selected topic", selectedTopicNodes);
-        
-    // }, [])
-
-    // useEffect(()=>{
-    //     console.log("question from context", question);
-    //     console.log("selected topic", selectedTopicNodes);
-        
-    // }, [selectedTopicNodes])
 
     const optionsItemTemplate = (option: Questions.Option) => {
         return(
@@ -293,7 +279,7 @@ const EditQuestion = () => {
             options: addedOptions,
             topics: selectedTopics,
             skills: selectedSkills,
-            status: questionStatus
+            status: questionStatus.code
         }
 
         console.log("mcq to be updated ", mcq);
@@ -420,6 +406,13 @@ const EditQuestion = () => {
                         </DataTable>
                     </div>
                     <div className="col-9 md:col-11">&nbsp;</div>
+                    <div>
+                    <div className="pl-5">
+                    {/* <p>Question Status: {questionStatus} </p> */}
+                    Question Status: <Dropdown value={questionStatus} options={questionStatuses} onChange={onChangeStatus} optionLabel="name" placeholder={questionStatus} />
+                        {/* {selectedCity && <p>Selected City: {selectedCity.name}</p>} */}
+                    </div>
+                    </div>
                     {/* <div className="col-1">
                         <Button label="Done" onClick={handleOnClickDone}></Button>
                     </div> */}
