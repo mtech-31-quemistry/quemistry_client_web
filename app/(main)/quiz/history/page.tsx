@@ -1,4 +1,3 @@
-// app/quiz/history/page.tsx
 'use client';
 import { Quiz } from '@/types';
 import React, { useEffect, useState } from 'react';
