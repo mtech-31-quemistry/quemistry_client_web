@@ -1,7 +1,7 @@
 import { Quiz } from '@/types';
 
 export const QuizService = {
-  startNewQuiz: async (topics: number[], skills: number[]): Promise<Quiz.ApiResponse> => {
+  startNewQuiz: async (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
@@ -20,6 +20,12 @@ export const QuizService = {
           pageSize: 60,
         }),
       });
+
+      if (response.status === 409) {
+        console.log('Conflict: Quiz could not be started due to a conflict.');
+        return false;
+      }
+
       const responseData: Quiz.ApiResponse = await response.json();
       console.log('Data fetched successfully:', responseData);
       return responseData;
