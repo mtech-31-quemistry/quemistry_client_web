@@ -166,8 +166,8 @@ const [visible, setVisible] = useState(false);
 
 const [questionCount, setQuestionCount] = useState<number | null>(null);
 
-const getNodeName = (key) => {
-  const findNode = (nodes, key) => {
+const getNodeName = (key: string) => {
+  const findNode = (nodes: any[], key: string): string | null => {
       for (const node of nodes) {
           if (node.key == key) {
               return node.data.name;
@@ -229,9 +229,16 @@ const renderSelectedNodes = () => {
                       <p>Default question count will be two.<br /></p>
                     </div>
                     <div className="col-12 md:col-6 mb-5">
-                      <InputNumber
+                    <InputNumber
                         value={questionCount}
-                        onValueChange={(e) => setQuestionCount(e.value)}
+                        onValueChange={(e) => {
+                          const value = e.value;
+                          if (typeof value === 'number' || value === null) {
+                            setQuestionCount(value);
+                          } else {
+                            setQuestionCount(null); // Handle unexpected types
+                          }
+                        }}
                         placeholder="Enter count (0-100)"
                       />
                     </div>
@@ -248,7 +255,7 @@ const renderSelectedNodes = () => {
                                     <div className="col-12 md:col-6 mb-5">
                                       <InputNumber
                                         value={questionCount}
-                                        onValueChange={(e) => setQuestionCount(e.value)}
+                                        onValueChange={(e) => setQuestionCount(e.value ?? null)}
                                         placeholder="2"
                                         disabled
                                       />

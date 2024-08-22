@@ -53,7 +53,7 @@ export const QuizService = {
     }
   },
 
-  getQuizCompleted: async (): Promise<Quiz.ApiResponse> => {
+  getQuizCompleted: async (): Promise<Quiz.CompletedResponse> => {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(
@@ -65,7 +65,7 @@ export const QuizService = {
           credentials: "include"
         }
       );
-      const responseData: Quiz.ApiResponse = await response.json();
+      const responseData: Quiz.CompletedResponse = await response.json();
       console.log('Data fetched successfully:', responseData);
       return responseData;
     } catch (error) {

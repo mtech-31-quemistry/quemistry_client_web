@@ -36,11 +36,22 @@ interface Option {
   interface ApiResponse {
     id: number;
     mcqs: Mcq[];
+    status: string;
+    points: number;
     pageNumber: number;
     pageSize: number;
     totalPages: number;
     totalRecords: number;
     message?: string;
+  }
+
+  interface CompletedResponse {
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    totalRecords: number;
+    message?: string;
+    quizzes: Quiz[];
   }
 }
 
