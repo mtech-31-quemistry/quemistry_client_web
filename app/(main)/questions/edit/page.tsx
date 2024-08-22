@@ -409,7 +409,7 @@ const EditQuestion = () => {
                     <div>
                     <div className="pl-5">
                     {/* <p>Question Status: {questionStatus} </p> */}
-                    Question Status: <Dropdown value={questionStatus} options={questionStatuses} onChange={onChangeStatus} optionLabel="name" placeholder={questionStatus} />
+                    Question Status: <Dropdown value={questionStatus} options={questionStatuses} onChange={onChangeStatus} optionLabel="name" placeholder={questionStatus.name.toString()} />
                         {/* {selectedCity && <p>Selected City: {selectedCity.name}</p>} */}
                     </div>
                     </div>
