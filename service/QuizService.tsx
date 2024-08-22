@@ -8,6 +8,9 @@ export const QuizService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-user-id': '12asd',
+          'x-user-email': 'andrewjtgh@gmail.com',
+          'x-user-roles': 'student',
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -34,6 +37,33 @@ export const QuizService = {
         {
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
+          },
+          credentials: "include"
+        }
+      );
+      const responseData: Quiz.ApiResponse = await response.json();
+      console.log('Data fetched successfully:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  },
+
+  getQuizCompleted: async (): Promise<Quiz.ApiResponse> => {
+    try {
+      console.log('Fetching data from API...');
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/completed?pageNumber=0&pageSize=60`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include"
         }
@@ -55,6 +85,9 @@ export const QuizService = {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include",
           body: JSON.stringify({
@@ -77,6 +110,9 @@ export const QuizService = {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include",
         }
