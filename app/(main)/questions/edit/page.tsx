@@ -58,7 +58,7 @@ const EditQuestion = () => {
     const [questionId, setQuestionId] = useState<number>(0);
     const [activeTab, setActiveTab] = useState<number>(0);
     
-    const onChangeStatus = (e) => {
+    const onChangeStatus = (e : any) => {
         console.log("change status ", e);
         setQuestionStatus(e.value);
     };
