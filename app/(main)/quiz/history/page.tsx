@@ -13,7 +13,7 @@ const QuizHistory: React.FC = () => {
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
-                if (responseData.message === "History not found") {
+                if (responseData.message === 'History not found') {
                     return;
                 }
                 setQuiz(responseData);

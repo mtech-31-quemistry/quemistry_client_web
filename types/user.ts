@@ -9,3 +9,8 @@ interface Class {
     educationLevel: string;
     subject: string;
 }
+
+interface ClassResponse extends Class {
+    id: string;
+    userId: string;
+}

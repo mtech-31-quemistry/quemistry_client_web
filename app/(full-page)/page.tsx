@@ -48,7 +48,9 @@ const LandingPage = () => {
                             </li>
                         </ul>
                         <div className="flex justify-content-between lg:block border-top-1 lg:border-top-none surface-border py-3 lg:py-0 mt-3 lg:mt-0">
-                            <Link href="/auth/google" ><Button label="Sign in" text rounded className="border-none font-light line-height-2 text-blue-500"></Button></Link>
+                            <Link href="/auth/google">
+                                <Button label="Sign in" text rounded className="border-none font-light line-height-2 text-blue-500"></Button>
+                            </Link>
                             <Button label="Register" rounded className="border-none ml-5 font-light line-height-2 bg-blue-500 text-white"></Button>
                         </div>
                     </div>
@@ -66,7 +68,9 @@ const LandingPage = () => {
                             <span className="font-light block">MTECH SE 31</span>Quemistry
                         </h1>
                         <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Platform manages multiple choice questions to test and improve your knowlege in chemistry ... </p>
-                        <Link href="/dashboard"><Button type="button" label="Get Started" rounded className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button></Link>
+                        <Link href="/dashboard">
+                            <Button type="button" label="Get Started" rounded className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button>
+                        </Link>
                     </div>
                     <div className="flex justify-content-center md:justify-content-end">
                         <img src="/demo/images/landing/landingImage.jpg" alt="Hero Image" height={300} className="w-9 md:w-auto" />

@@ -5,9 +5,9 @@ import { classNames } from 'primereact/utils';
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
-import { IS_LOGIN } from "../lib/constants"
+import { IS_LOGIN } from '../lib/constants';
 import { Menu } from 'primereact/menu';
-import { GoogleSigninService } from '@/service/GoogleSignInService'
+import { GoogleSigninService } from '@/service/GoogleSignInService';
 import { useRouter } from 'next/navigation';
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
@@ -19,14 +19,14 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const [isLogin, setIsLogin] = useState(false);
     const router = useRouter();
 
-     useEffect(()=>{
-        if(sessionStorage != undefined && sessionStorage.getItem(IS_LOGIN) === "true"){
+    useEffect(() => {
+        if (sessionStorage != undefined && sessionStorage.getItem(IS_LOGIN) === 'true') {
             setIsLogin(true);
         }
         //if(!isLogin){
         //     redirect("/");
         // }
-    },[]);
+    }, []);
 
     useImperativeHandle(ref, () => ({
         menubutton: menubuttonRef.current,
@@ -48,22 +48,22 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         {
             label: 'Sign out',
             icon: 'pi pi-sign-out',
-            command: (e: any)=> {
+            command: (e: any) => {
                 GoogleSigninService.signOut()
-                .then(()=>{
-                    setIsLogin(false);
-                    router.push("/");
-                })
-                .catch((err)=>{
-                    setIsLogin(false);
-                    router.push("/");
-                    console.log("fail to logout.");
-                    console.log(err);
-                });
+                    .then(() => {
+                        setIsLogin(false);
+                        router.push('/');
+                    })
+                    .catch((err) => {
+                        setIsLogin(false);
+                        router.push('/');
+                        console.log('fail to logout.');
+                        console.log(err);
+                    });
             }
         }
     ];
-    
+
     return (
         <div className="layout-topbar">
             <Link href="/" className="layout-topbar-logo">
@@ -80,24 +80,29 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
             </button>
 
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                {isLogin || <Link href="/auth/google" ><button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-sign-in"></i>
-                    <span>Sign in</span>
-                </button></Link>
-                }
-                {!isLogin || <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-calendar"></i>
-                    <span>Calendar</span>
-                </button>
-                }
-                {!isLogin || 
+                {isLogin || (
+                    <Link href="/auth/google">
+                        <button type="button" className="p-link layout-topbar-button">
+                            <i className="pi pi-sign-in"></i>
+                            <span>Sign in</span>
+                        </button>
+                    </Link>
+                )}
+                {!isLogin || (
+                    <button type="button" className="p-link layout-topbar-button">
+                        <i className="pi pi-calendar"></i>
+                        <span>Calendar</span>
+                    </button>
+                )}
+                {!isLogin || (
                     <div>
                         <Menu ref={profilemenubuttonRef} model={overlayMenuItems} popup />
                         <button type="button" className="p-link layout-topbar-button" onClick={toggleProfileMenu}>
-                    <i className="pi pi-user"></i>
-                    <span>Profile</span>
-                </button></div>
-                }
+                            <i className="pi pi-user"></i>
+                            <span>Profile</span>
+                        </button>
+                    </div>
+                )}
                 <Link href="/documentation">
                     <button type="button" className="p-link layout-topbar-button">
                         <i className="pi pi-cog"></i>

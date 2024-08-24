@@ -183,7 +183,15 @@ const ListDemo = () => {
             <div className="col-12 xl:col-4">
                 <div className="card">
                     <h5>OrderList</h5>
-                    <OrderList dataKey='code' value={orderlistValue} listStyle={{ height: '200px' }} className="p-orderlist-responsive" header="Cities" itemTemplate={(item) => <div>{item.name}</div>} onChange={(e) => setOrderlistValue(e.value)}></OrderList>
+                    <OrderList
+                        dataKey="code"
+                        value={orderlistValue}
+                        listStyle={{ height: '200px' }}
+                        className="p-orderlist-responsive"
+                        header="Cities"
+                        itemTemplate={(item) => <div>{item.name}</div>}
+                        onChange={(e) => setOrderlistValue(e.value)}
+                    ></OrderList>
                 </div>
             </div>
         </div>

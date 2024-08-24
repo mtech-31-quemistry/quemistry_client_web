@@ -1,3 +1,5 @@
+import { json } from "stream/consumers";
+
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 
 export const UserService = {
@@ -6,11 +8,32 @@ export const UserService = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Cookie': 'QUESESSION=f1d94def-900a-4643-bce9-df86cc8b1d7c'
       },
       credentials: 'include',
       body: JSON.stringify(data)
     });
     console.log('res', res);
+  },
+
+  async getClasses() {
+    console.log('classUrl', classUrl);
+    const res = await fetch(classUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include'
+    });
+
+    console.log('res', res);
+    return (await (res.json() as Promise<UserServiceResponse<ClassResponse>>)).payload;
   }
 };
+
+interface UserServiceResponse<T> {
+  statusCode: string;
+  statusMessage: string;
+  serviceName: string;
+  errors: string[];
+  payload: T[];
+}

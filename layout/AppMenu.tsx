@@ -5,30 +5,30 @@ import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
 import { AppMenuItem } from '@/types';
-import { IS_LOGIN, USER } from '../lib/constants'
+import { IS_LOGIN, USER } from '../lib/constants';
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
     const [user, setUser] = useState<UserProfile | null>();
     const [isLogin, setIsLogin] = useState<boolean>(false);
 
-    useEffect(()=>{
-        if(sessionStorage != undefined){
-            if(sessionStorage.getItem(IS_LOGIN) == "true"){
+    useEffect(() => {
+        if (sessionStorage != undefined) {
+            if (sessionStorage.getItem(IS_LOGIN) == 'true') {
                 setIsLogin(true);
                 setUser(JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile);
-            }else{
+            } else {
                 setUser(null);
             }
-        }else{
+        } else {
             setIsLogin(false);
         }
-    },[]);
+    }, []);
 
     const accessibleBy = (roles: string[]) => {
-        if(process.env.NODE_ENV === 'development') return true;
-        return isLogin && user?.roles.some(role => roles.includes(role));
-    }
+        if (process.env.NODE_ENV === 'development') return true;
+        return isLogin && user?.roles.some((role) => roles.includes(role));
+    };
     //customise list of menu items for quemistry
     const model: AppMenuItem[] = [
         {
@@ -41,13 +41,13 @@ const AppMenu = () => {
         },
         {
             label: 'Manage',
-            items: [{ label: 'Questions', icon: 'pi pi-fw pi-question-circle', to: '/questions/searchlist', 
-                    visible: accessibleBy(['admin', 'tutor']) },
+            items: [
+                { label: 'Questions', icon: 'pi pi-fw pi-question-circle', to: '/questions/searchlist', visible: accessibleBy(['admin', 'tutor']) },
                 { label: 'Topics', icon: 'pi pi-fw pi-tags', to: '/questions/topics', visible: accessibleBy(['admin', 'tutor']) },
-                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: accessibleBy(['tutor']) },
+                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: accessibleBy(['tutor']) }
             ],
             visible: accessibleBy(['admin', 'tutor'])
-        },
+        }
     ];
 
     return (
@@ -60,7 +60,6 @@ const AppMenu = () => {
                 </ul>
             </MenuProvider>
         </Suspense>
-
     );
 };
 

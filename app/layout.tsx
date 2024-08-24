@@ -9,7 +9,7 @@ import '../styles/demo/Demos.scss';
 import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { RouteGuard } from '@/lib/RouteGuard';
-import  { redirect } from 'next/navigation'
+import { redirect } from 'next/navigation';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -17,7 +17,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
     const pathname = usePathname();
-    if(!RouteGuard.apply(pathname)){
+    if (!RouteGuard.apply(pathname)) {
         redirect('/');
     }
     return (
@@ -27,7 +27,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </head>
             <body>
                 <PrimeReactProvider>
-                    <Suspense><LayoutProvider>{children}</LayoutProvider></Suspense>
+                    <Suspense>
+                        <LayoutProvider>{children}</LayoutProvider>
+                    </Suspense>
                 </PrimeReactProvider>
             </body>
         </html>
