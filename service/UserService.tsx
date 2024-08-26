@@ -1,5 +1,3 @@
-import { json } from "stream/consumers";
-
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 
 export const UserService = {
@@ -16,7 +14,6 @@ export const UserService = {
   },
 
   async getClasses() {
-    console.log('classUrl', classUrl);
     const res = await fetch(classUrl, {
       method: 'GET',
       headers: {
