@@ -327,7 +327,7 @@ const QuizPage: React.FC = () => {
                                                 type="radio"
                                                 name={`mcq-${currentQuestion.id}`}
                                                 checked={selectedOptions[currentQuestion.id] === option.no}
-                                                onChange={() =>
+                                                onChange={() => 
                                                     setSelectedOptions({
                                                         ...selectedOptions,
                                                         [currentQuestion.id]: option.no
@@ -351,12 +351,11 @@ const QuizPage: React.FC = () => {
                                             label="Next Question"
                                             onClick={() => {
                                                 if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                                    submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                    submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
                                                     handleNextQuestion();
                                                 } else {
                                                     console.error('Quiz ID is undefined or selected option is null');
                                                 }
-                                                console.log(`Next question: ${selectedOptions[currentQuestion.id]}`);
                                             }}
                                         ></Button>
                                     ) : (
@@ -367,7 +366,7 @@ const QuizPage: React.FC = () => {
                                                     // label="Submit Quiz"
                                                     onClick={() => {
                                                         if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                                            submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                            submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
                                                             setIsDisabled(true)
                                                         } else {
                                                             console.error('Quiz ID is undefined or selected option is null');
