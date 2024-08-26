@@ -26,7 +26,7 @@ const QuizPage: React.FC = () => {
 
     const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
     const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
-    const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | null }>({});
+    const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
 
@@ -50,9 +50,9 @@ const QuizPage: React.FC = () => {
                 }
                 setQuiz(responseData);
                 // Initialize selectedOptions with keys for each mcq.id set to null
-                const initialSelectedOptions: { [key: number]: number | null } = {};
+                const initialSelectedOptions: { [key: number]: number | 0 } = {};
                 responseData.mcqs.forEach((mcq) => {
-                    initialSelectedOptions[mcq.id] = null;
+                    initialSelectedOptions[mcq.id] = 0;
                 });
                 setSelectedOptions(initialSelectedOptions);
             } catch (error) {
@@ -96,9 +96,9 @@ const QuizPage: React.FC = () => {
                 status: 'abandoned' // Assuming 'status' is a field in your quiz object
             }));
             // Reset selected options
-            const initialSelectedOptions: { [key: number]: number | null } = {};
+            const initialSelectedOptions: { [key: number]: number | 0 } = {};
             quiz.mcqs.forEach((mcq: any) => {
-                initialSelectedOptions[mcq.id] = null;
+                initialSelectedOptions[mcq.id] = 0;
             });
             setSelectedOptions(initialSelectedOptions);
         } catch (error) {
@@ -348,16 +348,25 @@ const QuizPage: React.FC = () => {
                                 <div className="flex flex-wrap gap-2">
                                     {currentQuestionIndex < quiz.mcqs.length - 1 ? (
                                         <Button label="Next Question" onClick={() => {
-                                            submitAttempt(quiz.id, currentQuestionIndex, selectedOptions[currentQuestion.id]);
-                                            handleNextQuestion();
+                                            if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                                submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                handleNextQuestion();
+                                            } else {
+                                                console.error("Quiz ID is undefined or selected option is null");
+                                            }
+                                            console.log(`Next question: ${selectedOptions[currentQuestion.id]}`);
                                         }}></Button>
                                     ) : (
                                         <>
                                             <div>
                                                 <p>No more questions in this quiz. Do you want to submit?</p>
-                                                <Button label="Submit Quiz" onClick={() =>
-                                                    submitAttempt(quiz.id, currentQuestionIndex, selectedOptions[currentQuestion.id])
-                                                }></Button>
+                                                <Button label="Submit Quiz" onClick={() => {
+                                                    if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                                        submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                    } else {
+                                                        console.error("Quiz ID is undefined or selected option is null");
+                                                    }
+                                                }}></Button>
                                             </div>
                                         </>
                                     )}
