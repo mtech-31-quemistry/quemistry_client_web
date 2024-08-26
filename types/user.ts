@@ -11,6 +11,6 @@ interface Class {
 }
 
 interface ClassResponse extends Class {
-    id: string;
-    userId: string;
+    id: number;
+    userId: string | null;
 }

@@ -90,10 +90,7 @@ const Classes = () => {
                     </Dialog>
                     <h5>Manage Classes</h5>
                     <DataTable value={classes} tableStyle={{ minWidth: '20rem' }}>
-                        <Column field="code" header="Class Code" />
-                        <Column field="educationLevel" header="Education Level" />
-                        <Column field="subject" header="Subject" />
-                        <Column field="description" header="Description" />
+                        { classMapList.map(({ descriptionName, apiName }) => <Column field={apiName} header={descriptionName.split(' ')[1]} />) }
                     </DataTable>
                 </div>
             </div>
