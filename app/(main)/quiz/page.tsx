@@ -347,26 +347,32 @@ const QuizPage: React.FC = () => {
                             {selectedOptions[currentQuestion.id] !== null && (
                                 <div className="flex flex-wrap gap-2">
                                     {currentQuestionIndex < quiz.mcqs.length - 1 ? (
-                                        <Button label="Next Question" onClick={() => {
-                                            if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                                submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
-                                                handleNextQuestion();
-                                            } else {
-                                                console.error("Quiz ID is undefined or selected option is null");
-                                            }
-                                            console.log(`Next question: ${selectedOptions[currentQuestion.id]}`);
-                                        }}></Button>
+                                        <Button
+                                            label="Next Question"
+                                            onClick={() => {
+                                                if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                                    submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                    handleNextQuestion();
+                                                } else {
+                                                    console.error('Quiz ID is undefined or selected option is null');
+                                                }
+                                                console.log(`Next question: ${selectedOptions[currentQuestion.id]}`);
+                                            }}
+                                        ></Button>
                                     ) : (
                                         <>
                                             <div>
                                                 <p>No more questions in this quiz. Do you want to submit?</p>
-                                                <Button label="Submit Quiz" onClick={() => {
-                                                    if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                                        submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
-                                                    } else {
-                                                        console.error("Quiz ID is undefined or selected option is null");
-                                                    }
-                                                }}></Button>
+                                                <Button
+                                                    label="Submit Quiz"
+                                                    onClick={() => {
+                                                        if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                                            submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                        } else {
+                                                            console.error('Quiz ID is undefined or selected option is null');
+                                                        }
+                                                    }}
+                                                ></Button>
                                             </div>
                                         </>
                                     )}
