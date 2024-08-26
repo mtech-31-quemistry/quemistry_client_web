@@ -63,16 +63,16 @@ const QuizPage: React.FC = () => {
         fetchData();
     }, []);
 
-    const submitAttempt = async (mcqId: number) => {
-        try {
-            await QuizService.submitAttempt(mcqId);
-        } catch (error) {
-            console.error(`Error submitting attempt for MCQ ID: ${mcqId}`, error);
-        }
-    };
-
     const currentQuestion = quiz?.mcqs?.[currentQuestionIndex];
     const currentQuestionLength = quiz?.mcqs?.length ?? 0;
+
+    const submitAttempt = async (quizId: number, mcqId: number, attempt: number) => {
+        try {
+            await QuizService.submitAttempt(quizId, mcqId, attempt);
+        } catch (error) {
+            console.error(`Error submitting attempt for MCQ`, error);
+        }
+    };
 
     const handleNextQuestion = () => {
         if (currentQuestionLength > 0) {
@@ -347,12 +347,17 @@ const QuizPage: React.FC = () => {
                             {selectedOptions[currentQuestion.id] !== null && (
                                 <div className="flex flex-wrap gap-2">
                                     {currentQuestionIndex < quiz.mcqs.length - 1 ? (
-                                        <Button label="Next Question" onClick={handleNextQuestion}></Button>
+                                        <Button label="Next Question" onClick={() => {
+                                            submitAttempt(quiz.id, currentQuestionIndex, selectedOptions[currentQuestion.id]);
+                                            handleNextQuestion();
+                                        }}></Button>
                                     ) : (
                                         <>
                                             <div>
                                                 <p>No more questions in this quiz. Do you want to submit?</p>
-                                                <Button label="Submit Quiz" onClick={() => submitAttempt(currentQuestion.id)}></Button>
+                                                <Button label="Submit Quiz" onClick={() =>
+                                                    submitAttempt(quiz.id, currentQuestionIndex, selectedOptions[currentQuestion.id])
+                                                }></Button>
                                             </div>
                                         </>
                                     )}

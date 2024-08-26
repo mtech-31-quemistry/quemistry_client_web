@@ -8,6 +8,9 @@ export const QuizService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-user-id': '12asd',
+          'x-user-email': 'andrewjtgh@gmail.com',
+          'x-user-roles': 'student',
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -40,6 +43,9 @@ export const QuizService = {
         {
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include"
         }
@@ -53,7 +59,7 @@ export const QuizService = {
     }
   },
 
-  getQuizCompleted: async (): Promise<Quiz.CompletedResponse> => {
+  getQuizCompleted: async (): Promise<Quiz.ApiResponse> => {
     try {
       console.log('Fetching data from API...');
       const response = await fetch(
@@ -61,11 +67,14 @@ export const QuizService = {
         {
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include"
         }
       );
-      const responseData: Quiz.CompletedResponse = await response.json();
+      const responseData: Quiz.ApiResponse = await response.json();
       console.log('Data fetched successfully:', responseData);
       return responseData;
     } catch (error) {
@@ -74,22 +83,25 @@ export const QuizService = {
     }
   },
 
-  submitAttempt: async (mcqId: number): Promise<void> => {
+  submitAttempt: async (quizId:number, mcqId: number, attempt: number): Promise<void> => {
     try {
       await fetch(
-        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/2/mcqs/${mcqId}/attempt`,
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/${quizId}/mcqs/${mcqId}/attempt`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include",
           body: JSON.stringify({
-            attempt: 1,
+            attempt: {attempt},
           }),
         }
       );
-      console.log(`Attempt submitted for MCQ ID: ${mcqId}`);
+      console.log(`Attempt submitted for MCQ ID: ${mcqId} option: ${attempt}`);
     } catch (error) {
       console.error(`Error submitting attempt for MCQ ID: ${mcqId}`, error);
       throw error;
@@ -104,6 +116,9 @@ export const QuizService = {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
+            'x-user-email': 'andrewjtgh@gmail.com',
+            'x-user-roles': 'student',
+            'x-user-id': '12asd',
           },
           credentials: "include",
         }
