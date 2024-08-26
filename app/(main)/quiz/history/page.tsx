@@ -30,7 +30,7 @@ const QuizHistory: React.FC = () => {
             <div className="col-12">
                 <div className="card">
                     <h5>Quizzes</h5>
-                    <p>You currently have completed {quiz?.quizzes.length || 0} quizzes.</p>
+                    <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
                     <DataTable value={quiz?.quizzes} tableStyle={{ minWidth: '50rem' }}>
                         <Column field="id" header="Quiz Id"></Column>
                         <Column field="points" header="Points"></Column>
