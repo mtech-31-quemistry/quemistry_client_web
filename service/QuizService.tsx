@@ -85,7 +85,7 @@ export const QuizService = {
           },
           credentials: "include",
           body: JSON.stringify({
-            attempt: {attempt},
+            attemptOption: attempt,
           }),
         }
       );

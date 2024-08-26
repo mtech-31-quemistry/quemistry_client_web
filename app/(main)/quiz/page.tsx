@@ -362,17 +362,20 @@ const QuizPage: React.FC = () => {
                                     ) : (
                                         <>
                                             <div>
-                                                <p>No more questions in this quiz. Do you want to submit?</p>
+                                                <p>No more questions in this quiz. Click to submit.</p>
                                                 <Button
-                                                    label="Submit Quiz"
+                                                    // label="Submit Quiz"
                                                     onClick={() => {
                                                         if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
                                                             submitAttempt(quiz.id, currentQuestionIndex + 1, selectedOptions[currentQuestion.id]);
+                                                            setIsDisabled(true)
                                                         } else {
                                                             console.error('Quiz ID is undefined or selected option is null');
                                                         }
-                                                    }}
-                                                ></Button>
+                                                    }} disabled={isDisabled}
+                                                >
+                                                    {isDisabled ? 'Quiz Submitted' : 'Submit Quiz' }
+                                                </Button>
                                             </div>
                                         </>
                                     )}
