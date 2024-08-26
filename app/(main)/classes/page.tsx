@@ -1,34 +1,38 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
+
 import { Button } from 'primereact/button';
-import React, { Fragment, useEffect, useState } from 'react';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import React, { Fragment, useEffect, useState } from 'react';
 import { UserService } from '@/service/UserService';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+
+interface ClassMap {
+    descriptionName: string;
+    apiName: string;
+    defaultValue: string;
+    value: string;
+    setValue: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const Classes = () => {
     const [addClass, setAddClass] = useState(false);
     const [classes, setClasses] = useState<ClassResponse[]>([]);
 
-    interface ClassMap {
-        descriptionName: string;
-        apiName: string;
-        defaultValue: string;
-        value: string;
-        setValue: React.Dispatch<React.SetStateAction<string>>;
-    }
+    useEffect(() => {
+        fetchClasses();
+    });
 
-    const useGenerateClassMap = (descriptionName: string, apiName: string, defaultValue: string): ClassMap => {
+    const useGenerateClassMap = (descriptionName: string, apiName: string, defaultValue = ''): ClassMap => {
         const [value, setValue] = useState(defaultValue);
         return { descriptionName, apiName, defaultValue, value, setValue };
     };
 
-    const classMapList: ClassMap[] = [
-        useGenerateClassMap('Class Code', 'code', ''),
-        useGenerateClassMap('Class Description', 'description', ''),
-        useGenerateClassMap('Class Education Level', 'educationLevel', ''),
+    const classMapList = [
+        useGenerateClassMap('Class Code', 'code'),
+        useGenerateClassMap('Class Description', 'description'),
+        useGenerateClassMap('Class Education Level', 'educationLevel'),
         useGenerateClassMap('Class Subject', 'subject', 'Chemistry')
     ];
 
@@ -37,20 +41,13 @@ const Classes = () => {
         classMapList.forEach(({ setValue, defaultValue }) => setValue(defaultValue));
     };
 
+    const fetchClasses = async () => setClasses(await UserService.getClasses());
+
     const saveClass = async () => {
-        await UserService.addClass(classMapList.reduce((result, { apiName, value }) => ({ ...result, [apiName]: value }), {}) as Class);
+        await UserService.addClass(classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class);
         clearNewClass();
         await fetchClasses();
     };
-
-    const fetchClasses = async () => {
-        const classes = await UserService.getClasses();
-        setClasses(classes);
-    };
-
-    useEffect(() => {
-        fetchClasses();
-    }, []);
 
     const addClassFooter = (
         <div>
@@ -77,21 +74,19 @@ const Classes = () => {
                     <Fragment>
                         <Button label="New" icon="pi pi-plus" onClick={() => setAddClass(true)} />
                     </Fragment>
-                    <Dialog
-                        header="Add Class"
-                        style={{ width: '50vw' }}
-                        visible={addClass}
-                        onHide={() => {
-                            addClass && clearNewClass();
-                        }}
-                        footer={addClassFooter}
-                    >
+                    <Dialog header="Add Class" style={{ width: '50vw' }} visible={addClass} onHide={() => addClass && clearNewClass()} footer={addClassFooter}>
                         {classMapList.map(({ descriptionName, value, setValue }) => renderField(descriptionName, value, ({ target }) => setValue(target.value)))}
                     </Dialog>
                     <h5>Manage Classes</h5>
                     <DataTable value={classes} tableStyle={{ minWidth: '20rem' }}>
                         {classMapList.map(({ descriptionName, apiName }) => (
-                            <Column field={apiName} header={descriptionName.split(' ')[1]} />
+                            <Column
+                                field={apiName}
+                                header={descriptionName
+                                    .split(' ')
+                                    .filter((_, index) => index !== 0)
+                                    .join(' ')}
+                            />
                         ))}
                     </DataTable>
                 </div>
