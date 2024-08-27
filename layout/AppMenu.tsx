@@ -50,7 +50,7 @@ const AppMenu = () => {
         },
         {
             label: 'Google AI',
-            items: [{ label: 'Generate Question', icon: 'pi pi-fw pi-microchip-ai', to: '/questions/genai', visible: accessibleBy(['admin', 'tutor']) }],
+            items: [{ label: 'Generate Question', icon: 'pi pi-fw pi-microchip-ai', to: '/genai', visible: accessibleBy(['admin', 'tutor']) }],
             visible: accessibleBy(['admin', 'tutor'])
         }
     ];
