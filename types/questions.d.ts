@@ -46,7 +46,8 @@ declare namespace Questions {
     }
 
     interface RetrieveQuestionRequest {
-        ids?: number[];
+        topics?: number[];
+        skills?: number[];
         pageNumber?: number;
         pageSize?: number;
     }

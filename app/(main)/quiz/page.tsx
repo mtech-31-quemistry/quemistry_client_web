@@ -23,6 +23,8 @@ const QuizPage: React.FC = () => {
     const router = useRouter();
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
     const [topicNodes, setTopicNodes] = useState<any>(null);
+    const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
+    const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
 
     const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
     const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
@@ -159,7 +161,8 @@ const QuizPage: React.FC = () => {
 
     const [visible, setVisible] = useState(false);
 
-    const [questionCount, setQuestionCount] = useState<number | null>(null);
+    const [selectedQuestionCount, setSelectedQuestionCount] = useState<number>(0);
+    const [generatedQuestionCount, setGeneratedQuestionCount] = useState<number>(0);
 
     const getNodeName = (key: string) => {
         const findNode = (nodes: any[], key: string): string | null => {
@@ -188,6 +191,64 @@ const QuizPage: React.FC = () => {
             })
             .join('');
     };
+
+
+    useEffect(() => {
+        let newSelectedTopics: number[] = [];
+        let newSelectedSkills: number[] = [];
+
+        if (selectedTopicNodes) {
+            Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                let topic_skill = key.split('-');
+                if (topic_skill.length > 1) {
+                    newSelectedSkills.push(parseInt(topic_skill[1]));
+                } else {
+                    newSelectedTopics.push(parseInt(topic_skill[0]));
+                }
+            });
+        }
+
+        setSelectedTopics(newSelectedTopics);
+        setSelectedSkills(newSelectedSkills);
+    }, [selectedTopicNodes]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (activeTab === 1) { // Assuming the "Options" tab has index 1
+                console.log('selectedTopics', selectedTopics);
+                console.log('selectedSkills', selectedSkills);
+    
+                const retrieveQuestionRequest = {
+                    topics: selectedTopics,
+                    skills: selectedSkills,
+                    pageNumber: 0,
+                    pageSize: 60
+                };
+    
+                console.log('retrieveQuestionRequest', retrieveQuestionRequest);
+                try {
+                    const mcqResponse = await QuestionsService.retrieveMCQ(retrieveQuestionRequest);
+                    console.log('mcqResponse', mcqResponse);
+    
+                        console.log('count', mcqResponse);
+                    if (mcqResponse && mcqResponse) {
+                        // Extract unique ids
+                        const uniqueIds = new Set(mcqResponse.map(mcq => mcq.id));
+                        const count = uniqueIds.size;
+                        setGeneratedQuestionCount(count);
+                    } else {
+                        setGeneratedQuestionCount(0);
+                    }
+                } catch (error) {
+                    console.error('Error retrieving MCQs:', error);
+                    setGeneratedQuestionCount(0);
+                }
+            }
+        };
+    
+        fetchData();
+    }, [activeTab, selectedTopics, selectedSkills]);
+
 
     return (
         <div className="grid">
@@ -244,22 +305,22 @@ const QuizPage: React.FC = () => {
                                     <div className="grid">
                                         <div className="col-12 md:col-6 mb-5">
                                             <p>
-                                                Default question count will be two.
+                                                {generatedQuestionCount} questions will be generated.
                                                 <br />
                                             </p>
                                         </div>
                                         <div className="col-12 md:col-6 mb-5">
                                             <InputNumber
-                                                value={questionCount}
+                                                value={selectedQuestionCount}
                                                 onValueChange={(e) => {
                                                     const value = e.value;
                                                     if (typeof value === 'number' || value === null) {
-                                                        setQuestionCount(value);
+                                                        setSelectedQuestionCount(value);
                                                     } else {
-                                                        setQuestionCount(null); // Handle unexpected types
+                                                        setSelectedQuestionCount(0); // Handle unexpected types
                                                     }
                                                 }}
-                                                placeholder="Enter count (0-100)"
+                                                placeholder={generatedQuestionCount}
                                             />
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
@@ -271,12 +332,12 @@ const QuizPage: React.FC = () => {
                                     <div className="grid">
                                         <div className="col-12 md:col-6 mb-5">
                                             <p>
-                                                Question count:
+                                            {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} questions will be generated.
                                                 <br />
                                             </p>
                                         </div>
                                         <div className="col-12 md:col-6 mb-5">
-                                            <InputNumber value={questionCount} onValueChange={(e) => setQuestionCount(e.value ?? null)} placeholder="2" disabled />
+                                            <InputNumber value={selectedQuestionCount} placeholder="0" disabled />
                                         </div>
                                         <div className="col-12 md:col-6 mb-5">
                                             <InputTextarea value={renderSelectedNodes()} rows={5} cols={30} autoResize disabled />
