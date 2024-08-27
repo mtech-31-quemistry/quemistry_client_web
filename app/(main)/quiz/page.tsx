@@ -305,7 +305,7 @@ const QuizPage: React.FC = () => {
                                     <div className="grid">
                                         <div className="col-12 md:col-6 mb-5">
                                             <p>
-                                                {generatedQuestionCount} questions will be generated.
+                                                {generatedQuestionCount} question(s) will be generated.
                                                 <br />
                                             </p>
                                         </div>
@@ -332,7 +332,7 @@ const QuizPage: React.FC = () => {
                                     <div className="grid">
                                         <div className="col-12 md:col-6 mb-5">
                                             <p>
-                                            {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} questions will be generated.
+                                            {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.
                                                 <br />
                                             </p>
                                         </div>

@@ -4,10 +4,83 @@ import React, { useEffect, useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { QuizService } from '../../../../service/QuizService';
+import { Tag } from 'primereact/tag';
 
+
+interface Topic {
+    id: number;
+    name: string;
+}
+
+interface Skill {
+    id: number;
+    name: string;
+}
+
+interface ProcessedQuiz {
+    id: number;
+    topicsCount: number;
+    skillsCount: number;
+    topics: Topic[];
+    skills: Skill[];
+    points: number;
+    mcqsCount: number;
+}
+
+const topicsBodyTemplate = (rowData: ProcessedQuiz) => {
+    return (
+        <React.Fragment>
+            {rowData.topics.map(topic => (
+                <Tag 
+                    key={topic.id} 
+                    style={{ marginRight: '1em' }} 
+                    severity="info" 
+                    value={topic.name}
+                />
+            ))}
+        </React.Fragment>
+    );
+};
+
+const skillsBodyTemplate = (rowData: ProcessedQuiz) => {
+    return (
+        <React.Fragment>
+            {rowData.skills.map(skill => (
+                <Tag 
+                    key={skill.id} 
+                    style={{ marginRight: '1em' }} 
+                    severity="warning" 
+                    value={skill.name}
+                />
+            ))}
+        </React.Fragment>
+    );
+};
+
+const achievementBodyTemplate = (rowData: ProcessedQuiz) => {
+    const totalPoints = rowData.mcqsCount;
+    const earnedPoints = rowData.points;
+    const percentage = (earnedPoints / totalPoints) * 100;
+
+    let severity: 'success' | 'warning' | 'danger' = 'danger'; // Default to danger
+    if (percentage >= 80) {
+        severity = 'success';
+    } else if (percentage >= 50) {
+        severity = 'warning';
+    }
+
+    return (
+        <Tag 
+            severity={severity} 
+            value={`Points: ${earnedPoints}/${totalPoints} (${percentage.toFixed(2)}%)`}
+        />
+    );
+};
+
+// Assuming QuizHistory component is defined elsewhere
 const QuizHistory: React.FC = () => {
     const [quiz, setQuiz] = useState<Quiz.CompletedResponse | null>(null);
-    const [processedQuizzes, setProcessedQuizzes] = useState<any[]>([]);
+    const [processedQuizzes, setProcessedQuizzes] = useState<ProcessedQuiz[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -20,12 +93,12 @@ const QuizHistory: React.FC = () => {
 
                 // Process the data to calculate counts and extract unique topics and skills
                 const processedData = responseData.quizzes.map(quiz => {
-                    const topicsMap = new Map<number, string>();
-                    const skillsMap = new Map<number, string>();
+                    const topicsMap = new Map<number, Topic>();
+                    const skillsMap = new Map<number, Skill>();
 
                     quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
-                        mcq.topics.forEach(topic => topicsMap.set(topic.id, topic.name));
-                        mcq.skills.forEach(skill => skillsMap.set(skill.id, skill.name));
+                        mcq.topics.forEach(topic => topicsMap.set(topic.id, topic));
+                        mcq.skills.forEach(skill => skillsMap.set(skill.id, skill));
                     });
 
                     return {
@@ -47,21 +120,6 @@ const QuizHistory: React.FC = () => {
         fetchData();
     }, []);
 
-    // Custom body template for topicsCount
-    const topicsBodyTemplate = (rowData: any) => {
-        return `Topics: ${rowData.topicsCount} (${rowData.topics.join(', ')})`;
-    };
-
-    // Custom body template for skillsCount
-    const skillsBodyTemplate = (rowData: any) => {
-        return `Skills: ${rowData.skillsCount} (${rowData.skills.join(', ')})`;
-    };
-
-    // Custom body template for achievement
-    const achievementBodyTemplate = (rowData: any) => {
-        return `Scoring: ${rowData.points} / ${rowData.mcqsCount}`;
-    };
-
     return (
         <div className="grid">
             <div className="col-12">
@@ -70,8 +128,8 @@ const QuizHistory: React.FC = () => {
                     <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
                     <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="id" sortOrder={1} defaultSortOrder={1}>
                         <Column field="id" header="Quiz Number" sortable></Column>
-                        <Column body={topicsBodyTemplate} header="Topic Count"></Column>
-                        <Column body={skillsBodyTemplate} header="Skill Count"></Column>
+                        <Column body={topicsBodyTemplate} header="Topics"></Column>
+                        <Column body={skillsBodyTemplate} header="Skills"></Column>
                         <Column body={achievementBodyTemplate} header="Achievement"></Column>
                     </DataTable>
                 </div>
