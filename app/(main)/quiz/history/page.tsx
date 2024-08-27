@@ -23,7 +23,7 @@ const QuizHistory: React.FC = () => {
                     const topicsMap = new Map<number, string>();
                     const skillsMap = new Map<number, string>();
 
-                    quiz.mcqs.forEach(mcq => {
+                    quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
                         mcq.topics.forEach(topic => topicsMap.set(topic.id, topic.name));
                         mcq.skills.forEach(skill => skillsMap.set(skill.id, skill.name));
                     });

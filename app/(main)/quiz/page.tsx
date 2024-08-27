@@ -316,7 +316,7 @@ const QuizPage: React.FC = () => {
                     {currentQuestion && (
                         <div key={currentQuestion.id}>
                             <div className="card">
-                                <span className="question-id">Question {currentQuestionIndex + 1}: </span>
+                                <span className="question-id">Question {currentQuestionIndex + 1} of {quiz.mcqs.length}: </span>
                                 <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
                             </div>
                             <div className="card">
