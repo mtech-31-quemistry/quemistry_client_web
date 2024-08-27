@@ -68,8 +68,8 @@ const QuizHistory: React.FC = () => {
                 <div className="card">
                     <h5>Quizzes</h5>
                     <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
-                    <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }}>
-                        <Column field="id" header="Quiz Number"></Column>
+                    <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="id" sortOrder={1} defaultSortOrder={1}>
+                        <Column field="id" header="Quiz Number" sortable></Column>
                         <Column body={topicsBodyTemplate} header="Topic Count"></Column>
                         <Column body={skillsBodyTemplate} header="Skill Count"></Column>
                         <Column body={achievementBodyTemplate} header="Achievement"></Column>
