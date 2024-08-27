@@ -252,7 +252,7 @@ const QuizPage: React.FC = () => {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Quizzes</h5>
                         <Fragment>
-                            <Button icon="pi pi-times" text style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={isQuizOngoing} />
+                            <Button icon="pi pi-times" style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={isQuizOngoing} />
                         </Fragment>
                         <Dialog
                             header="Exit Quiz"
@@ -266,6 +266,9 @@ const QuizPage: React.FC = () => {
                             Are you sure you want to exit the quiz?
                         </Dialog>
                     </div>
+                    {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && (
+                        <div>No questions generated.</div>
+                    )}
                     {!isQuizOngoing && (
                         <div>
                             <br />
