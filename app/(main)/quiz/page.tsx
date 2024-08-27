@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import React, { Fragment } from 'react';
 import { InputNumber } from 'primereact/inputnumber';
 import { TreeTable } from 'primereact/treetable';
-import { InputTextarea } from 'primereact/inputtextarea'; // Correct import statement
+import { InputTextarea } from 'primereact/inputtextarea';
 
 const QuizPage: React.FC = () => {
     const router = useRouter();
@@ -51,7 +51,6 @@ const QuizPage: React.FC = () => {
                     return;
                 }
                 setQuiz(responseData);
-                // Initialize selectedOptions with keys for each mcq.id set to null
                 const initialSelectedOptions: { [key: number]: number | 0 } = {};
                 responseData.mcqs.forEach((mcq) => {
                     initialSelectedOptions[mcq.id] = 0;
@@ -92,12 +91,10 @@ const QuizPage: React.FC = () => {
         try {
             await QuizService.abandonQuiz(quiz.id);
             console.log(`Attempt abandoned for Quiz ID: ${quiz.id}`);
-            // Optionally, you can update the state to reflect the abandoned status
             setQuiz((prevQuiz: any) => ({
                 ...prevQuiz,
-                status: 'abandoned' // Assuming 'status' is a field in your quiz object
+                status: 'abandoned'
             }));
-            // Reset selected options
             const initialSelectedOptions: { [key: number]: number | 0 } = {};
             quiz.mcqs.forEach((mcq: any) => {
                 initialSelectedOptions[mcq.id] = 0;
@@ -129,7 +126,6 @@ const QuizPage: React.FC = () => {
     }, [listOfTopics]);
 
     const confirmExit = () => {
-        // Logic to handle exiting the quiz and saving progress
         console.log('Quiz exited. Progress saved.');
         setVisible(false);
         abandonQuiz();
@@ -214,7 +210,7 @@ const QuizPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (activeTab === 1) { // Assuming the "Options" tab has index 1
+            if (activeTab === 1) {
                 console.log('selectedTopics', selectedTopics);
                 console.log('selectedSkills', selectedSkills);
     
@@ -232,7 +228,6 @@ const QuizPage: React.FC = () => {
     
                         console.log('count', mcqResponse);
                     if (mcqResponse && mcqResponse) {
-                        // Extract unique ids
                         const uniqueIds = new Set(mcqResponse.map(mcq => mcq.id));
                         const count = uniqueIds.size;
                         setGeneratedQuestionCount(count);
@@ -317,7 +312,7 @@ const QuizPage: React.FC = () => {
                                                     if (typeof value === 'number') {
                                                         setSelectedQuestionCount(value);
                                                     } else {
-                                                        setSelectedQuestionCount(0); // Handle unexpected types
+                                                        setSelectedQuestionCount(0);
                                                     }
                                                 }}
                                                 placeholder={generatedQuestionCount.toString()}
@@ -340,7 +335,7 @@ const QuizPage: React.FC = () => {
                                             <InputNumber value={selectedQuestionCount} disabled />
                                         </div>
                                         <div className="col-12 md:col-6 mb-5">
-                                            <InputTextarea value={renderSelectedNodes()} rows={5} cols={30} autoResize disabled />
+                                            <InputTextarea value={renderSelectedNodes()} autoResize disabled />
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                             <Button
@@ -424,7 +419,6 @@ const QuizPage: React.FC = () => {
                                             <div>
                                                 <p>No more questions in this quiz. Click to submit.</p>
                                                 <Button
-                                                    // label="Submit Quiz"
                                                     onClick={() => {
                                                         if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
                                                             submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
