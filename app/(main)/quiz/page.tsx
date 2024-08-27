@@ -314,13 +314,13 @@ const QuizPage: React.FC = () => {
                                                 value={selectedQuestionCount}
                                                 onValueChange={(e) => {
                                                     const value = e.value;
-                                                    if (typeof value === 'number' || value === null) {
+                                                    if (typeof value === 'number') {
                                                         setSelectedQuestionCount(value);
                                                     } else {
                                                         setSelectedQuestionCount(0); // Handle unexpected types
                                                     }
                                                 }}
-                                                placeholder={generatedQuestionCount}
+                                                placeholder={generatedQuestionCount.toString()}
                                             />
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
@@ -337,7 +337,7 @@ const QuizPage: React.FC = () => {
                                             </p>
                                         </div>
                                         <div className="col-12 md:col-6 mb-5">
-                                            <InputNumber value={selectedQuestionCount} placeholder="0" disabled />
+                                            <InputNumber value={selectedQuestionCount} disabled />
                                         </div>
                                         <div className="col-12 md:col-6 mb-5">
                                             <InputTextarea value={renderSelectedNodes()} rows={5} cols={30} autoResize disabled />
