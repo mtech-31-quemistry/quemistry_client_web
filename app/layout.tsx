@@ -18,7 +18,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
     const pathname = usePathname();
     if (!RouteGuard.apply(pathname)) {
-        redirect('/');
+        redirect('/auth/google');
     }
     return (
         <html lang="en" suppressHydrationWarning>

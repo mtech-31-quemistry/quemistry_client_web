@@ -1,5 +1,5 @@
 'use client';
-import { USER, IS_LOGIN } from '../lib/constants'
+import { USER, IS_LOGIN } from '@/lib/constants'
 
 export const RouteGuard = {
 
@@ -13,7 +13,7 @@ export const RouteGuard = {
     },
     loginUser(){
         if(this.isLogin()){
-            return  JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile;           
+            return  JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile;
         }
         else{
             return null;
@@ -53,7 +53,14 @@ export const RouteGuard = {
         }
     },
     accessibleBy (roles: string[]) {
-        return this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
+        var canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
+
+        if (!canAccess) {
+            let redirectionUrl = document.location.href;
+            sessionStorage.setItem("redirection", redirectionUrl);
+        }
+
+        return canAccess;
     },
-    
+
 }

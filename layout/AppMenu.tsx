@@ -36,21 +36,49 @@ const AppMenu = () => {
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
                 { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz', visible: accessibleBy(['student']) },
-                { label: 'History', icon: 'pi pi-fw pi-history', to: '/quiz/history', visible: accessibleBy(['student']) }
+                {
+                    label: 'History',
+                    icon: 'pi pi-fw pi-history',
+                    to: '/quiz/history',
+                    visible: accessibleBy(['student'])
+                }
             ]
         },
         {
             label: 'Manage',
             items: [
-                { label: 'Questions', icon: 'pi pi-fw pi-question-circle', to: '/questions/searchlist', visible: accessibleBy(['admin', 'tutor']) },
-                { label: 'Topics', icon: 'pi pi-fw pi-tags', to: '/questions/topics', visible: accessibleBy(['admin', 'tutor']) },
+                {
+                    label: 'Questions',
+                    icon: 'pi pi-fw pi-question-circle',
+                    to: '/questions/searchlist',
+                    visible: accessibleBy(['admin', 'tutor'])
+                },
+                {
+                    label: 'Topics',
+                    icon: 'pi pi-fw pi-tags',
+                    to: '/questions/topics',
+                    visible: accessibleBy(['admin', 'tutor'])
+                },
                 { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: accessibleBy(['tutor']) }
             ],
             visible: accessibleBy(['admin', 'tutor'])
         },
         {
             label: 'Google AI',
-            items: [{ label: 'Generate Question', icon: 'pi pi-fw pi-microchip-ai', to: '/genai', visible: accessibleBy(['admin', 'tutor']) }],
+            items: [
+                {
+                    label: 'Generate Question', icon: 'pi pi-fw pi-microchip-ai', to: '/genai',
+                    visible: accessibleBy(['admin', 'tutor'])
+                },
+                {
+                    label: 'Topics',
+                    icon: 'pi pi-fw pi-tags',
+                    to: '/questions/topics',
+                    visible: accessibleBy(['admin', 'tutor'])
+                },
+                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: accessibleBy(['tutor']) },
+                { label: 'Students', icon: 'pi pi-fw pi-users', to: '/students', visible: accessibleBy(['tutor']) }
+            ],
             visible: accessibleBy(['admin', 'tutor'])
         }
     ];

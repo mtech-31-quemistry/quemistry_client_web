@@ -1,4 +1,5 @@
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
+const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/retrieve`
 
 export const UserService = {
   async addClass(data: Class) {
@@ -14,16 +15,7 @@ export const UserService = {
   },
 
   async getClasses() {
-    const res = await fetch(classUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include'
-    });
-
-    console.log('res', res);
-    return (await (res.json() as Promise<UserServiceResponse<ClassResponse>>)).payload;
+    return (await api<UserServiceResponse<ClassResponse>>(getAllClassesUrl)).payload;
   }
 };
 
