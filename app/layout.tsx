@@ -1,5 +1,5 @@
 'use client';
-import { LayoutProvider } from '../layout/context/layoutcontext';
+import { LayoutProvider } from '@/layout/context/layoutcontext';
 import { PrimeReactProvider } from 'primereact/api';
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css';
@@ -7,19 +7,13 @@ import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import { Suspense } from 'react';
-import { usePathname } from 'next/navigation';
-import { RouteGuard } from '@/lib/RouteGuard';
-import { redirect } from 'next/navigation';
+import Loading from '@/app/loading';
 
 interface RootLayoutProps {
     children: React.ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-    const pathname = usePathname();
-    if (!RouteGuard.apply(pathname)) {
-        redirect('/auth/google');
-    }
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
@@ -27,7 +21,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </head>
             <body>
                 <PrimeReactProvider>
-                    <Suspense>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Loading />
                         <LayoutProvider>{children}</LayoutProvider>
                     </Suspense>
                 </PrimeReactProvider>

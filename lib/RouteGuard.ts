@@ -1,6 +1,7 @@
 'use client';
 import { USER, IS_LOGIN } from '@/lib/constants'
 
+let queryParameters = '';
 export const RouteGuard = {
 
     isLogin(){
@@ -19,7 +20,8 @@ export const RouteGuard = {
             return null;
         }
     },
-    apply(path: string):boolean{
+    apply(path: string, queryString: string):boolean{
+        queryParameters = path + "?" + queryString;
         if(process.env.NODE_ENV === 'development') return true;
         switch(path){
             case '/':
@@ -52,15 +54,16 @@ export const RouteGuard = {
                 return false;
         }
     },
-    accessibleBy (roles: string[]) {
+    accessibleBy (roles: string[]): boolean {
         var canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
 
         if (!canAccess) {
-            let redirectionUrl = document.location.href;
-            sessionStorage.setItem("redirection", redirectionUrl);
+            sessionStorage.setItem("redirection",  queryParameters);
         }
 
         return canAccess;
     },
 
 }
+
+export default RouteGuard;
