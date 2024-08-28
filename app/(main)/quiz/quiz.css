@@ -11,3 +11,7 @@
     word-wrap: break-word !important;
     word-break: break-word !important;
 }
+
+.card {
+    margin-bottom: 0px; /* Adjust this value as needed */
+}

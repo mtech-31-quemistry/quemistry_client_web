@@ -1,4 +1,5 @@
 'use client';
+import './quiz.css';
 import { useEffect, useState } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
@@ -32,6 +33,7 @@ const QuizPage: React.FC = () => {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
+    const [isAnswered, setIsAnswered] = useState(false);
 
     const [addedOptions, setAddedOptions] = useState<Questions.Option[]>([]);
     const [stem, setStem] = useState<string>('');
@@ -42,8 +44,44 @@ const QuizPage: React.FC = () => {
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
 
     const [activeTab, setActiveTab] = useState<number>(0);
+    const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
+    const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
+
+    const handleOptionClick = (mcqId: number, optionNo: number) => {
+        if (!currentQuestion) {
+            console.error("Current question is undefined.");
+            return;
+        }
+
+          setSelectedOptions({
+            ...selectedOptions,
+            [mcqId]: optionNo
+        });
+
+        const isCorrectAnswer = currentQuestion.options.find(option => option.no === optionNo)?.isAnswer;
+        const totalOptions = currentQuestion.options.length;
+
+        if (!isCorrectAnswer) {
+            const newNumberOfIncorrectOptions = numberOfIncorrectOptions + 1;
+            setNumberOfIncorrectOptions(newNumberOfIncorrectOptions);
+
+            if (newNumberOfIncorrectOptions === totalOptions - 1) {
+                console.log('totalOptions', totalOptions);
+                console.log('newNum of incorrect options', newNumberOfIncorrectOptions);
+                setIsAnswered(true);
+            }
+        } else {
+            setIsAnswered(true);
+        }
+
+        setExplanationsVisible({
+            ...explanationsVisible,
+            [optionNo]: true
+        });
+    };
 
     useEffect(() => {
+        setIsAnswered(false)
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizInProgress();
@@ -79,6 +117,8 @@ const QuizPage: React.FC = () => {
     const handleNextQuestion = () => {
         if (currentQuestionLength > 0) {
             if (currentQuestionIndex < currentQuestionLength - 1) {
+                setExplanationsVisible({});
+                setIsAnswered(false);
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
             }
         }
@@ -376,29 +416,25 @@ const QuizPage: React.FC = () => {
                     {currentQuestion && (
                         <div key={currentQuestion.id}>
                             <div className="card">
-                                <span className="question-id">Question {currentQuestionIndex + 1} of {quiz.mcqs.length}: </span>
-                                <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
+                                    <p><b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b></p>
+                                    <p><span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span></p>
                                 {currentQuestion.options.map((option) => (
-                                    <div key={option.no} className="card">
+                                    <div key={option.no} className="card" onClick={() => handleOptionClick(currentQuestion.id, option.no)}>
                                         <label className="option-label">
                                             <input
-                                                type="radio"
+                                                type="hidden"
                                                 name={`mcq-${currentQuestion.id}`}
                                                 checked={selectedOptions[currentQuestion.id] === option.no}
-                                                onChange={() => 
-                                                    setSelectedOptions({
-                                                        ...selectedOptions,
-                                                        [currentQuestion.id]: option.no
-                                                    })
-                                                }
+                                                onChange={() => handleOptionClick(currentQuestion.id, option.no)}
                                             />
-                                            <span className="option-no">Option {option.no}: </span>
                                             <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                         </label>
-                                        <div className={`explanation-container ${selectedOptions[currentQuestion.id] === option.no ? 'visible' : 'hidden'}`}>
-                                            {option.isAnswer && <strong>Correct Answer</strong>}
-                                            <p>{option.explanation}</p>
-                                        </div>
+                                        {explanationsVisible[option.no] && (
+                                            <div className="explanation-container">
+                                                {option.isAnswer && <strong>Correct Answer</strong>}
+                                                <p>{option.explanation}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -415,42 +451,36 @@ const QuizPage: React.FC = () => {
                                                     console.error('Quiz ID is undefined or selected option is null');
                                                 }
                                             }}
+                                            disabled={!isAnswered}
                                         ></Button>
                                     ) : (
                                         <>
                                             <div>
                                                 <p>No more questions in this quiz. Click to submit.</p>
                                                 <Button
+                                                label="Submit Quiz"
                                                     onClick={() => {
                                                         if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
                                                             submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
-                                                            setIsDisabled(true)
+                                                            // setIsDisabled(true)
                                                         } else {
                                                             console.error('Quiz ID is undefined or selected option is null');
                                                         }
-                                                    }} disabled={isDisabled}
+                                                    }} disabled={!isAnswered}
                                                 >
-                                                    {isDisabled ? 'Quiz Submitted' : 'Submit Quiz' }
+                                                    {/* {!isAnswered ? 'Quiz Submitted' : 'Submit Quiz' } */}
                                                 </Button>
                                             </div>
                                         </>
                                     )}
                                 </div>
                             )}
-                            <h5>Topics</h5>
+                            <h5>Topic</h5>
                             <ul>
-                                {currentQuestion.topics.map((topic) => (
-                                    <li key={topic.id}>{topic.name}</li>
-                                ))}
+                                {currentQuestion.topics.map((topic) => topic.name).join(', ')}
                             </ul>
-                            <h5>Skills</h5>
-                            <ul>
-                                {currentQuestion.skills.map((skill) => (
-                                    <li key={skill.id}>{skill.name}</li>
-                                ))}
-                            </ul>
-                            <ProgressBar value={(currentQuestionIndex + 1) / quiz.mcqs.length * 100} />
-                            </div>
+                            <ProgressBar value={Math.round((currentQuestionIndex + 1) / quiz.mcqs.length * 100)} />
+                        </div>
                     )}
                 </div>
             </div>
