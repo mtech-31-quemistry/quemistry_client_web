@@ -18,6 +18,7 @@ import React, { Fragment } from 'react';
 import { InputNumber } from 'primereact/inputnumber';
 import { TreeTable } from 'primereact/treetable';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { ProgressBar } from 'primereact/progressbar';
 
 const QuizPage: React.FC = () => {
     const router = useRouter();
@@ -377,8 +378,6 @@ const QuizPage: React.FC = () => {
                             <div className="card">
                                 <span className="question-id">Question {currentQuestionIndex + 1} of {quiz.mcqs.length}: </span>
                                 <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
-                            </div>
-                            <div className="card">
                                 {currentQuestion.options.map((option) => (
                                     <div key={option.no} className="card">
                                         <label className="option-label">
@@ -450,7 +449,8 @@ const QuizPage: React.FC = () => {
                                     <li key={skill.id}>{skill.name}</li>
                                 ))}
                             </ul>
-                        </div>
+                            <ProgressBar value={(currentQuestionIndex + 1) / quiz.mcqs.length * 100} />
+                            </div>
                     )}
                 </div>
             </div>
