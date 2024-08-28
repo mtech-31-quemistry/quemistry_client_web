@@ -49,7 +49,6 @@ const skillsBodyTemplate = (rowData: ProcessedQuiz) => {
                 <Tag 
                     key={skill.id} 
                     style={{ marginRight: '1em' }} 
-                    severity="warning" 
                     value={skill.name}
                 />
             ))}
