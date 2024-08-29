@@ -1,5 +1,3 @@
-import response from './response.json';
-
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 const getAllClassesUrl = `${classUrl}/retrieve`
 
