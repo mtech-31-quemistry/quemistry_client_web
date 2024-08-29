@@ -23,10 +23,10 @@ const GoogleAuthPage = () => {
     useEffect(() => {
         if (isDenyAccess) redirect('/auth/access');
         if (isLogin) {
-            let redirectionUrl = "/dashboard";
+            let redirectionUrl = '/dashboard';
 
-            if (typeof sessionStorage !== "undefined" && sessionStorage.getItem("redirection") !== null) {
-                redirectionUrl = sessionStorage.getItem("redirection") || "/dashboard";
+            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('redirection') !== null) {
+                redirectionUrl = sessionStorage.getItem('redirection') || '/dashboard';
                 sessionStorage.removeItem('redirection');
             }
 

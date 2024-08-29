@@ -49,16 +49,16 @@ const QuizPage: React.FC = () => {
 
     const handleOptionClick = (mcqId: number, optionNo: number) => {
         if (!currentQuestion) {
-            console.error("Current question is undefined.");
+            console.error('Current question is undefined.');
             return;
         }
 
-          setSelectedOptions({
+        setSelectedOptions({
             ...selectedOptions,
             [mcqId]: optionNo
         });
 
-        const isCorrectAnswer = currentQuestion.options.find(option => option.no === optionNo)?.isAnswer;
+        const isCorrectAnswer = currentQuestion.options.find((option) => option.no === optionNo)?.isAnswer;
         const totalOptions = currentQuestion.options.length;
 
         if (!isCorrectAnswer) {
@@ -81,7 +81,7 @@ const QuizPage: React.FC = () => {
     };
 
     useEffect(() => {
-        setIsAnswered(false)
+        setIsAnswered(false);
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizInProgress();
@@ -229,7 +229,6 @@ const QuizPage: React.FC = () => {
             .join('');
     };
 
-
     useEffect(() => {
         let newSelectedTopics: number[] = [];
         let newSelectedSkills: number[] = [];
@@ -254,22 +253,22 @@ const QuizPage: React.FC = () => {
             if (activeTab === 1) {
                 console.log('selectedTopics', selectedTopics);
                 console.log('selectedSkills', selectedSkills);
-    
+
                 const retrieveQuestionRequest = {
                     topics: selectedTopics,
                     skills: selectedSkills,
                     pageNumber: 0,
                     pageSize: 60
                 };
-    
+
                 console.log('retrieveQuestionRequest', retrieveQuestionRequest);
                 try {
                     const mcqResponse = await QuestionsService.retrieveMCQ(retrieveQuestionRequest);
                     console.log('mcqResponse', mcqResponse);
-    
-                        console.log('count', mcqResponse);
+
+                    console.log('count', mcqResponse);
                     if (mcqResponse && mcqResponse) {
-                        const uniqueIds = new Set(mcqResponse.map(mcq => mcq.id));
+                        const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
                         const count = uniqueIds.size;
                         setGeneratedQuestionCount(count);
                     } else {
@@ -281,10 +280,9 @@ const QuizPage: React.FC = () => {
                 }
             }
         };
-    
+
         fetchData();
     }, [activeTab, selectedTopics, selectedSkills]);
-
 
     return (
         <div className="grid">
@@ -307,9 +305,7 @@ const QuizPage: React.FC = () => {
                             Are you sure you want to exit the quiz?
                         </Dialog>
                     </div>
-                    {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && (
-                        <div>No questions generated.</div>
-                    )}
+                    {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
                             <br />
@@ -371,7 +367,7 @@ const QuizPage: React.FC = () => {
                                     <div className="grid">
                                         <div className="col-12 md:col-6 mb-5">
                                             <p>
-                                            {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.
+                                                {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.
                                                 <br />
                                             </p>
                                         </div>
@@ -416,17 +412,16 @@ const QuizPage: React.FC = () => {
                     {currentQuestion && (
                         <div key={currentQuestion.id}>
                             <div className="card">
-                                    <p><b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b></p>
-                                    <p><span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span></p>
+                                <p>
+                                    <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
+                                </p>
+                                <p>
+                                    <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
+                                </p>
                                 {currentQuestion.options.map((option) => (
                                     <div key={option.no} className="card" onClick={() => handleOptionClick(currentQuestion.id, option.no)}>
                                         <label className="option-label">
-                                            <input
-                                                type="hidden"
-                                                name={`mcq-${currentQuestion.id}`}
-                                                checked={selectedOptions[currentQuestion.id] === option.no}
-                                                onChange={() => handleOptionClick(currentQuestion.id, option.no)}
-                                            />
+                                            <input type="hidden" name={`mcq-${currentQuestion.id}`} checked={selectedOptions[currentQuestion.id] === option.no} onChange={() => handleOptionClick(currentQuestion.id, option.no)} />
                                             <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                         </label>
                                         {explanationsVisible[option.no] && (
@@ -458,7 +453,7 @@ const QuizPage: React.FC = () => {
                                             <div>
                                                 <p>No more questions in this quiz. Click to submit.</p>
                                                 <Button
-                                                label="Submit Quiz"
+                                                    label="Submit Quiz"
                                                     onClick={() => {
                                                         if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
                                                             submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
@@ -466,7 +461,8 @@ const QuizPage: React.FC = () => {
                                                         } else {
                                                             console.error('Quiz ID is undefined or selected option is null');
                                                         }
-                                                    }} disabled={!isAnswered}
+                                                    }}
+                                                    disabled={!isAnswered}
                                                 >
                                                     {/* {!isAnswered ? 'Quiz Submitted' : 'Submit Quiz' } */}
                                                 </Button>
@@ -476,10 +472,8 @@ const QuizPage: React.FC = () => {
                                 </div>
                             )}
                             <h5>Topic</h5>
-                            <ul>
-                                {currentQuestion.topics.map((topic) => topic.name).join(', ')}
-                            </ul>
-                            <ProgressBar value={Math.round((currentQuestionIndex + 1) / quiz.mcqs.length * 100)} />
+                            <ul>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</ul>
+                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
                         </div>
                     )}
                 </div>

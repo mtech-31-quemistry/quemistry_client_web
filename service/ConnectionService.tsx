@@ -1,16 +1,14 @@
-function api<T>(url: string, body: string = '', method: string = "GET",): Promise<T> {
-    return fetch(url, {
-        method: method,
-        body: body,
+async function api<T>(url: string, body: string = '', method: string = "GET",): Promise<T> {
+    const response = await fetch(url, {
+        method,
+        body,
         credentials: "include",
         headers: {
             'Content-Type': 'application/json'
         }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.statusText)
-            }
-            return response.json() as Promise<T>
-        });
+    });
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+    return await (response.json() as Promise<T>);
 }

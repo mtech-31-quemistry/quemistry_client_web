@@ -1,21 +1,15 @@
+import response from './response.json';
+
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
-const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_QUESTIONS_URL}/retrieve`
+const getAllClassesUrl = `${classUrl}/retrieve`
 
 export const UserService = {
   async addClass(data: Class) {
-    const res = await fetch(classUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(data)
-    });
-    console.log('res', res);
+    await api<void>(classUrl,JSON.stringify(data), 'POST');
   },
 
   async getClasses() {
-    return (await api<UserServiceResponse<ClassResponse>>(getAllClassesUrl)).payload;
+    return (await api<UserServiceResponse<ClassResponse[]>>(getAllClassesUrl)).payload;
   }
 };
 
@@ -24,5 +18,5 @@ interface UserServiceResponse<T> {
   statusMessage: string;
   serviceName: string;
   errors: string[];
-  payload: T[];
+  payload: T;
 }

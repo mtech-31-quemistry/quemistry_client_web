@@ -6,7 +6,6 @@ import { Column } from 'primereact/column';
 import { QuizService } from '../../../../service/QuizService';
 import { Tag } from 'primereact/tag';
 
-
 interface Topic {
     id: number;
     name: string;
@@ -30,13 +29,8 @@ interface ProcessedQuiz {
 const topicsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
-            {rowData.topics.map(topic => (
-                <Tag 
-                    key={topic.id} 
-                    style={{ marginRight: '1em' }} 
-                    severity="info" 
-                    value={topic.name}
-                />
+            {rowData.topics.map((topic) => (
+                <Tag key={topic.id} style={{ marginRight: '1em' }} severity="info" value={topic.name} />
             ))}
         </React.Fragment>
     );
@@ -45,12 +39,8 @@ const topicsBodyTemplate = (rowData: ProcessedQuiz) => {
 const skillsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
-            {rowData.skills.map(skill => (
-                <Tag 
-                    key={skill.id} 
-                    style={{ marginRight: '1em' }} 
-                    value={skill.name}
-                />
+            {rowData.skills.map((skill) => (
+                <Tag key={skill.id} style={{ marginRight: '1em' }} value={skill.name} />
             ))}
         </React.Fragment>
     );
@@ -68,12 +58,7 @@ const achievementBodyTemplate = (rowData: ProcessedQuiz) => {
         severity = 'warning';
     }
 
-    return (
-        <Tag 
-            severity={severity} 
-            value={`Points: ${earnedPoints}/${totalPoints} (${percentage.toFixed(2)}%)`}
-        />
-    );
+    return <Tag severity={severity} value={`Points: ${earnedPoints}/${totalPoints} (${percentage.toFixed(2)}%)`} />;
 };
 
 // Assuming QuizHistory component is defined elsewhere
@@ -91,13 +76,13 @@ const QuizHistory: React.FC = () => {
                 setQuiz(responseData);
 
                 // Process the data to calculate counts and extract unique topics and skills
-                const processedData = responseData.quizzes.map(quiz => {
+                const processedData = responseData.quizzes.map((quiz) => {
                     const topicsMap = new Map<number, Topic>();
                     const skillsMap = new Map<number, Skill>();
 
                     quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
-                        mcq.topics.forEach(topic => topicsMap.set(topic.id, topic));
-                        mcq.skills.forEach(skill => skillsMap.set(skill.id, skill));
+                        mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
+                        mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
                     });
 
                     return {
@@ -107,7 +92,7 @@ const QuizHistory: React.FC = () => {
                         topics: Array.from(topicsMap.values()),
                         skills: Array.from(skillsMap.values()),
                         points: quiz.points,
-                        mcqsCount: quiz.mcqs.length,
+                        mcqsCount: quiz.mcqs.length
                     };
                 });
                 setProcessedQuizzes(processedData);

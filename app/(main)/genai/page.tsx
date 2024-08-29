@@ -73,22 +73,25 @@ const GenAi: React.FC = () => {
             <div className="col-12">
                 <div className="card">
                     <h5>GenAI</h5>
-                    <Dropdown
-                        value={selectedQuestion}
-                        options={questions}
-                        onChange={onQuestionChange}
-                        optionLabel="stem"
-                        placeholder="Select a Question"
-                        filter
-                    />
+                    <Dropdown value={selectedQuestion} options={questions} onChange={onQuestionChange} optionLabel="stem" placeholder="Select a Question" filter />
                     {selectedQuestion && (
                         <div className="mt-3">
                             <h6>Selected Question:</h6>
-                            <p><strong>ID:</strong> {selectedQuestion.id}</p>
-                            <p><strong>Topic:</strong> {selectedQuestion.topic}</p>
-                            <p><strong>Skill:</strong> {selectedQuestion.skill}</p>
-                            <p><strong>Stem:</strong> {selectedQuestion.stem}</p>
-                            <p><strong>Options:</strong></p>
+                            <p>
+                                <strong>ID:</strong> {selectedQuestion.id}
+                            </p>
+                            <p>
+                                <strong>Topic:</strong> {selectedQuestion.topic}
+                            </p>
+                            <p>
+                                <strong>Skill:</strong> {selectedQuestion.skill}
+                            </p>
+                            <p>
+                                <strong>Stem:</strong> {selectedQuestion.stem}
+                            </p>
+                            <p>
+                                <strong>Options:</strong>
+                            </p>
                             <ul>
                                 {selectedQuestion.options.map((option: any, index: number) => (
                                     <li key={index}>
@@ -102,11 +105,21 @@ const GenAi: React.FC = () => {
                     {generatedQuestion && (
                         <div className="mt-3">
                             <h6>Generated Question:</h6>
-                            <p><strong>ID:</strong> {generatedQuestion.id}</p>
-                            <p><strong>Topic:</strong> {generatedQuestion.topic}</p>
-                            <p><strong>Skill:</strong> {generatedQuestion.skill}</p>
-                            <p><strong>Stem:</strong> {generatedQuestion.stem}</p>
-                            <p><strong>Options:</strong></p>
+                            <p>
+                                <strong>ID:</strong> {generatedQuestion.id}
+                            </p>
+                            <p>
+                                <strong>Topic:</strong> {generatedQuestion.topic}
+                            </p>
+                            <p>
+                                <strong>Skill:</strong> {generatedQuestion.skill}
+                            </p>
+                            <p>
+                                <strong>Stem:</strong> {generatedQuestion.stem}
+                            </p>
+                            <p>
+                                <strong>Options:</strong>
+                            </p>
                             <ul>
                                 {generatedQuestion.options.map((option: any, index: number) => (
                                     <li key={index}>

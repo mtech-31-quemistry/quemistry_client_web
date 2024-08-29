@@ -10,5 +10,5 @@ export default function Loading() {
         redirect('/auth/google');
     }
 
-    return "";
+    return '';
 }
