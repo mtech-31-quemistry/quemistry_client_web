@@ -27,7 +27,7 @@ export const GenaiService = {
                      //return res.json();
                     const reader = res.body?.getReader();
                     let count = 0;
-                    while(count < 10){
+                    while(count < 50){
                         count++;
                         reader?.read().then(({ done, value }) => {
                             if (done) {
@@ -37,7 +37,7 @@ export const GenaiService = {
                             console.log("valueStr ", count);
                             console.log(valueStr);
                             //search for event: data
-                            var searchedIndex = valueStr.indexOf("event: data");
+                            var searchedIndex = valueStr.lastIndexOf("event: data");
                             if(searchedIndex != -1){
                                 valueStr = valueStr.substring(searchedIndex + 11);
                                 console.log(valueStr);
