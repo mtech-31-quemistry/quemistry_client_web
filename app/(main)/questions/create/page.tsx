@@ -153,17 +153,7 @@ const EditQuestion = () => {
         setIsAnswer(false);
         setShowOptionDialog(false);
     };
-
-    const handleOnClickDone = () => {
-        console.log('handleOnClickDone');
-        console.log(selectedTopicNodes);
-        //validate
-        const answer = addedOptions.filter((option: Questions.Option) => {
-            return option.isAnswer;
-        });
-        if (!answer || answer.length <= 0) throw 'No answer selected';
-        console.log(answer);
-        //populate skills for mcq
+    const retrieveSelectedTopicSkillsIds = () => {
         let selectedTopics: number[] = [];
         let selectedSkills: number[] = [];
         if (selectedTopicNodes) {
@@ -177,6 +167,20 @@ const EditQuestion = () => {
                 }
             });
         }
+        return { selectedTopics: selectedTopics, selectedSkills: selectedSkills };
+    }
+    const handleOnClickDone = () => {
+        console.log('handleOnClickDone');
+        console.log(selectedTopicNodes);
+        //validate
+        const answer = addedOptions.filter((option: Questions.Option) => {
+            return option.isAnswer;
+        });
+        if (!answer || answer.length <= 0) throw 'No answer selected';
+        console.log(answer);
+        //populate skills for mcq
+        const { selectedTopics, selectedSkills } = retrieveSelectedTopicSkillsIds();
+        
         //instantiate MCQ object before adding
         let mcq = {
             stem: stem,
@@ -215,17 +219,7 @@ const EditQuestion = () => {
             showWarning("Invalid Input", "Generate Question works only for 1 topic with 1 or more skills selected");
             return;
         }
-        let selectedTopics: number[] = [];
-        let selectedSkills: number[] = [];
-        Object.entries(selectedTopicNodes).forEach(([key, data]) => {
-            //console.debug('key', key, 'data', data);
-            let topic_skill = key.split('-');
-            if (topic_skill.length > 1) {
-                selectedSkills.push(parseInt(topic_skill[1]));
-            } else {
-                selectedTopics.push(parseInt(topic_skill[0]));
-            }
-        });
+        const { selectedTopics, selectedSkills } = retrieveSelectedTopicSkillsIds();
         if(selectedTopics.length !=1){
             showWarning("Invalid Input", "Generate Question works only for 1 topic with 1 or more skills selected");
             return;
