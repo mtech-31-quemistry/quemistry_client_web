@@ -14,6 +14,7 @@ import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { TreeNode } from 'primereact/treenode';
 import { useRouter } from 'next/navigation';
 import { Toast } from 'primereact/toast';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const EditQuestion = () => {
     const router = useRouter();
@@ -28,6 +29,8 @@ const EditQuestion = () => {
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<number>(0);
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+    
     const toast = useRef<Toast>(null);
 
     const showWarning = (summary: string, message: string) => {
@@ -206,6 +209,7 @@ const EditQuestion = () => {
         var updateQuestion = (data: Genai.MCQ) => {
             setStem(data.stem);
             setAddedOptions(data.options);
+            setShowSpinner(false);
         }
         setStem('');
         setAddedOptions([]);
@@ -228,7 +232,6 @@ const EditQuestion = () => {
         const searchedTopic: Questions.Topic| undefined = listOfTopics.find((t: Questions.Topic) => {
             return t.id == selectedTopics[0];
         })
-        console.debug("searchedTopic", searchedTopic)
         if(searchedTopic){
             let selectedTopic: Questions.Topic={
                 id: searchedTopic.id,
@@ -241,12 +244,14 @@ const EditQuestion = () => {
             }
             console.debug("selectedTopic", selectedTopic)
             setActiveTab(3)
+            setShowSpinner(true);
             GenaiService.generateMCQByTopicStream(1, selectedTopic, updateQuestion);
         }
     }
     return (
         <>
             <Toast ref={toast} position="top-center" />
+            {!showSpinner || <ProgressSpinner style={{width: '50px', height: '50px', position: 'fixed', left: '50%', top: '50%', opacity: '1', zIndex: '1000', background: 'transparent'}} strokeWidth="8" fill="var(--surface-ground)"  />}
             <h5>Add Question</h5>
             <br />
             <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
