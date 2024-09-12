@@ -22,12 +22,8 @@ export const UserService = {
   },
 
   async acceptInvitation(studentInvitation: StudentInvitation) {
-      console.log('accept invitation code', studentInvitation.invitationCode)
       const body = JSON.stringify(studentInvitation);
-
-      const header = {userId: 'e2dbf729-5c52-485f-8900-2a8f6680de4c', userEmail: 'htet.raymond@gmail.com'};
-
-      return api<UserServiceResponse<StudentInvitationResponse>>(acceptInvitationUrl, body, "POST", header);
+      return api<UserServiceResponse<boolean>>(acceptInvitationUrl, body, "POST");
   }
 };
 
@@ -36,5 +32,5 @@ interface UserServiceResponse<T> {
   statusMessage: string;
   serviceName: string;
   errors: string[];
-  payload: T[];
+  payload: T;
 }

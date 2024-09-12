@@ -22,3 +22,11 @@ interface ClassResponse extends Class {
     id: number;
     userId: string | null;
 }
+
+interface StudentInvitation {
+    invitationCode: string;
+}
+
+interface StudentInvitationResponse {
+    success: boolean;
+}
