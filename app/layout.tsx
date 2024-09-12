@@ -7,7 +7,7 @@ import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import { Suspense } from 'react';
-import Loading from '@/app/loading';
+import RedirectionHandler from '@/app/RedirectionHandler';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <body>
                 <PrimeReactProvider>
                     <Suspense fallback={<div>Loading...</div>}>
-                        <Loading />
+                        <RedirectionHandler />
                         <LayoutProvider>{children}</LayoutProvider>
                     </Suspense>
                 </PrimeReactProvider>

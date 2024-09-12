@@ -11,6 +11,7 @@ import { LayoutContext } from '../../../layout/context/layoutcontext';
 //import Link from 'next/link';
 //import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
+import { Toast } from 'primereact/toast';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -40,6 +41,7 @@ const Dashboard = () => {
     const menu2 = useRef<Menu>(null);
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
+    const toast = useRef<Toast>(null);
 
     const applyLightTheme = () => {
         const lineOptions: ChartOptions = {
@@ -105,13 +107,46 @@ const Dashboard = () => {
         setLineOptions(lineOptions);
     };
 
+    const invitationResponse = (isSucceeded: boolean) => {
+
+        let summary = 'Success';
+        let detail = 'We have successfully enrolled you into the class'
+
+        if (!isSucceeded) {
+            summary = 'Error Enrolling';
+            detail = 'Please contact customer support for more info.'
+        }
+
+        toast.current?.show({
+            severity: isSucceeded ? 'success' : 'error',
+            summary: summary,
+            detail: detail,
+            life: 5000 //3 secs
+        });
+    };
+
+
+
     useEffect(() => {
         if (layoutConfig.colorScheme === 'light') {
             applyLightTheme();
         } else {
             applyDarkTheme();
         }
-    }, [layoutConfig.colorScheme]);
+
+        setTimeout(() => {
+            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('invitation_result') !== null) {
+                const invitationResult =  sessionStorage.getItem('invitation_result') === "true" || false;
+                sessionStorage.removeItem('invitation_result');
+                invitationResponse(invitationResult);
+            }
+        }, 500);
+
+
+
+    }, [layoutConfig.colorScheme, toast]);
+
+
 
     const formatCurrency = (value: number) => {
         return value?.toLocaleString('en-US', {
@@ -121,7 +156,9 @@ const Dashboard = () => {
     };
 
     return (
+
         <div className="grid">
+            <Toast ref={toast} position="top-center" className={"col-12"} />
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">
