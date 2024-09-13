@@ -1,6 +1,7 @@
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}`
 const acceptInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/invitation/accept`
+const sendInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/invitation/create`
 
 import api from "./ConnectionService"
 
@@ -24,6 +25,11 @@ export const UserService = {
   async acceptInvitation(studentInvitation: StudentInvitation) {
       const body = JSON.stringify(studentInvitation);
       return api<UserServiceResponse<boolean>>(acceptInvitationUrl, body, "POST");
+  },
+
+  sendInvitation(inviteStudent: InviteStudent) {
+      const body = JSON.stringify(inviteStudent);
+      return api<UserServiceResponse<boolean>>(sendInvitationUrl, body, "POST");
   }
 };
 

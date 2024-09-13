@@ -30,3 +30,9 @@ interface StudentInvitation {
 interface StudentInvitationResponse {
     success: boolean;
 }
+
+interface InviteStudent {
+    studentEmail: string;
+    studentFullName: string;
+    classCode: string;
+}
