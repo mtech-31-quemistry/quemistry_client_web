@@ -22,7 +22,7 @@ const Classes = () => {
 
     useEffect(() => {
         fetchClasses();
-    });
+    }, [addClass]);
 
     const useGenerateClassMap = (descriptionName: string, apiName: string, defaultValue = ''): ClassMap => {
         const [value, setValue] = useState(defaultValue);

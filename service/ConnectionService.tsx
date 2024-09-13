@@ -1,4 +1,4 @@
-export default async function api<T>(url: string, body: string = '', method: string = 'GET', header: Header = { userId: '', userEmail: '' }): Promise<T> {
+export default async function api<T>(url: string, body?: string, method: string = 'GET', header: Header = { userId: '', userEmail: '' }): Promise<T> {
     console.log('url:', url, ' and method:', method);
     return await fetch(url, {
         method: method,

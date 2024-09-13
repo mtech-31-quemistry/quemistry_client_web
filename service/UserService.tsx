@@ -1,5 +1,5 @@
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
-const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}/retrieve`
+const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}`
 const acceptInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/invitation/accept`
 
 import api from "./ConnectionService"
