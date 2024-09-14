@@ -57,7 +57,7 @@ const Classes = () => {
     );
 
     const renderField = (labelTextName: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => (
-        <div className="field grid">
+        <div className="field grid" key={labelTextName}>
             <label htmlFor={labelTextName} className="col-12 mb-2 md:col-2 md:mb-0">
                 {labelTextName}
             </label>
