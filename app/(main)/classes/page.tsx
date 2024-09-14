@@ -79,8 +79,9 @@ const Classes = () => {
                     </Dialog>
                     <h5>Manage Classes</h5>
                     <DataTable value={classes} tableStyle={{ minWidth: '20rem' }}>
-                        {classMapList.map(({ descriptionName, apiName }) => (
+                        {classMapList.map(({ descriptionName, apiName }, index) => (
                             <Column
+                                key={index}
                                 field={apiName}
                                 header={descriptionName
                                     .split(' ')
