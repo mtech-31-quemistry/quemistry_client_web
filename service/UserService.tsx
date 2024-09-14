@@ -1,3 +1,5 @@
+import Header from 'quill/formats/header';
+
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}`
 const acceptInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/invitation/accept`
@@ -19,17 +21,17 @@ export const UserService = {
   },
 
   async getClasses() {
-    return (await api<UserServiceResponse<ClassResponse[]>>(getAllClassesUrl)).payload;
+    return (await api<UserServiceResponse<ClassResponse[]>>({ url: getAllClassesUrl })).payload;
   },
 
   async acceptInvitation(studentInvitation: StudentInvitation) {
       const body = JSON.stringify(studentInvitation);
-      return api<UserServiceResponse<boolean>>(acceptInvitationUrl, body, "POST");
+      return api<UserServiceResponse<boolean>>({ url: acceptInvitationUrl, body, method: "POST" });
   },
 
   sendInvitation(inviteStudent: InviteStudent) {
       const body = JSON.stringify(inviteStudent);
-      return api<UserServiceResponse<boolean>>(sendInvitationUrl, body, "POST");
+      return api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: "POST" });
   }
 };
 
