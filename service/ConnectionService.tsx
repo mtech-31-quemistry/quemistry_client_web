@@ -1,13 +1,35 @@
-export default async function api<T>(url: string, body?: string, method: string = 'GET', header: Header = { userId: '', userEmail: '' }): Promise<T> {
+export default async function api<T>({
+                                         url,
+                                         body,
+                                         method = 'GET',
+                                         userId,
+                                         userEmail
+                                     }: {
+    url: string,
+    body?: string,
+    method?: string,
+    userId?: string,
+    userEmail?: string
+}): Promise<T> {
     console.log('url:', url, ' and method:', method);
+
+    let headers: HeadersInit | undefined = {};
+
+    if (userId && userId.trim().length > 1) {
+        headers['x-user-id'] = userId;
+    }
+
+    if (userEmail && userEmail.trim().length > 1) {
+        headers['x-user-email'] = userEmail;
+    }
+
     return await fetch(url, {
         method: method,
         body: body,
         credentials: 'include',
         headers: {
-            'Content-Type': 'application/json',
-            'x-user-id': header.userId,
-            'x-user-email': header.userEmail
+            ...headers,
+            'Content-Type': 'application/json'
         }
     })
         .then(response => {
@@ -18,7 +40,4 @@ export default async function api<T>(url: string, body?: string, method: string 
         });
 }
 
-interface Header {
-    userId: string;
-    userEmail: string;
-}
+
