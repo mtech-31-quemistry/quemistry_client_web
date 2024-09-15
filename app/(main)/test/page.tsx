@@ -1,5 +1,5 @@
 'use client';
-import './quiz.css';
+import './test.css';
 import React, { useEffect, useState, Fragment } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
@@ -19,36 +19,34 @@ const QuizPage: React.FC = () => {
     const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
     const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+    const [currentTestQuestionIndex, setCurrentTestQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
     const [isAnswered, setIsAnswered] = useState(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
-    const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
     const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
-    const [showScore, setShowScore] = useState(true);
-    const [showScoreMessage, setShowScoreMessage] = useState('');
-    const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
+    const [showTestScore, setShowTestScore] = useState('');
+    const [showTestScoreMessage, setShowTestScoreMessage] = useState('');
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
 
-    // Retrieve currentQuestionIndex from local storage when the component mounts
+    // Retrieve currentTestQuestionIndex from local storage when the component mounts
     useEffect(() => {
-        const savedIndex = localStorage.getItem('currentQuestionIndex');
-        if (savedIndex) {
-            setCurrentQuestionIndex(parseInt(savedIndex, 10));
+        const savedTestIndex = localStorage.getItem('currentTestQuestionIndex');
+        if (savedTestIndex) {
+            setCurrentTestQuestionIndex(parseInt(savedTestIndex, 10));
         }
     }, []);
 
     useEffect(() => {
-        const savedShowScore = localStorage.getItem('showScore');
-        if (savedShowScore) {
-            setShowScore(savedShowScore === 'true');
+        const savedShowTestScore = localStorage.getItem('showTestScore');
+        if (savedShowTestScore) {
+            setShowTestScore(savedShowTestScore === 'true');
         }
     }, []);
 
     useEffect(() => {
-        const savedShowScoreMessage = localStorage.getItem('showScoreMessage');
-        if (savedShowScoreMessage) {
-            setShowScoreMessage(savedShowScoreMessage);
+        const savedShowTestScoreMessage = localStorage.getItem('showTestScoreMessage');
+        if (savedShowTestScoreMessage) {
+            setShowTestScoreMessage(savedShowTestScoreMessage);
         }
     }, []);
 
@@ -82,12 +80,6 @@ const QuizPage: React.FC = () => {
             setIsAnswered(true);
         }
 
-        setExplanationsVisible(currentQuestion.options.reduce((acc, option) => {
-            acc[option.no] = true;
-            return acc;
-        }, {} as { [key: number]: boolean }));
-
-        setIsAnswerSubmitted(true);
         setIsRadioDisabled(true);
     };
 
@@ -114,7 +106,7 @@ const QuizPage: React.FC = () => {
         fetchData();
     }, []);
 
-    const currentQuestion = quiz?.mcqs?.[currentQuestionIndex];
+    const currentQuestion = quiz?.mcqs?.[currentTestQuestionIndex];
     const currentQuestionLength = quiz?.mcqs?.length ?? 0;
 
     const submitAttempt = async (quizId: number, mcqId: number, attempt: number) => {
@@ -127,12 +119,9 @@ const QuizPage: React.FC = () => {
 
     const handleNextQuestion = () => {
         if (currentQuestionLength > 0) {
-            if (currentQuestionIndex < currentQuestionLength - 1) {
-                setExplanationsVisible({});
-                setIsAnswered(false);
-                setIsAnswerSubmitted(false);
+            if (currentTestQuestionIndex < currentQuestionLength - 1) {
                 setIsRadioDisabled(false);
-                setCurrentQuestionIndex(currentQuestionIndex + 1);
+                setCurrentTestQuestionIndex(currentTestQuestionIndex + 1);
             }
         }
     };
@@ -153,8 +142,8 @@ const QuizPage: React.FC = () => {
                 initialSelectedOptions[mcq.id] = 0;
             });
             setSelectedOptions(initialSelectedOptions);
-            setShowScore(false);
-            localStorage.setItem('currentQuestionIndex', '0');
+            setShowTestScore(false);
+            localStorage.setItem('currentTestQuestionIndex', '0');
         } catch (error) {
             console.error('Error abandoning quiz:', error);
         }
@@ -306,36 +295,36 @@ const QuizPage: React.FC = () => {
     const displayScore = () => {
         const score = calculateScore();
         const totalQuestions = quiz?.mcqs.length || 0;
-        setCurrentQuestionIndex(currentQuestionIndex + 1)
-        setShowScore(true);
-        setShowScoreMessage(`You answered ${score} of ${totalQuestions} questions correctly.`);
-        localStorage.setItem('showScoreMessage', showScoreMessage);
+        setCurrentTestQuestionIndex(currentTestQuestionIndex + 1)
+        setShowTestScore(true);
+        setShowTestScoreMessage(`You have completed the class test.`);
+        localStorage.setItem('showTestScoreMessage', showTestScoreMessage);
     };
 
-    // Save currentQuestionIndex to local storage whenever it changes
+    // Save currentTestQuestionIndex to local storage whenever it changes
     useEffect(() => {
-        localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
-    }, [currentQuestionIndex]);
+        localStorage.setItem('currentTestQuestionIndex', currentTestQuestionIndex.toString());
+    }, [currentTestQuestionIndex]);
 
     useEffect(() => {
-        localStorage.setItem('showScore', showScore.toString());
-    }, [showScore]);
+        localStorage.setItem('showTestScore', showTestScore.toString());
+    }, [showTestScore]);
 
     useEffect(() => {
-        localStorage.setItem('showScoreMessage', showScoreMessage.toString());
-    }, [showScoreMessage]);
+        localStorage.setItem('showTestScoreMessage', showTestScoreMessage.toString());
+    }, [showTestScoreMessage]);
 
-    return (
+   return (
         <div className="grid">
             <div className="col-12">
                 <div className="card">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <h5>Quizzes</h5>
+                        <h5>Class Tests</h5>
                         <Fragment>
                             <Button icon="pi pi-times" style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={isQuizOngoing} />
                         </Fragment>
                         <Dialog
-                            header="Exit Quiz"
+                            header="Exit Test"
                             style={{ width: '50vw' }}
                             visible={visible}
                             onHide={() => {
@@ -343,7 +332,7 @@ const QuizPage: React.FC = () => {
                             }}
                             footer={cancelFooter}
                         >
-                            Are you sure you want to exit the quiz?
+                            Are you sure you want to exit the test?
                         </Dialog>
                     </div>
                     {!isQuizOngoing && (
@@ -398,7 +387,7 @@ const QuizPage: React.FC = () => {
                         <div key={currentQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
+                                    <h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
                                     <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
                                 </div>
                                 <div className="cardOption">
@@ -418,54 +407,43 @@ const QuizPage: React.FC = () => {
                                                 <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                             </div>
                                         </label>
-                                        {explanationsVisible[option.no] && (
-                                            <div>
-                                                {option.isAnswer ? (
-                                                    <div className="explanation-container" style={{ color: 'green' }}>Correct Answer</div>
-                                                ) : (
-                                                    <div className="explanation-container" style={{ color: 'red' }}>Incorrect Answer</div>
-                                                )}
-                                                <div className="explanation-container">{option.explanation}</div>
-                                            </div>
-                                        )}
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex flex-wrap gap-2">
-                                {isAnswerSubmitted ? (
-                                    currentQuestionIndex < quiz.mcqs.length - 1 ? (
-                                        <Button
-                                            label="Next Question"
-                                            onClick={() => {
-                                                if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                                    submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
-                                                    handleNextQuestion();
-                                                } else {
-                                                    console.error('Quiz ID is undefined or selected option is null');
-                                                }
-                                            }}
-                                        ></Button>
-                                    ) : (
-                                        <Button
-                                            label="Submit Quiz"
-                                            onClick={displayScore}
-                                        ></Button>
-                                    )
-                                ) : (
-                                    <Button
-                                        label="Submit"
-                                        onClick={handleSubmitAnswer}
-                                        disabled={isAnswerSubmitted}
-                                    ></Button>
-                                )}
-                            </div>
+                           <div className="flex flex-wrap gap-2">
+                               {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
+                                   <Button
+                                       label="Next Question"
+                                       onClick={() => {
+                                           if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                               submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                               handleNextQuestion();
+                                           } else {
+                                               console.error('Test ID is undefined or selected option is null');
+                                           }
+                                       }}
+                                   ></Button>
+                               ) : (
+                                   <Button
+                                       label="Submit Test"
+                                       onClick={() => {
+                                           if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                               submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                               displayScore();
+                                           } else {
+                                               console.error('Test ID is undefined or selected option is null');
+                                           }
+                                       }}
+                                   ></Button>
+                               )}
+                           </div>
                             <h6><b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
-                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
+                            <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
                         </div>
                     )}
-                    {showScore && showScoreMessage && (
+                    {showTestScore && showTestScoreMessage && (
                         <div className="score-message">
-                            {showScoreMessage}
+                            {showTestScoreMessage}
                         </div>
                     )}
                 </div>
