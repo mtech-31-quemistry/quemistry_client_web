@@ -8,9 +8,6 @@ export const QuizService = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-user-id': '12asd',
-          'x-user-email': 'andrewjtgh@gmail.com',
-          'x-user-roles': 'student',
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -43,9 +40,6 @@ export const QuizService = {
         {
           headers: {
             'Content-Type': 'application/json',
-            'x-user-email': 'andrewjtgh@gmail.com',
-            'x-user-roles': 'student',
-            'x-user-id': '12asd',
           },
           credentials: "include"
         }
@@ -67,9 +61,6 @@ export const QuizService = {
         {
           headers: {
             'Content-Type': 'application/json',
-            'x-user-email': 'andrewjtgh@gmail.com',
-            'x-user-roles': 'student',
-            'x-user-id': '12asd',
           },
           credentials: "include"
         }
@@ -91,13 +82,10 @@ export const QuizService = {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'x-user-email': 'andrewjtgh@gmail.com',
-            'x-user-roles': 'student',
-            'x-user-id': '12asd',
           },
           credentials: "include",
           body: JSON.stringify({
-            "attemptOption": attempt,
+            attemptOption: attempt,
           }),
         }
       );
@@ -116,9 +104,6 @@ export const QuizService = {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'x-user-email': 'andrewjtgh@gmail.com',
-            'x-user-roles': 'student',
-            'x-user-id': '12asd',
           },
           credentials: "include",
         }
