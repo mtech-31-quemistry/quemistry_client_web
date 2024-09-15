@@ -24,7 +24,7 @@ const QuizPage: React.FC = () => {
     const [isAnswered, setIsAnswered] = useState(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
-    const [showTestScore, setShowTestScore] = useState('');
+    const [showTestScore, setShowTestScore] = useState(false);
     const [showTestScoreMessage, setShowTestScoreMessage] = useState('');
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
 
@@ -46,7 +46,7 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         const savedShowTestScoreMessage = localStorage.getItem('showTestScoreMessage');
         if (savedShowTestScoreMessage) {
-            setShowTestScoreMessage(savedShowTestScoreMessage);
+            setShowTestScoreMessage(savedShowTestScoreMessage as string);
         }
     }, []);
 

@@ -25,7 +25,7 @@ const QuizPage: React.FC = () => {
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
     const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
-    const [showScore, setShowScore] = useState(true);
+    const [showScore, setShowScore] = useState(false);
     const [showScoreMessage, setShowScoreMessage] = useState('');
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
