@@ -279,25 +279,7 @@ const QuizPage: React.FC = () => {
         fetchData();
     }, [selectedTopics, selectedSkills]);
 
-    const calculateScore = () => {
-        if (!quiz) return;
-
-        let score = 0;
-        quiz.mcqs.forEach((mcq) => {
-            const selectedOption = selectedOptions[mcq.id];
-            const correctOption = mcq.options.find((option) => option.isAnswer)?.no;
-
-            if (selectedOption === correctOption) {
-                score++;
-            }
-        });
-
-        return score;
-    };
-
     const displayScore = () => {
-        const score = calculateScore();
-        const totalQuestions = quiz?.mcqs.length || 0;
         setCurrentTestQuestionIndex(currentTestQuestionIndex + 1)
         setShowTestScore(true);
         setShowTestScoreMessage(`You have completed the class test.`);
