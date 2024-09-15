@@ -28,6 +28,7 @@ const QuizPage: React.FC = () => {
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
     const [quizIdAvailable, setQuizIdAvailable] = useState(false);
+    const [isAbandoning, setIsAbandoning] = useState(false);
 
     // Retrieve currentQuestionIndex from local storage when the component mounts
     useEffect(() => {
@@ -124,6 +125,7 @@ const QuizPage: React.FC = () => {
             console.error('No quiz to abandon');
             return;
         }
+        setIsAbandoning(true); // Set isAbandoning to true to disable further actions
         try {
             await QuizService.abandonQuiz(quiz.id);
             setQuiz((prevQuiz: any) => ({
@@ -140,6 +142,8 @@ const QuizPage: React.FC = () => {
             localStorage.setItem('currentQuestionIndex', '0');
         } catch (error) {
             console.error('Error abandoning quiz:', error);
+        } finally {
+            setIsAbandoning(false); // Set isAbandoning to false once the call is complete
         }
     };
 
@@ -176,7 +180,13 @@ const QuizPage: React.FC = () => {
     const cancelFooter = (
         <div>
             <Button label="Cancel" icon="pi pi-times" onClick={cancelExit} className="p-button-text" />
-            <Button label="Quit" icon="pi pi-save" onClick={confirmExit} autoFocus />
+            <Button
+                label="Quit"
+                icon="pi pi-save"
+                onClick={confirmExit}
+                autoFocus
+                disabled={isAbandoning} // Disable the button while the quiz is being abandoned
+            />
         </div>
     );
 
