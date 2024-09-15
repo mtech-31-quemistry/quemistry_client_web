@@ -137,13 +137,13 @@ const QuizPage: React.FC = () => {
                 initialSelectedOptions[mcq.id] = 0;
             });
             setSelectedOptions(initialSelectedOptions);
-            setShowScore(true);
-            localStorage.setItem('showScore', 'true');
+            setShowScore(false);
+            localStorage.setItem('showScore', 'false');
             localStorage.setItem('currentQuestionIndex', '0');
         } catch (error) {
             console.error('Error abandoning quiz:', error);
         } finally {
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             setIsAbandoning(false); // Set isAbandoning to false once the call is complete
             setIsQuizOngoing(false);
             window.location.reload();
@@ -345,8 +345,6 @@ const QuizPage: React.FC = () => {
         setIsStartingNewQuiz(true); // Set isStartingNewQuiz to true to disable the button
         try {
             await QuizService.startNewQuiz(selectedTopics, selectedSkills);
-            // Refresh the page upon completion
-            
         } catch (error) {
             console.error('Error starting new quiz:', error);
         } finally {
@@ -377,9 +375,9 @@ const QuizPage: React.FC = () => {
                             Are you sure you want to exit the quiz?
                         </Dialog>
                     </div>
+                    {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
-                            {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div className="card">No questions generated.</div>}
                             <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b>
                             <div>
                                 <div className="col-12 md:col-6 mb-5">

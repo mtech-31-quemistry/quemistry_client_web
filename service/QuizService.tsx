@@ -1,35 +1,38 @@
 import { Quiz } from '@/types';
 
 export const QuizService = {
-  startNewQuiz: async (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
-    try {
-      console.log('Fetching data from API...');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          topics: topics,
-          skills: skills,
-          totalSize: 60,
-          pageSize: 60,
-        }),
-      });
+  startNewQuiz: (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        console.log('Fetching data from API...');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            topics: topics,
+            skills: skills,
+            totalSize: 60,
+            pageSize: 60,
+          }),
+        });
 
-      if (response.status === 409) {
-        console.log('Conflict: Quiz could not be started due to a conflict.');
-        return false;
+        if (response.status === 409) {
+          console.log('Conflict: Quiz could not be started due to a conflict.');
+          resolve(false);
+          return;
+        }
+
+        const responseData: Quiz.ApiResponse = await response.json();
+        console.log('Data fetched successfully:', responseData);
+        resolve(responseData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        reject(error);
       }
-
-      const responseData: Quiz.ApiResponse = await response.json();
-      console.log('Data fetched successfully:', responseData);
-      return responseData;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
+    });
   },
 
   getQuizInProgress: async (): Promise<Quiz.ApiResponse> => {
@@ -85,7 +88,7 @@ export const QuizService = {
           },
           credentials: "include",
           body: JSON.stringify({
-            attemptOption: attempt,
+            "attemptOption": attempt,
           }),
         }
       );
