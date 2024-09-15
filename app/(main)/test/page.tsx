@@ -21,7 +21,6 @@ const QuizPage: React.FC = () => {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentTestQuestionIndex, setCurrentTestQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [isAnswered, setIsAnswered] = useState(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
     const [showTestScore, setShowTestScore] = useState(false);
@@ -65,27 +64,10 @@ const QuizPage: React.FC = () => {
             console.error('Current question is undefined.');
             return;
         }
-
-        const selectedOptionNo = selectedOptions[currentTestQuestion.id];
-        const isCorrectAnswer = currentTestQuestion.options.find((option) => option.no === selectedOptionNo)?.isAnswer;
-        const totalOptions = currentTestQuestion.options.length;
-
-        if (!isCorrectAnswer) {
-            const newNumberOfIncorrectOptions = numberOfIncorrectOptions + 1;
-            setNumberOfIncorrectOptions(newNumberOfIncorrectOptions);
-
-            if (newNumberOfIncorrectOptions === totalOptions - 1) {
-                setIsAnswered(true);
-            }
-        } else {
-            setIsAnswered(true);
-        }
-
         setIsRadioDisabled(true);
     };
 
     useEffect(() => {
-        setIsAnswered(false);
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizInProgress();
@@ -282,6 +264,8 @@ const QuizPage: React.FC = () => {
     const displayScore = () => {
         setCurrentTestQuestionIndex(currentTestQuestionIndex + 1)
         setShowTestScore(true);
+        localStorage.setItem('showTestScore', 'false');
+        localStorage.setItem('currentTestQuestionIndex', '0');
         setShowTestScoreMessage(`You have completed the class test.`);
         localStorage.setItem('showTestScoreMessage', showTestScoreMessage);
     };
@@ -298,6 +282,14 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         localStorage.setItem('showTestScoreMessage', showTestScoreMessage.toString());
     }, [showTestScoreMessage]);
+
+    useEffect(() => {
+        if (!isQuizOngoing) {
+            setShowTestScore(false);
+            localStorage.setItem('showTestScore', 'false');
+            localStorage.setItem('currentTestQuestionIndex', '0');
+        }
+    }, [isQuizOngoing]);
 
    return (
         <div className="grid">
@@ -363,7 +355,7 @@ const QuizPage: React.FC = () => {
                                     }}
                                     disabled={isDisabled}
                                 >
-                                    {isDisabled ? 'Loading Quiz...' : 'Submit'}
+                                    {isDisabled ? 'Loading Test...' : 'Submit'}
                                 </Button>
                             </div>
                         </div>

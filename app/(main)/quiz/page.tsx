@@ -21,10 +21,8 @@ const QuizPage: React.FC = () => {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [isAnswered, setIsAnswered] = useState(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
-    const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
     const [showScore, setShowScore] = useState(false);
     const [showScoreMessage, setShowScoreMessage] = useState('');
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
@@ -67,22 +65,6 @@ const QuizPage: React.FC = () => {
             console.error('Current question is undefined.');
             return;
         }
-
-        const selectedOptionNo = selectedOptions[currentQuestion.id];
-        const isCorrectAnswer = currentQuestion.options.find((option) => option.no === selectedOptionNo)?.isAnswer;
-        const totalOptions = currentQuestion.options.length;
-
-        if (!isCorrectAnswer) {
-            const newNumberOfIncorrectOptions = numberOfIncorrectOptions + 1;
-            setNumberOfIncorrectOptions(newNumberOfIncorrectOptions);
-
-            if (newNumberOfIncorrectOptions === totalOptions - 1) {
-                setIsAnswered(true);
-            }
-        } else {
-            setIsAnswered(true);
-        }
-
         setExplanationsVisible(currentQuestion.options.reduce((acc, option) => {
             acc[option.no] = true;
             return acc;
@@ -93,7 +75,6 @@ const QuizPage: React.FC = () => {
     };
 
     useEffect(() => {
-        setIsAnswered(false);
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizInProgress();
@@ -131,7 +112,6 @@ const QuizPage: React.FC = () => {
         if (currentQuestionLength > 0) {
             if (currentQuestionIndex < currentQuestionLength - 1) {
                 setExplanationsVisible({});
-                setIsAnswered(false);
                 setIsAnswerSubmitted(false);
                 setIsRadioDisabled(false);
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -155,7 +135,8 @@ const QuizPage: React.FC = () => {
                 initialSelectedOptions[mcq.id] = 0;
             });
             setSelectedOptions(initialSelectedOptions);
-            setShowScore(false);
+            setShowScore(true);
+            localStorage.setItem('showScore', 'true');
             localStorage.setItem('currentQuestionIndex', '0');
         } catch (error) {
             console.error('Error abandoning quiz:', error);
@@ -310,6 +291,7 @@ const QuizPage: React.FC = () => {
         const totalQuestions = quiz?.mcqs.length || 0;
         setCurrentQuestionIndex(currentQuestionIndex + 1)
         setShowScore(true);
+        localStorage.setItem('currentQuestionIndex', '0');
         setShowScoreMessage(`You answered ${score} of ${totalQuestions} questions correctly.`);
         localStorage.setItem('showScoreMessage', showScoreMessage);
     };
@@ -326,6 +308,14 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         localStorage.setItem('showScoreMessage', showScoreMessage.toString());
     }, [showScoreMessage]);
+
+    useEffect(() => {
+        if (!isQuizOngoing) {
+            setShowScore(false);
+            localStorage.setItem('showScore', 'false');
+            localStorage.setItem('currentQuestionIndex', '0');
+        }
+    }, [isQuizOngoing]);
 
     return (
         <div className="grid">
