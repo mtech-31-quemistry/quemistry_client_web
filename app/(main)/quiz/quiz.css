@@ -15,3 +15,18 @@
 .card {
     margin-bottom: 0px; /* Adjust this value as needed */
 }
+
+.explanation-container {
+    margin: 0.3rem 0; /* Adds 1rem of space above and below the div */
+    padding-left: 36px; /* Adjust this value to match the indentation of the option text */
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+}
+
+.option-label input[type="radio"] {
+    margin-right: 18px; /* Adjust this value to align the radio button and text correctly */
+    margin-bottom: 3px; /* Adjust this value to align the radio button and text correctly */
+}
