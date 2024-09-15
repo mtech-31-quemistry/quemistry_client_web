@@ -27,6 +27,7 @@ const QuizPage: React.FC = () => {
     const [showTestScore, setShowTestScore] = useState(false);
     const [showTestScoreMessage, setShowTestScoreMessage] = useState('');
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
+    const [quizIdAvailable, setQuizIdAvailable] = useState(false);
 
     // Retrieve currentTestQuestionIndex from local storage when the component mounts
     useEffect(() => {
@@ -423,6 +424,7 @@ const QuizPage: React.FC = () => {
                                                console.error('Test ID is undefined or selected option is null');
                                            }
                                        }}
+                                       disabled={!quizIdAvailable}
                                    ></Button>
                                ) : (
                                    <Button
