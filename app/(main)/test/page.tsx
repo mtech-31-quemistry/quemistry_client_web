@@ -60,14 +60,14 @@ const QuizPage: React.FC = () => {
     };
 
     const handleSubmitAnswer = () => {
-        if (!currentQuestion) {
+        if (!currentTestQuestion) {
             console.error('Current question is undefined.');
             return;
         }
 
-        const selectedOptionNo = selectedOptions[currentQuestion.id];
-        const isCorrectAnswer = currentQuestion.options.find((option) => option.no === selectedOptionNo)?.isAnswer;
-        const totalOptions = currentQuestion.options.length;
+        const selectedOptionNo = selectedOptions[currentTestQuestion.id];
+        const isCorrectAnswer = currentTestQuestion.options.find((option) => option.no === selectedOptionNo)?.isAnswer;
+        const totalOptions = currentTestQuestion.options.length;
 
         if (!isCorrectAnswer) {
             const newNumberOfIncorrectOptions = numberOfIncorrectOptions + 1;
@@ -106,7 +106,7 @@ const QuizPage: React.FC = () => {
         fetchData();
     }, []);
 
-    const currentQuestion = quiz?.mcqs?.[currentTestQuestionIndex];
+    const currentTestQuestion = quiz?.mcqs?.[currentTestQuestionIndex];
     const currentQuestionLength = quiz?.mcqs?.length ?? 0;
 
     const submitAttempt = async (quizId: number, mcqId: number, attempt: number) => {
@@ -143,6 +143,7 @@ const QuizPage: React.FC = () => {
             });
             setSelectedOptions(initialSelectedOptions);
             setShowTestScore(false);
+            localStorage.setItem('showTestScore', 'false');
             localStorage.setItem('currentTestQuestionIndex', '0');
         } catch (error) {
             console.error('Error abandoning quiz:', error);
@@ -383,25 +384,25 @@ const QuizPage: React.FC = () => {
                             </div>
                         </div>
                     )}
-                    {currentQuestion && (
-                        <div key={currentQuestion.id}>
+                    {currentTestQuestion && (
+                        <div key={currentTestQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
-                                    <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
+                                    <b>{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</b>
                                 </div>
                                 <div className="cardOption">
-                                    <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
+                                    <span dangerouslySetInnerHTML={{ __html: currentTestQuestion.stem }} />
                                 </div>
-                                {currentQuestion.options.map((option) => (
+                                {currentTestQuestion.options.map((option) => (
                                     <div key={option.no} className="cardOption">
                                         <label className="option-label">
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                 <input
                                                     type="radio"
-                                                    name={`mcq-${currentQuestion.id}`}
-                                                    checked={selectedOptions[currentQuestion.id] === option.no}
-                                                    onChange={() => handleOptionClick(currentQuestion.id, option.no)}
+                                                    name={`mcq-${currentTestQuestion.id}`}
+                                                    checked={selectedOptions[currentTestQuestion.id] === option.no}
+                                                    onChange={() => handleOptionClick(currentTestQuestion.id, option.no)}
                                                     disabled={isRadioDisabled}
                                                 />
                                                 <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
@@ -415,8 +416,8 @@ const QuizPage: React.FC = () => {
                                    <Button
                                        label="Next Question"
                                        onClick={() => {
-                                           if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                               submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                           if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                               submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
                                                handleNextQuestion();
                                            } else {
                                                console.error('Test ID is undefined or selected option is null');
@@ -427,8 +428,8 @@ const QuizPage: React.FC = () => {
                                    <Button
                                        label="Submit Test"
                                        onClick={() => {
-                                           if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                               submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                           if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                               submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
                                                displayScore();
                                            } else {
                                                console.error('Test ID is undefined or selected option is null');
@@ -437,7 +438,7 @@ const QuizPage: React.FC = () => {
                                    ></Button>
                                )}
                            </div>
-                            <h6><b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
+                            <h6><b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
                             <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
                         </div>
                     )}
