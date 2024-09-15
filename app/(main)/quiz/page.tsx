@@ -31,30 +31,6 @@ const QuizPage: React.FC = () => {
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
     const [quizIdAvailable, setQuizIdAvailable] = useState(false);
 
-    useEffect(() => {
-        setIsAnswered(false);
-        const fetchData = async () => {
-            try {
-                const responseData = await QuizService.getQuizInProgress();
-                if (responseData.message === 'Quiz not found') {
-                    setIsQuizOngoing(false);
-                    return;
-                }
-                setQuiz(responseData);
-                const initialSelectedOptions: { [key: number]: number | 0 } = {};
-                responseData.mcqs.forEach((mcq) => {
-                    initialSelectedOptions[mcq.id] = 0;
-                });
-                setSelectedOptions(initialSelectedOptions);
-                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-    
-        fetchData();
-    }, []);
-
     // Retrieve currentQuestionIndex from local storage when the component mounts
     useEffect(() => {
         const savedIndex = localStorage.getItem('currentQuestionIndex');
@@ -131,6 +107,7 @@ const QuizPage: React.FC = () => {
                     initialSelectedOptions[mcq.id] = 0;
                 });
                 setSelectedOptions(initialSelectedOptions);
+                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
             } catch (error) {
                 console.error('Error fetching data:', error);
             }

@@ -99,6 +99,7 @@ const QuizPage: React.FC = () => {
                     initialSelectedOptions[mcq.id] = 0;
                 });
                 setSelectedOptions(initialSelectedOptions);
+                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
