@@ -27,6 +27,8 @@ const QuizPage: React.FC = () => {
     const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
     const [showScore, setShowScore] = useState(true);
     const [showScoreMessage, setShowScoreMessage] = useState('');
+    const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
+    const [isRadioDisabled, setIsRadioDisabled] = useState(false);
 
     // Retrieve currentQuestionIndex from local storage when the component mounts
     useEffect(() => {
@@ -42,26 +44,31 @@ const QuizPage: React.FC = () => {
             setShowScore(savedShowScore === 'true');
         }
     }, []);
-    
+
     useEffect(() => {
         const savedShowScoreMessage = localStorage.getItem('showScoreMessage');
         if (savedShowScoreMessage) {
             setShowScoreMessage(savedShowScoreMessage);
         }
     }, []);
-    
+
     const handleOptionClick = (mcqId: number, optionNo: number) => {
-        if (!currentQuestion) {
-            console.error('Current question is undefined.');
-            return;
-        }
+        if (isRadioDisabled) return;
 
         setSelectedOptions({
             ...selectedOptions,
             [mcqId]: optionNo
         });
+    };
 
-        const isCorrectAnswer = currentQuestion.options.find((option) => option.no === optionNo)?.isAnswer;
+    const handleSubmitAnswer = () => {
+        if (!currentQuestion) {
+            console.error('Current question is undefined.');
+            return;
+        }
+
+        const selectedOptionNo = selectedOptions[currentQuestion.id];
+        const isCorrectAnswer = currentQuestion.options.find((option) => option.no === selectedOptionNo)?.isAnswer;
         const totalOptions = currentQuestion.options.length;
 
         if (!isCorrectAnswer) {
@@ -75,10 +82,13 @@ const QuizPage: React.FC = () => {
             setIsAnswered(true);
         }
 
-        setExplanationsVisible({
-            ...explanationsVisible,
-            [optionNo]: true
-        });
+        setExplanationsVisible(currentQuestion.options.reduce((acc, option) => {
+            acc[option.no] = true;
+            return acc;
+        }, {} as { [key: number]: boolean }));
+
+        setIsAnswerSubmitted(true);
+        setIsRadioDisabled(true);
     };
 
     useEffect(() => {
@@ -120,6 +130,8 @@ const QuizPage: React.FC = () => {
             if (currentQuestionIndex < currentQuestionLength - 1) {
                 setExplanationsVisible({});
                 setIsAnswered(false);
+                setIsAnswerSubmitted(false);
+                setIsRadioDisabled(false);
                 setCurrentQuestionIndex(currentQuestionIndex + 1);
             }
         }
@@ -142,7 +154,7 @@ const QuizPage: React.FC = () => {
             });
             setSelectedOptions(initialSelectedOptions);
             setShowScore(false);
-            localStorage.setItem('currentQuestionIndex', 0);
+            localStorage.setItem('currentQuestionIndex', '0');
         } catch (error) {
             console.error('Error abandoning quiz:', error);
         }
@@ -277,17 +289,17 @@ const QuizPage: React.FC = () => {
 
     const calculateScore = () => {
         if (!quiz) return;
-    
+
         let score = 0;
         quiz.mcqs.forEach((mcq) => {
             const selectedOption = selectedOptions[mcq.id];
             const correctOption = mcq.options.find((option) => option.isAnswer)?.no;
-    
+
             if (selectedOption === correctOption) {
                 score++;
             }
         });
-    
+
         return score;
     };
 
@@ -354,44 +366,46 @@ const QuizPage: React.FC = () => {
                                 </div>
                                 <div className="col-12 md:col-6 mb-5"></div>
                             </div>
-                                <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                    <Button
-                                        onClick={() => {
-                                            let selectedTopics: number[] = [];
-                                            let selectedSkills: number[] = [];
-                                            if (selectedTopicNodes) {
-                                                Object.entries(selectedTopicNodes).forEach(([key, data]) => {
-                                                    let topic_skill = key.split('-');
-                                                    if (topic_skill.length > 1) {
-                                                        selectedSkills.push(parseInt(topic_skill[1]));
-                                                    } else {
-                                                        selectedTopics.push(parseInt(topic_skill[0]));
-                                                    }
-                                                });
-                                            }
-                                            setIsDisabled(true);
-                                            QuizService.startNewQuiz(selectedTopics, selectedSkills);
-                                            setTimeout(() => {
-                                                window.location.reload();
-                                            }, 1500);
-                                        }}
-                                        disabled={isDisabled}
-                                    >
-                                        {isDisabled ? 'Loading Quiz...' : 'Submit'}
-                                    </Button>
-                                </div>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
+                                <Button
+                                    onClick={() => {
+                                        let selectedTopics: number[] = [];
+                                        let selectedSkills: number[] = [];
+                                        if (selectedTopicNodes) {
+                                            Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                                                let topic_skill = key.split('-');
+                                                if (topic_skill.length > 1) {
+                                                    selectedSkills.push(parseInt(topic_skill[1]));
+                                                } else {
+                                                    selectedTopics.push(parseInt(topic_skill[0]));
+                                                }
+                                            });
+                                        }
+                                        setIsDisabled(true);
+                                        QuizService.startNewQuiz(selectedTopics, selectedSkills);
+                                        setTimeout(() => {
+                                            window.location.reload();
+                                        }, 1500);
+                                    }}
+                                    disabled={isDisabled}
+                                >
+                                    {isDisabled ? 'Loading Quiz...' : 'Submit'}
+                                </Button>
                             </div>
+                        </div>
                     )}
                     {currentQuestion && (
                         <div key={currentQuestion.id}>
                             <div className="card">
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
-                                        <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
-                                    </div>
-                                    <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
+                                    <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
+                                </div>
+                                <div className="cardOption">
+                                    <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
+                                </div>
                                 {currentQuestion.options.map((option) => (
-                                    <div key={option.no} className="card">
+                                    <div key={option.no} className="cardOption">
                                         <label className="option-label">
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                 <input
@@ -399,6 +413,7 @@ const QuizPage: React.FC = () => {
                                                     name={`mcq-${currentQuestion.id}`}
                                                     checked={selectedOptions[currentQuestion.id] === option.no}
                                                     onChange={() => handleOptionClick(currentQuestion.id, option.no)}
+                                                    disabled={isRadioDisabled}
                                                 />
                                                 <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                             </div>
@@ -416,9 +431,9 @@ const QuizPage: React.FC = () => {
                                     </div>
                                 ))}
                             </div>
-                            {selectedOptions[currentQuestion.id] !== null && (
-                                <div className="flex flex-wrap gap-2">
-                                    {currentQuestionIndex < quiz.mcqs.length - 1 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {isAnswerSubmitted ? (
+                                    currentQuestionIndex < quiz.mcqs.length - 1 ? (
                                         <Button
                                             label="Next Question"
                                             onClick={() => {
@@ -429,23 +444,21 @@ const QuizPage: React.FC = () => {
                                                     console.error('Quiz ID is undefined or selected option is null');
                                                 }
                                             }}
-                                            disabled={!isAnswered}
                                         ></Button>
                                     ) : (
-                                        <>
-                                            <div>
-                                                    <Button
-                                                        label="Submit Quiz"
-                                                        onClick={displayScore}
-                                                        disabled={!isAnswered}
-                                                    >
-                                                        {/* {!isAnswered ? 'Quiz Submitted' : 'Submit Quiz' } */}
-                                                    </Button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            )}
+                                        <Button
+                                            label="Submit Quiz"
+                                            onClick={displayScore}
+                                        ></Button>
+                                    )
+                                ) : (
+                                    <Button
+                                        label="Submit"
+                                        onClick={handleSubmitAnswer}
+                                        disabled={isAnswerSubmitted}
+                                    ></Button>
+                                )}
+                            </div>
                             <h5>Topic</h5>
                             <ul>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</ul>
                             <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
@@ -453,8 +466,8 @@ const QuizPage: React.FC = () => {
                     )}
                     {showScore && showScoreMessage && (
                         <div className="score-message">
-                        {showScoreMessage}
-                    </div>
+                            {showScoreMessage}
+                        </div>
                     )}
                 </div>
             </div>

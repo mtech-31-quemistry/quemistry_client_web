@@ -12,8 +12,9 @@
     word-break: break-word !important;
 }
 
-.card {
+.cardOption {
     margin-bottom: 0px; /* Adjust this value as needed */
+    padding: 10px; /* Adjust this value as needed */
 }
 
 .explanation-container {
