@@ -405,8 +405,6 @@ const QuizPage: React.FC = () => {
                                         </label>
                                     </div>
                                 ))}
-                            </div>
-                           <div className="flex flex-wrap gap-2">
                                {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
                                    <Button
                                        label="Next Question"
