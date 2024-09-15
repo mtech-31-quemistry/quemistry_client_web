@@ -1,49 +1,28 @@
 'use client';
 import './quiz.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
 import { Button } from 'primereact/button';
 import { QuestionsService } from '@/service/QuestionsService';
 import { Questions } from '@/types';
-import { TabView, TabPanel } from 'primereact/tabview';
-import { Editor, EditorTextChangeEvent } from 'primereact/editor';
-import { InputSwitch, InputSwitchChangeEvent } from 'primereact/inputswitch';
 import { InputText } from 'primereact/inputtext';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
-import { useRouter } from 'next/navigation';
-import React, { Fragment } from 'react';
-import { InputNumber } from 'primereact/inputnumber';
-import { TreeTable } from 'primereact/treetable';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { ProgressBar } from 'primereact/progressbar';
 
 const QuizPage: React.FC = () => {
-    const router = useRouter();
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
     const [topicNodes, setTopicNodes] = useState<any>(null);
     const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
-
     const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
     const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
     const [isAnswered, setIsAnswered] = useState(false);
-
-    const [addedOptions, setAddedOptions] = useState<Questions.Option[]>([]);
-    const [stem, setStem] = useState<string>('');
-    const [answer, setAnswer] = useState<string>('');
-    const [explanation, setExplanation] = useState<string>('');
-    const [isAnswer, setIsAnswer] = useState<boolean>(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
-    const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
-
-    const [activeTab, setActiveTab] = useState<number>(0);
     const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
     const [numberOfIncorrectOptions, setNumberOfIncorrectOptions] = useState(0);
 
@@ -250,39 +229,37 @@ const QuizPage: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (activeTab === 1) {
-                console.log('selectedTopics', selectedTopics);
-                console.log('selectedSkills', selectedSkills);
+            console.log('selectedTopics', selectedTopics);
+            console.log('selectedSkills', selectedSkills);
 
-                const retrieveQuestionRequest = {
-                    topics: selectedTopics,
-                    skills: selectedSkills,
-                    pageNumber: 0,
-                    pageSize: 60
-                };
+            const retrieveQuestionRequest = {
+                topics: selectedTopics,
+                skills: selectedSkills,
+                pageNumber: 0,
+                pageSize: 60
+            };
 
-                console.log('retrieveQuestionRequest', retrieveQuestionRequest);
-                try {
-                    const mcqResponse = await QuestionsService.retrieveMCQ(retrieveQuestionRequest);
-                    console.log('mcqResponse', mcqResponse);
+            console.log('retrieveQuestionRequest', retrieveQuestionRequest);
+            try {
+                const mcqResponse = await QuestionsService.retrieveMCQ(retrieveQuestionRequest);
+                console.log('mcqResponse', mcqResponse);
 
-                    console.log('count', mcqResponse);
-                    if (mcqResponse && mcqResponse) {
-                        const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
-                        const count = uniqueIds.size;
-                        setGeneratedQuestionCount(count);
-                    } else {
-                        setGeneratedQuestionCount(0);
-                    }
-                } catch (error) {
-                    console.error('Error retrieving MCQs:', error);
+                console.log('count', mcqResponse);
+                if (mcqResponse && mcqResponse) {
+                    const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
+                    const count = uniqueIds.size;
+                    setGeneratedQuestionCount(count);
+                } else {
                     setGeneratedQuestionCount(0);
                 }
+            } catch (error) {
+                console.error('Error retrieving MCQs:', error);
+                setGeneratedQuestionCount(0);
             }
         };
 
         fetchData();
-    }, [activeTab, selectedTopics, selectedSkills]);
+    }, [selectedTopics, selectedSkills]);
 
     return (
         <div className="grid">
@@ -309,105 +286,51 @@ const QuizPage: React.FC = () => {
                     {!isQuizOngoing && (
                         <div>
                             <br />
-                            <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
-                                <TabPanel header="General Information">
-                                    <div className="grid">
-                                        <div className="col-12 md:col-6 mb-5">
-                                            <TreeSelect
-                                                value={selectedTopicNodes}
-                                                onChange={(e) => setSelectedTopicNodes(e.value)}
-                                                options={topicNodes}
-                                                className="md:w-50rem w-full"
-                                                metaKeySelection={false}
-                                                selectionMode="checkbox"
-                                                display="chip"
-                                                placeholder="Select Topics / Skills"
-                                                showClear
-                                            ></TreeSelect>
-                                        </div>
-                                        <div className="col-12 md:col-6 mb-5"></div>
-                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                            <Button
-                                                label="Next"
-                                                onClick={() => {
-                                                    setActiveTab(1);
-                                                }}
-                                            ></Button>
-                                        </div>
-                                    </div>
-                                </TabPanel>
-                                <TabPanel header="Options">
-                                    <div className="grid">
-                                        <div className="col-12 md:col-6 mb-5">
-                                            <p>
-                                                {generatedQuestionCount} question(s) will be generated.
-                                                <br />
-                                            </p>
-                                        </div>
-                                        <div className="col-12 md:col-6 mb-5">
-                                            <InputNumber
-                                                value={selectedQuestionCount}
-                                                onValueChange={(e) => {
-                                                    const value = e.value;
-                                                    if (typeof value === 'number') {
-                                                        setSelectedQuestionCount(value);
+                            <div className="grid">
+                                <div className="col-12 md:col-6 mb-5">
+                                    <TreeSelect
+                                        value={selectedTopicNodes}
+                                        onChange={(e) => setSelectedTopicNodes(e.value)}
+                                        options={topicNodes}
+                                        className="md:w-50rem w-full"
+                                        metaKeySelection={false}
+                                        selectionMode="checkbox"
+                                        display="chip"
+                                        placeholder="Select Topics / Skills"
+                                        showClear
+                                    ></TreeSelect>
+                                </div>
+                                <div className="col-12 md:col-6 mb-5"></div>
+                            </div>
+                                {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.
+                                <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
+                                    <Button
+                                        onClick={() => {
+                                            let selectedTopics: number[] = [];
+                                            let selectedSkills: number[] = [];
+                                            if (selectedTopicNodes) {
+                                                Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                                                    console.log('key', key, 'data', data);
+                                                    let topic_skill = key.split('-');
+                                                    if (topic_skill.length > 1) {
+                                                        selectedSkills.push(parseInt(topic_skill[1]));
                                                     } else {
-                                                        setSelectedQuestionCount(0);
+                                                        selectedTopics.push(parseInt(topic_skill[0]));
                                                     }
-                                                }}
-                                                placeholder={generatedQuestionCount.toString()}
-                                            />
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                            <Button label="Next" onClick={() => setActiveTab(2)}></Button>
-                                        </div>
-                                    </div>
-                                </TabPanel>
-                                <TabPanel header="Review">
-                                    <div className="grid">
-                                        <div className="col-12 md:col-6 mb-5">
-                                            <p>
-                                                {selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.
-                                                <br />
-                                            </p>
-                                        </div>
-                                        <div className="col-12 md:col-6 mb-5">
-                                            <InputNumber value={selectedQuestionCount} disabled />
-                                        </div>
-                                        <div className="col-12 md:col-6 mb-5">
-                                            <InputTextarea value={renderSelectedNodes()} autoResize disabled />
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                            <Button
-                                                onClick={() => {
-                                                    let selectedTopics: number[] = [];
-                                                    let selectedSkills: number[] = [];
-                                                    if (selectedTopicNodes) {
-                                                        Object.entries(selectedTopicNodes).forEach(([key, data]) => {
-                                                            console.log('key', key, 'data', data);
-                                                            let topic_skill = key.split('-');
-                                                            if (topic_skill.length > 1) {
-                                                                selectedSkills.push(parseInt(topic_skill[1]));
-                                                            } else {
-                                                                selectedTopics.push(parseInt(topic_skill[0]));
-                                                            }
-                                                        });
-                                                    }
-                                                    setIsDisabled(true);
-                                                    QuizService.startNewQuiz(selectedTopics, selectedSkills);
-                                                    setTimeout(() => {
-                                                        window.location.reload();
-                                                    }, 1500);
-                                                }}
-                                                disabled={isDisabled}
-                                            >
-                                                {isDisabled ? 'Loading Quiz...' : 'Submit'}
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </TabPanel>
-                            </TabView>
-                        </div>
+                                                });
+                                            }
+                                            setIsDisabled(true);
+                                            QuizService.startNewQuiz(selectedTopics, selectedSkills);
+                                            setTimeout(() => {
+                                                window.location.reload();
+                                            }, 1500);
+                                        }}
+                                        disabled={isDisabled}
+                                    >
+                                        {isDisabled ? 'Loading Quiz...' : 'Submit'}
+                                    </Button>
+                                </div>
+                            </div>
                     )}
                     {currentQuestion && (
                         <div key={currentQuestion.id}>
