@@ -143,7 +143,10 @@ const QuizPage: React.FC = () => {
         } catch (error) {
             console.error('Error abandoning quiz:', error);
         } finally {
+            await new Promise(resolve => setTimeout(resolve, 5000));
             setIsAbandoning(false); // Set isAbandoning to false once the call is complete
+            setIsQuizOngoing(false);
+            window.location.reload();
         }
     };
 
@@ -167,10 +170,7 @@ const QuizPage: React.FC = () => {
     }, [listOfTopics]);
 
     const confirmExit = () => {
-        setVisible(false);
         abandonQuiz();
-        setIsQuizOngoing(false);
-        window.location.reload();
     };
 
     const cancelExit = () => {
@@ -327,6 +327,35 @@ const QuizPage: React.FC = () => {
         }
     }, [isQuizOngoing]);
 
+    const [isStartingNewQuiz, setIsStartingNewQuiz] = useState(false);
+
+    const startNewQuiz = async () => {
+        let selectedTopics: number[] = [];
+        let selectedSkills: number[] = [];
+        if (selectedTopicNodes) {
+            Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                let topic_skill = key.split('-');
+                if (topic_skill.length > 1) {
+                    selectedSkills.push(parseInt(topic_skill[1]));
+                } else {
+                    selectedTopics.push(parseInt(topic_skill[0]));
+                }
+            });
+        }
+        setIsStartingNewQuiz(true); // Set isStartingNewQuiz to true to disable the button
+        try {
+            await QuizService.startNewQuiz(selectedTopics, selectedSkills);
+            // Refresh the page upon completion
+            
+        } catch (error) {
+            console.error('Error starting new quiz:', error);
+        } finally {
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            setIsStartingNewQuiz(false); // Set isStartingNewQuiz to false once the call is complete
+            window.location.reload();
+        }
+    };
+
     return (
         <div className="grid">
             <div className="col-12">
@@ -370,28 +399,10 @@ const QuizPage: React.FC = () => {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                 <Button
-                                    onClick={() => {
-                                        let selectedTopics: number[] = [];
-                                        let selectedSkills: number[] = [];
-                                        if (selectedTopicNodes) {
-                                            Object.entries(selectedTopicNodes).forEach(([key, data]) => {
-                                                let topic_skill = key.split('-');
-                                                if (topic_skill.length > 1) {
-                                                    selectedSkills.push(parseInt(topic_skill[1]));
-                                                } else {
-                                                    selectedTopics.push(parseInt(topic_skill[0]));
-                                                }
-                                            });
-                                        }
-                                        setIsDisabled(true);
-                                        QuizService.startNewQuiz(selectedTopics, selectedSkills);
-                                        setTimeout(() => {
-                                            window.location.reload();
-                                        }, 1500);
-                                    }}
-                                    disabled={isDisabled}
+                                    onClick={startNewQuiz}
+                                    disabled={isDisabled || isStartingNewQuiz}
                                 >
-                                    {isDisabled ? 'Loading Quiz...' : 'Submit'}
+                                    {isStartingNewQuiz ? 'Loading Quiz...' : 'Submit'}
                                 </Button>
                             </div>
                         </div>
@@ -474,7 +485,7 @@ const QuizPage: React.FC = () => {
                 </div>
             </div>
         </div>
-    );
+    );    
 };
 
 export default QuizPage;
