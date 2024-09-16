@@ -6,8 +6,8 @@ import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { UserService } from '@/service/UserService';
-import CreateInvitationPage from '@/app/(main)/students/invitation/create/page';
 import { Toast } from 'primereact/toast';
+import CreateInvitationComponent from '@/app/(main)/students/invitation/CreateInvitationComponent';
 
 const Students = () => {
   const [inviteStudentStatus, setInviteStudentStatus] = useState(false);
@@ -18,7 +18,7 @@ const Students = () => {
   const toast = useRef<Toast>(null);
 
   useEffect(() => {
-    fetchStudents();
+
   }, [inviteStudentStatus]);
 
   const clearInviteStudent = () => {
@@ -27,8 +27,6 @@ const Students = () => {
     setEmail('');
     setFullName('');
   };
-
-  const fetchStudents = async () => setStudents(await UserService.getStudents());
 
   const inviteStudent = async () => {
     console.log('email', email, 'class code', selectedClass.code, 'full name', fullName);
@@ -42,7 +40,6 @@ const Students = () => {
     invitationResponse(isSucceeded, fullName, selectedClass.name);
 
     clearInviteStudent();
-    await fetchStudents();
   };
 
   const invitationResponse = (isSucceeded: boolean, fullName: string, className: string) => {
@@ -80,7 +77,7 @@ const Students = () => {
           </Fragment>
           <Dialog header="Invite Student" style={{ width: '50vw' }} visible={inviteStudentStatus}
                   onHide={() => inviteStudentStatus && clearInviteStudent()} footer={addStudentFooter}>
-            <CreateInvitationPage setEmail={setEmail} email={email} setFullName={setFullName} fullName={fullName}
+            <CreateInvitationComponent setEmail={setEmail} email={email} setFullName={setFullName} fullName={fullName}
                                   selectedClass={selectedClass} setSelectedClass={setSelectedClass} />
           </Dialog>
           <h5>Manage Students</h5>
