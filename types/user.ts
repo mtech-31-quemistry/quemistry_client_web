@@ -36,3 +36,8 @@ interface InviteStudent {
     studentFullName: string;
     classCode: string;
 }
+
+interface InputClass {
+  name: string;
+  code: string;
+}
