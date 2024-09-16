@@ -1,9 +1,7 @@
-import Header from 'quill/formats/header';
-
 const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || ''
 const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}`
-const acceptInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/invitation/accept`
-const sendInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/invitation/create`
+const acceptInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_URL}/invitation/accept`
+const sendInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_URL}/invitation/create`
 
 import api from "./ConnectionService"
 
@@ -20,6 +18,10 @@ export const UserService = {
     console.log('res', res);
   },
 
+  async updateClass(data: Class) {
+    return (await api<UserServiceResponse<ClassResponse[]>>({ url: classUrl, body: JSON.stringify(data), method: "PUT" })).payload;
+  },
+
   async getClasses() {
     return (await api<UserServiceResponse<ClassResponse[]>>({ url: getAllClassesUrl })).payload;
   },
@@ -29,10 +31,11 @@ export const UserService = {
       return api<UserServiceResponse<boolean>>({ url: acceptInvitationUrl, body, method: "POST" });
   },
 
-  sendInvitation(inviteStudent: InviteStudent) {
+  async sendInvitation(inviteStudent: InviteStudent) {
       const body = JSON.stringify(inviteStudent);
-      return api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: "POST" });
-  }
+      return (await api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: "POST" })).payload;
+  },
+
 };
 
 interface UserServiceResponse<T> {
