@@ -450,14 +450,7 @@ console.log("c"+uniqueIds.size)
                                     currentQuestionIndex < quiz.mcqs.length - 1 ? (
                                         <Button
                                             label="Next Question"
-                                            onClick={() => {
-                                                if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
-                                                    submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
-                                                    handleNextQuestion();
-                                                } else {
-                                                    console.error('Quiz ID is undefined or selected option is null');
-                                                }
-                                            }}
+                                            
                                             disabled={!isAnswerSubmitted || !quizIdAvailable}
                                         ></Button>
                                     ) : (
@@ -469,7 +462,15 @@ console.log("c"+uniqueIds.size)
                                 ) : (
                                     <Button
                                         label="Submit"
-                                        onClick={handleSubmitAnswer}
+                                        onClick={() => {
+                                            if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
+                                                submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                                handleSubmitAnswer();
+                                                handleNextQuestion();
+                                            } else {
+                                                console.error('Quiz ID is undefined or selected option is null');
+                                            }
+                                        }}
                                         disabled={isAnswerSubmitted}
                                     ></Button>
                                 )}

@@ -61,16 +61,19 @@ const achievementBodyTemplate = (rowData: ProcessedQuiz) => {
     return <Tag severity={severity} value={`Points: ${earnedPoints}/${totalPoints} (${percentage.toFixed(2)}%)`} />;
 };
 
-// Assuming QuizHistory component is defined elsewhere
 const QuizHistory: React.FC = () => {
     const [quiz, setQuiz] = useState<Quiz.CompletedResponse | null>(null);
     const [processedQuizzes, setProcessedQuizzes] = useState<ProcessedQuiz[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
                 if (responseData.message === 'History not found') {
+                    setError('History not found');
+                    setLoading(false);
                     return;
                 }
                 setQuiz(responseData);
@@ -98,11 +101,22 @@ const QuizHistory: React.FC = () => {
                 setProcessedQuizzes(processedData);
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setError('Error fetching data');
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchData();
     }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="grid">
