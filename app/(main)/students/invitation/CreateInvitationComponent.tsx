@@ -14,7 +14,7 @@ interface Props {
   setSelectedClass: Dispatch<SetStateAction<InputClass>>;
 }
 
-const CreateInvitationPage = (props: Props) => {
+export default function CreateInvitationComponent(props : Props) {
   const [inputClasses, setInputClasses] = useState<InputClass[]>([]);
 
   useEffect(() => {
@@ -68,5 +68,3 @@ const CreateInvitationPage = (props: Props) => {
     </div>
   );
 };
-
-export default CreateInvitationPage;
