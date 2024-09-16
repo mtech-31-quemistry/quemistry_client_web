@@ -10,6 +10,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { ProgressBar } from 'primereact/progressbar';
+import ApiHelper from '@/lib/ApiHelper';
 
 const QuizPage: React.FC = () => {
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
@@ -264,19 +265,14 @@ const QuizPage: React.FC = () => {
             try {
                 const mcqResponse = await QuestionsService.retrieveMCQ(retrieveQuestionRequest);
                 if (mcqResponse && mcqResponse) {
-console.log("a"+mcqResponse.map((mcq) => mcq.id))
                     const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
-console.log("b"+uniqueIds.size)
                     const count = uniqueIds.size;
                     setGeneratedQuestionCount(count);
-console.log("c"+uniqueIds.size)
                 } else {
-                    console.log("1"+generatedQuestionCount)
                     setGeneratedQuestionCount(0);
                 }
             } catch (error) {
                 console.error('Error retrieving MCQs:', error);
-                console.log("2"+generatedQuestionCount)
                 setGeneratedQuestionCount(0);
             }
         };

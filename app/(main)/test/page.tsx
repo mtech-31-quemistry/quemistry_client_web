@@ -103,12 +103,9 @@ const QuizPage: React.FC = () => {
     };
 
     const handleNextQuestion = () => {
-        console.log(currentQuestionLength)
         if (currentQuestionLength > 0) {
-            console.log(currentTestQuestionIndex)
             if (currentTestQuestionIndex < currentQuestionLength - 1) {
                 setIsRadioDisabled(false);
-                console.log(currentTestQuestionIndex)
                 setCurrentTestQuestionIndex(currentTestQuestionIndex + 1);
             }
         }

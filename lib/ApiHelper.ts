@@ -9,6 +9,10 @@ export const ApiHelper = {
         if(process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USEREMAIL && process.env.NEXT_PUBLIC_USEREMAIL.trim().length > 1){
           headers.append('x-user-email', process.env.NEXT_PUBLIC_USEREMAIL);
         }
+        if(process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USERROLES && process.env.NEXT_PUBLIC_USERROLES.trim().length > 1){
+          headers.append('x-user-roles', process.env.NEXT_PUBLIC_USERROLES);
+        }
+        console.log(headers)
         return headers;
     },
 }
