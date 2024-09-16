@@ -137,7 +137,6 @@ const QuizPage: React.FC = () => {
         } catch (error) {
             console.error('Error abandoning quiz:', error);
         } finally {
-            await new Promise(resolve => setTimeout(resolve, 3000));
             setIsQuizOngoing(false);
             setIsAbandoning(false); // Set isAbandoning to false once the call is complete
             window.location.reload();
@@ -325,7 +324,6 @@ const QuizPage: React.FC = () => {
         } catch (error) {
             console.error('Error starting new test:', error);
         } finally {
-            await new Promise(resolve => setTimeout(resolve, 5000));
             setIsStartingNewQuiz(false); // Set isStartingNewQuiz to false once the call is complete
             window.location.reload();
         }
