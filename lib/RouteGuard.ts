@@ -40,6 +40,8 @@ export const RouteGuard = {
                 return this.accessibleBy(['student']);
             case '/quiz/history':
                 return this.accessibleBy(['student']);
+            case '/quiz/results':
+                return this.accessibleBy(['student']);
             case '/questions/create':
                 return this.accessibleBy(['admin', 'tutor']);
             case '/questions/edit':
