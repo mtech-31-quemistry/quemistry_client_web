@@ -1,0 +1,42 @@
+/* results.css */
+.progress-bar-container {
+    display: flex;
+    gap: 2px; /* Adjust the gap between progress bars as needed */
+    align-items: center; /* Align items vertically */
+  }
+  
+  .progress-bar {
+    height: 1px;
+    flex-grow: 1;
+  }
+  
+  .progress-bar.current {
+    background-color: white;
+  }
+  
+  .progress-bar.correct {
+    background-color: green;
+  }
+  
+  .progress-bar.incorrect {
+    background-color: red;
+  }
+  
+  .progress-label {
+    font-size: 18px;
+    color: black;
+    margin-right: 4px;
+    margin-bottom: 2px; /* Add bottom margin */
+    display: flex;
+    justify-content: center; /* Horizontally align the number */
+    align-items: center; /* Vertically align the number */
+    width: 24px; /* Adjust the width to fit the circle */
+    height: 24px; /* Adjust the height to fit the circle */
+    background-color: white; /* Background color for the circle */
+  }
+  
+  .progress-label.current {
+    border-radius: 50%;
+    border: 2px solid black; /* Border for the circle */
+    /* background-color: yellow;*/ /* Different background color for the selected number */
+  }

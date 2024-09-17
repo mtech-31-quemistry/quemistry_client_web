@@ -71,18 +71,6 @@ const AppMenu = () => {
                 { label: 'Students', icon: 'pi pi-fw pi-users', to: '/students', visible: accessibleBy(['tutor']) }
             ],
             visible: accessibleBy(['admin', 'tutor'])
-        },
-        {
-            label: 'Google AI',
-            items: [
-                {
-                    label: 'Generate Question',
-                    icon: 'pi pi-fw pi-microchip-ai',
-                    to: '/genai',
-                    visible: accessibleBy(['admin', 'tutor'])
-                },
-            ],
-            visible: accessibleBy(['admin', 'tutor'])
         }
     ];
 
