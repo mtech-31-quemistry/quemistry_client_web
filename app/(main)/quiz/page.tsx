@@ -421,7 +421,8 @@ const QuizPage: React.FC = () => {
                                 {currentQuestion.options && currentQuestion.options.map((option) => (
                                     <div key={option.no} className="cardOption">
                                         <label className="option-label">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>{`mcq-${option.no}`}
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>`{option.no}`
+                                                {option.no !== null && `mcq-${option.no}`}
                                                 <input
                                                     type="radio"
                                                     name={`mcq-${currentQuestion.id}`}
@@ -466,7 +467,8 @@ const QuizPage: React.FC = () => {
                                 ) : (
                                     <Button
                                         label="Submit"
-                                        onClick={() => {submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                        onClick={() => {
+                                            submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
                                             handleSubmitAnswer()
                                         }}
                                         disabled={isAnswerSubmitted}
