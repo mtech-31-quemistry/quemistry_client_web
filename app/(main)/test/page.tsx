@@ -95,9 +95,10 @@ const QuizPage: React.FC = () => {
     const currentTestQuestion = quiz?.mcqs?.[currentTestQuestionIndex];
     const currentQuestionLength = quiz?.mcqs?.length ?? 0;
 
-    const submitAttempt = async (quizId: number, mcqId: number, attempt: number) => {
+    const submitAttempt = async (quizId: number, mcqId: number, attempt: number | null | undefined) => {
+        const attemptValue = attempt ?? 0;
         try {
-            await QuizService.submitAttempt(quizId, mcqId, attempt);
+            await QuizService.submitAttempt(quizId, mcqId, attemptValue);
         } catch (error) {
             console.error(`Error submitting attempt for MCQ`, error);
         }

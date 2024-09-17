@@ -111,7 +111,7 @@ const QuizPage: React.FC = () => {
             console.error(`Error submitting attempt for MCQ`, error);
         }
     };
-    
+
     const handleNextQuestion = () => {
         if (currentQuestionLength > 0) {
             if (currentQuestionIndex < currentQuestionLength - 1) {
@@ -421,7 +421,7 @@ const QuizPage: React.FC = () => {
                                 {currentQuestion.options && currentQuestion.options.map((option) => (
                                     <div key={option.no} className="cardOption">
                                         <label className="option-label">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>{`mcq-${option.no}`}
                                                 <input
                                                     type="radio"
                                                     name={`mcq-${currentQuestion.id}`}
