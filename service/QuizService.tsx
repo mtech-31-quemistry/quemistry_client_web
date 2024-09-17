@@ -17,7 +17,7 @@ export const QuizService = {
             totalSize: 60,
             pageSize: 60,
           }),
-        });
+        }); 
 
         if (response.status === 409) {
           console.log('Conflict: Quiz could not be started due to a conflict.');

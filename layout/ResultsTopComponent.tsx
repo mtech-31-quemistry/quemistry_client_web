@@ -17,10 +17,10 @@ const quizData = {
 }
 
 export default function ResultsTopComponent() {
-
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
     const [selectedAnswer, setSelectedAnswer] = useState("")
     const currentQuestion = quizData.questions[currentQuestionIndex]
+    const [questionDisplay, setQuestionDisplay] = useState(Number)
 
     return (
         <div className="card">
@@ -28,22 +28,20 @@ export default function ResultsTopComponent() {
             <div className="progress-bar-container mb-6">
                 {quizData.progress.map((correct, index) => (
                     <div key={index} className="progress-bar-segment">
-                        <div className={`progress-label ${index === currentQuestionIndex ? 'current' : ''}`}>
-                            {index + 1}
-                        </div>
-                        <div className={`progress-bar ${index === currentQuestionIndex ? 'current' : correct ? 'correct' : 'incorrect'}`} />
+                        <a onClick={() => setQuestionDisplay(index + 1)}>
+                            <div className={`progress-label ${index === currentQuestionIndex ? 'current' : ''}`}>
+                                {index + 1}
+                            </div>
+                            <div className={`progress-bar ${index === currentQuestionIndex ? 'current' : correct ? 'correct' : 'incorrect'}`} />
+                        </a>
                     </div>
                 ))}
             </div>
+            {(questionDisplay > 0 ) &&
             <div className="card">
-                <h5>Question 1</h5>
+                <h5>Question {questionDisplay}</h5>
             </div>
-            <div className="card">
-                <h5>Question 2</h5>
-            </div>
-            <div className="card">
-                <h5>Question 3</h5>
-            </div>
+            }
         </div>
     )
 }
