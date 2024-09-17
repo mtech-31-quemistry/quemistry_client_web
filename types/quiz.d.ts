@@ -30,6 +30,7 @@ declare namespace Quiz {
         closedBy: string | null;
         createdOn: number;
         createdBy: string;
+        attemptOption: number | null;
     }
 
     interface ApiResponse {
@@ -50,6 +51,6 @@ declare namespace Quiz {
         totalPages: number;
         totalRecords: number;
         message?: string;
-        quizzes: Quiz[];
+        quizzes: Quiz[Mcq];
     }
 }

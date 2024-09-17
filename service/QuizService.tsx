@@ -17,7 +17,7 @@ export const QuizService = {
             totalSize: 60,
             pageSize: 60,
           }),
-        }); 
+        });
 
         if (response.status === 409) {
           console.log('Conflict: Quiz could not be started due to a conflict.');
@@ -29,7 +29,7 @@ export const QuizService = {
         console.log('Data fetched successfully:', responseData);
         resolve(responseData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('No data could be displayed: ', error);
         reject(error);
       }
     });
@@ -50,7 +50,7 @@ export const QuizService = {
       console.log('Data fetched successfully:', responseData);
       return responseData;
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('No data could be displayed: ', error);
       throw error;
     }
   },
@@ -70,7 +70,7 @@ export const QuizService = {
       console.log('Data fetched successfully:', responseData);
       return responseData;
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('No data could be displayed: ', error);
       throw error;
     }
   },

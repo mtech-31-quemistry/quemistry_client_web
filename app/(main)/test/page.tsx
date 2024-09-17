@@ -83,6 +83,7 @@ const QuizPage: React.FC = () => {
                 });
                 setSelectedOptions(initialSelectedOptions);
                 setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
+                setExplanationsVisible({}); // Initialize explanationsVisible
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -192,6 +193,7 @@ const QuizPage: React.FC = () => {
     );
 
     const [visible, setVisible] = useState(false);
+    const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
 
     const [selectedQuestionCount, setSelectedQuestionCount] = useState<number>(0);
     const [generatedQuestionCount, setGeneratedQuestionCount] = useState<number>(0);
@@ -381,13 +383,13 @@ const QuizPage: React.FC = () => {
                         <div key={currentTestQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
+                                   <div style={{ minWidth: '500px' }}><h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
                                     <b>{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentTestQuestion.stem }} />
                                 </div>
-                                {currentTestQuestion.options.map((option) => (
+                                {currentTestQuestion.options && currentTestQuestion.options.map((option) => (
                                     <div key={option.no} className="cardOption">
                                         <label className="option-label">
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -401,6 +403,16 @@ const QuizPage: React.FC = () => {
                                                 <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                             </div>
                                         </label>
+                                        {explanationsVisible[option.no] && (
+                                            <div>
+                                                {option.isAnswer ? (
+                                                    <div className="explanation-container" style={{ color: 'green' }}>Correct Answer</div>
+                                                ) : (
+                                                    <div className="explanation-container" style={{ color: 'red' }}>Incorrect Answer</div>
+                                                )}
+                                                <div className="explanation-container">{option.explanation}</div>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                                {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (

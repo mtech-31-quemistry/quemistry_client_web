@@ -1,34 +1,65 @@
 'use client';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Quiz } from '@/types';
+import ResultsBottomComponent from './ResultsBottomComponent';
+import { QuizService } from '@/service/QuizService';
 
-const quizData = {
-    title: "Building Web Applications With React: Proficient Average",
-    verifiedDate: "VERIFIED 5.15.2024",
-    questions: [
-        {
-            id: 6,
-            text: "In which call would you pass the rendering code to perform assertions on a component?",
-            options: ["wrap()", "to()", "act()", "be()", "I don't know yet."],
-            correctAnswer: "act()"
-        },
-    ],
-    totalQuestions: 20,
-    progress: [false, true, false, true, false, true, true, true, true, true, false, true, false, false, true, true, false, true, true, true]
+interface ResultsTopComponentProps {
+    onQuestionClick: (index: number) => void;
+    currentQuestionIndex: number;
 }
 
-export default function ResultsTopComponent() {
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-    const [selectedAnswer, setSelectedAnswer] = useState("")
-    const currentQuestion = quizData.questions[currentQuestionIndex]
-    const [questionDisplay, setQuestionDisplay] = useState(Number)
+export default function ResultsTopComponent({ onQuestionClick, currentQuestionIndex }: ResultsTopComponentProps) {
+    const [quiz, setQuiz] = useState<Quiz.CompletedResponse | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseData = await QuizService.getQuizCompleted();
+                if (responseData.message === 'History not found') {
+                    setError('History not found');
+                    setLoading(false);
+                    return;
+                }
+                setQuiz(responseData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setError('Error fetching data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!quiz || !quiz.quizzes || quiz.quizzes.length === 0) {
+        return <div>No quiz data available</div>;
+    }
+
+    const progress = quiz.quizzes[0].mcqs.map((mcq: Quiz.Mcq) => {
+        const attemptOption = mcq.attemptOption ?? 0;
+        const selectedOption = mcq.options[attemptOption - 1];
+        return selectedOption && selectedOption.isAnswer;
+    });
 
     return (
         <div className="card">
             <h5>Quiz Results</h5>
             <div className="progress-bar-container mb-6">
-                {quizData.progress.map((correct, index) => (
+                {progress.map((correct: boolean, index: number) => (
                     <div key={index} className="progress-bar-segment">
-                        <a onClick={() => setQuestionDisplay(index + 1)}>
+                        <a onClick={() => onQuestionClick(index)}>
                             <div className={`progress-label ${index === currentQuestionIndex ? 'current' : ''}`}>
                                 {index + 1}
                             </div>
@@ -37,11 +68,7 @@ export default function ResultsTopComponent() {
                     </div>
                 ))}
             </div>
-            {(questionDisplay > 0 ) &&
-            <div className="card">
-                <h5>Question {questionDisplay}</h5>
-            </div>
-            }
+            <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} />
         </div>
-    )
+    );
 }

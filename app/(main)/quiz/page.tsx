@@ -19,7 +19,7 @@ const QuizPage: React.FC = () => {
     const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
     const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
-    const [currentTestQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
     const [listOfTopics, setListOfTopics] = useState<Questions.Topic[]>([]);
     const [explanationsVisible, setExplanationsVisible] = useState<{ [key: number]: boolean }>({});
@@ -62,17 +62,19 @@ const QuizPage: React.FC = () => {
     };
 
     const handleSubmitAnswer = () => {
-        if (!currentTestQuestion) {
+        if (!currentQuestion) {
             console.error('Current question is undefined.');
             return;
         }
-        setExplanationsVisible(currentTestQuestion.options.reduce((acc, option) => {
-            acc[option.no] = true;
-            return acc;
-        }, {} as { [key: number]: boolean }));
-
+        if (currentQuestion.options) {
+            setExplanationsVisible(currentQuestion.options.reduce((acc, option) => {
+                acc[option.no] = true;
+                return acc;
+            }, {} as { [key: number]: boolean }));
+        }
         setIsAnswerSubmitted(true);
         setIsRadioDisabled(true);
+        submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id] ?? 0);
     };
 
     useEffect(() => {
@@ -98,24 +100,25 @@ const QuizPage: React.FC = () => {
         fetchData();
     }, []);
 
-    const currentTestQuestion = quiz?.mcqs?.[currentTestQuestionIndex];
-    const currentTestQuestionLength = quiz?.mcqs?.length ?? 0;
+    const currentQuestion = quiz?.mcqs?.[currentQuestionIndex];
+    const currentQuestionLength = quiz?.mcqs?.length ?? 0;
 
-    const submitAttempt = async (quizId: number, mcqId: number, attempt: number) => {
+    const submitAttempt = async (quizId: number, mcqId: number, attempt: number | null | undefined) => {
+        const attemptValue = attempt ?? 0;
         try {
-            await QuizService.submitAttempt(quizId, mcqId, attempt);
+            await QuizService.submitAttempt(quizId, mcqId, attemptValue);
         } catch (error) {
             console.error(`Error submitting attempt for MCQ`, error);
         }
     };
-
+    
     const handleNextQuestion = () => {
-        if (currentTestQuestionLength > 0) {
-            if (currentTestQuestionIndex < currentTestQuestionLength - 1) {
+        if (currentQuestionLength > 0) {
+            if (currentQuestionIndex < currentQuestionLength - 1) {
                 setExplanationsVisible({});
                 setIsAnswerSubmitted(false);
                 setIsRadioDisabled(false);
-                setCurrentQuestionIndex(currentTestQuestionIndex + 1);
+                setCurrentQuestionIndex(currentQuestionIndex + 1);
             }
         }
     };
@@ -281,24 +284,26 @@ const QuizPage: React.FC = () => {
 
     const calculateScore = () => {
         if (!quiz) return;
-
+    
         let score = 0;
         quiz.mcqs.forEach((mcq) => {
             const selectedOption = selectedOptions[mcq.id];
-            const correctOption = mcq.options.find((option) => option.isAnswer)?.no;
-
-            if (selectedOption === correctOption) {
-                score++;
+            if (mcq.options) {
+                const correctOption = mcq.options.find((option) => option.isAnswer)?.no;
+    
+                if (selectedOption === correctOption) {
+                    score++;
+                }
             }
         });
-
+    
         return score;
     };
 
     const displayScore = () => {
         const score = calculateScore();
         const totalQuestions = quiz?.mcqs.length || 0;
-        setCurrentQuestionIndex(currentTestQuestionIndex + 1)
+        setCurrentQuestionIndex(currentQuestionIndex + 1)
         setShowScore(true);
         localStorage.setItem('currentQuestionIndex', '0');
         setShowScoreMessage(`You answered ${score} of ${totalQuestions} questions correctly.`);
@@ -307,8 +312,8 @@ const QuizPage: React.FC = () => {
 
     // Save currentQuestionIndex to local storage whenever it changes
     useEffect(() => {
-        localStorage.setItem('currentQuestionIndex', currentTestQuestionIndex.toString());
-    }, [currentTestQuestionIndex]);
+        localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
+    }, [currentQuestionIndex]);
 
     useEffect(() => {
         localStorage.setItem('showScore', showScore.toString());
@@ -373,7 +378,7 @@ const QuizPage: React.FC = () => {
                             Are you sure you want to exit the quiz?
                         </Dialog>
                     </div>
-                    {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
+                    {quiz && quiz.mcqs && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
                             <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b>
@@ -403,25 +408,25 @@ const QuizPage: React.FC = () => {
                             </div>
                         </div>
                     )}
-                    {currentTestQuestion && (
-                        <div key={currentTestQuestion.id}>
+                    {currentQuestion && (
+                        <div key={currentQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs.length || 0}</h6>
-                                    <b>{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</b>
+                                    <div style={{ minWidth: '500px' }}><h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
+                                    <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
                                 </div>
                                 <div className="cardOption">
-                                    <span dangerouslySetInnerHTML={{ __html: currentTestQuestion.stem }} />
+                                    <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
                                 </div>
-                                {currentTestQuestion.options.map((option) => (
+                                {currentQuestion.options && currentQuestion.options.map((option) => (
                                     <div key={option.no} className="cardOption">
                                         <label className="option-label">
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                 <input
                                                     type="radio"
-                                                    name={`mcq-${currentTestQuestion.id}`}
-                                                    checked={selectedOptions[currentTestQuestion.id] === option.no}
-                                                    onChange={() => handleOptionClick(currentTestQuestion.id, option.no)}
+                                                    name={`mcq-${currentQuestion.id}`}
+                                                    checked={selectedOptions[currentQuestion.id] === option.no}
+                                                    onChange={() => handleOptionClick(currentQuestion.id, option.no)}
                                                     disabled={isRadioDisabled}
                                                 />
                                                 <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
@@ -440,11 +445,11 @@ const QuizPage: React.FC = () => {
                                     </div>
                                 ))}
                                 {isAnswerSubmitted ? (
-                                    currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
+                                    currentQuestionIndex < quiz.mcqs.length - 1 ? (
                                         <Button
                                             label="Next Question"
                                             onClick={() => {
-                                                if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                                if (quiz.id !== undefined && selectedOptions[currentQuestion.id] !== null) {
                                                     handleNextQuestion();
                                                 } else {
                                                     console.error('Quiz ID is undefined or selected option is null');
@@ -461,14 +466,15 @@ const QuizPage: React.FC = () => {
                                 ) : (
                                     <Button
                                         label="Submit"
-                                        onClick={() => {submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
-                                            handleSubmitAnswer()}}
+                                        onClick={() => {submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
+                                            handleSubmitAnswer()
+                                        }}
                                         disabled={isAnswerSubmitted}
                                     ></Button>
                                 )}
                             </div>
-                            <h6><b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
-                            <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
+                            <h6><b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
+                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz?.mcqs?.length) * 100)} />
                         </div>
                     )}
                     {showScore && showScoreMessage && (

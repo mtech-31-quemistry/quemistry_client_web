@@ -6,7 +6,7 @@
 }
 
 .progress-bar {
-  height: 3px;
+  height: 1.5px;
   flex-grow: 1;
 }
 
@@ -56,4 +56,55 @@
   .progress-label {
       margin-bottom: 4px; /* Adjust margin for better spacing */
   }
+}
+
+/* General styles for the card */
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Styles for the question title */
+.card h5 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Styles for the question text */
+.card p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Styles for the options list */
+.card ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Styles for the options */
+.card li {
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+/* Styles for correct options */
+.card li.correct {
+  background-color: #d4edda; /* Light green background */
+  border-color: #c3e6cb; /* Green border */
+  color: #155724; /* Dark green text */
+}
+
+/* Styles for incorrect options */
+.card li.incorrect {
+  background-color: #f8d7da; /* Light red background */
+  border-color: #f5c6cb; /* Red border */
+  color: #721c24; /* Dark red text */
 }
