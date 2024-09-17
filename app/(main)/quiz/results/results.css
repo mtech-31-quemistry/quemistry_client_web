@@ -85,36 +85,44 @@
   margin-bottom: 20px;
 }
 
-.multi-line-treeselect .p-treeselect-label-container {
-  white-space: normal !important;
-  overflow-wrap: break-word !important;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
+/* Styles for the question title */
+.card h5 {
+  font-size: 24px;
+  margin-bottom: 10px;
 }
 
-.multi-line-treeselect .p-treeselect-label {
-  white-space: normal !important;
-  overflow-wrap: break-word !important;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
+/* Styles for the question text */
+.card p {
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
-.cardOption {
-  margin-bottom: 0px; /* Adjust this value as needed */
-  padding: 10px; /* Adjust this value as needed */
+/* Styles for the options list */
+.card ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-.explanation-container {
-  margin: 0.3rem 0; /* Adds 1rem of space above and below the div */
-  padding-left: 36px; /* Adjust this value to match the indentation of the option text */
+/* Styles for the options */
+.card li {
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
 }
 
-.option-label {
-  display: flex;
-  align-items: center;
+/* Styles for correct options */
+.card li.correct {
+  background-color: #d4edda; /* Light green background */
+  border-color: #c3e6cb; /* Green border */
+  color: #155724; /* Dark green text */
 }
 
-.option-label input[type="radio"] {
-  margin-right: 18px; /* Adjust this value to align the radio button and text correctly */
-  margin-bottom: 3px; /* Adjust this value to align the radio button and text correctly */
+/* Styles for incorrect options */
+.card li.incorrect {
+  background-color: #f8d7da; /* Light red background */
+  border-color: #f5c6cb; /* Red border */
+  color: #721c24; /* Dark red text */
 }

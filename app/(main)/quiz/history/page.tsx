@@ -83,7 +83,7 @@ const QuizHistory: React.FC = () => {
                     const topicsMap = new Map<number, Topic>();
                     const skillsMap = new Map<number, Skill>();
                 
-                    quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
+                    quiz.mcq.forEach((mcq: Quiz.Mcq) => {
                         mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
                         mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
                     });
@@ -100,7 +100,6 @@ const QuizHistory: React.FC = () => {
                 });
                 setProcessedQuizzes(processedData);
             } catch (error) {
-                console.error('Error fetching data:', error);
                 setError('Error fetching data');
             } finally {
                 setLoading(false);

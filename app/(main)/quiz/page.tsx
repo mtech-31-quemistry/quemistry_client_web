@@ -1,5 +1,6 @@
 'use client';
 import './quiz.css';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState, Fragment } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
@@ -29,8 +30,12 @@ const QuizPage: React.FC = () => {
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
     const [quizIdAvailable, setQuizIdAvailable] = useState(false);
     const [isAbandoning, setIsAbandoning] = useState(false);
+    const router = useRouter();
 
-    // Retrieve currentQuestionIndex from local storage when the component mounts
+    const handleViewResults = () => {
+        router.push('/quiz/results');
+    };
+
     useEffect(() => {
         const savedIndex = localStorage.getItem('currentQuestionIndex');
         if (savedIndex) {
@@ -381,7 +386,7 @@ const QuizPage: React.FC = () => {
                     {quiz && quiz.mcqs && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
-                            <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b>
+                            {/* <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b> */}
                             <div>
                                 <div className="col-12 md:col-6 mb-5">
                                     <TreeSelect
@@ -412,8 +417,8 @@ const QuizPage: React.FC = () => {
                         <div key={currentQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ minWidth: '500px' }}><h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
-                                    <b>{currentQuestion.skills.map((skill) => skill.name).join(', ')}</b>
+                                    <div style={{ minWidth: '120px' }}><h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
+                                    <b><div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div></b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
@@ -421,8 +426,8 @@ const QuizPage: React.FC = () => {
                                 {currentQuestion.options && currentQuestion.options.map((option) => (
                                     <div key={option.no} className="cardOption">
                                         <label className="option-label">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>`{option.no}`
-                                                {option.no !== null && `mcq-${option.no}`}
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                {option.no !== null}
                                                 <input
                                                     type="radio"
                                                     name={`mcq-${currentQuestion.id}`}
@@ -480,8 +485,13 @@ const QuizPage: React.FC = () => {
                         </div>
                     )}
                     {showScore && showScoreMessage && (
-                        <div className="score-message">
-                            {showScoreMessage}
+                        <div><p>
+                            <div className="score-message">
+                                {showScoreMessage}
+                            </div></p>
+                            <div>
+                                <Button onClick={handleViewResults}>View latest Quiz Results</Button>
+                            </div>
                         </div>
                     )}
                 </div>

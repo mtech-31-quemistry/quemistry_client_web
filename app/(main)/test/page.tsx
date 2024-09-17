@@ -336,7 +336,7 @@ const QuizPage: React.FC = () => {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Class Tests</h5>
                         <Fragment>
-                            <Button icon="pi pi-times" style={{ marginLeft: 'auto' }} onClick={() => setVisible(true)} visible={isQuizOngoing} />
+                            <Button icon="pi pi-times" style={{ marginLeft: 'auto' }}  onClick={() => isQuizOngoing ? setVisible(true) : confirmExit()} visible={isQuizOngoing && !showTestScore} />
                         </Fragment>
                         <Dialog
                             header="Exit Test"
@@ -353,7 +353,7 @@ const QuizPage: React.FC = () => {
                     {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
-                            <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b>
+                            {/* <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b> */}
                             <div>
                                 <div className="col-12 md:col-6 mb-5">
                                     <TreeSelect
@@ -384,8 +384,8 @@ const QuizPage: React.FC = () => {
                         <div key={currentTestQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                   <div style={{ minWidth: '500px' }}><h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
-                                    <b>{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</b>
+                                <div style={{ minWidth: '120px' }}><h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
+                                <b><div className="card">{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</div></b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentTestQuestion.stem }} />

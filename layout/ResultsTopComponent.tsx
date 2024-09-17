@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Quiz } from '@/types';
 import ResultsBottomComponent from './ResultsBottomComponent';
 import { QuizService } from '@/service/QuizService';
+import { Button } from 'primereact/button';
+import './results.css';
 
 interface ResultsTopComponentProps {
     onQuestionClick: (index: number) => void;
@@ -13,6 +15,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
     const [quiz, setQuiz] = useState<Quiz.CompletedResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [reload, setReload] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +36,11 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
         };
 
         fetchData();
-    }, []);
+    }, [reload]); // Add reload as a dependency to re-fetch data when reload state changes
+
+    const handleReload = () => {
+        setReload(prevReload => !prevReload);
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -47,7 +54,11 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
         return <div>No quiz data available</div>;
     }
 
-    const progress = quiz.quizzes[0].mcqs.map((mcq: Quiz.Mcq) => {
+    // Find the latest quiz by ID
+    const latestQuiz = quiz.quizzes.reduce((latest, current) => (current.id > latest.id ? current : latest), quiz.quizzes[0]);
+
+    // Update the progress calculation
+    const progress = latestQuiz.mcqs.map((mcq: Quiz.Mcq) => {
         const attemptOption = mcq.attemptOption ?? 0;
         const selectedOption = mcq.options[attemptOption - 1];
         return selectedOption && selectedOption.isAnswer;
@@ -68,7 +79,8 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                     </div>
                 ))}
             </div>
-            <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} />
+            <Button onClick={handleReload}>Reload Page</Button>
+            {/* <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} /> */}
         </div>
     );
 }
