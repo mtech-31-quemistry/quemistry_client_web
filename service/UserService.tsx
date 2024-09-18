@@ -56,7 +56,7 @@ export const UserService = {
       }
     }).then((data) =>{
       if(data === null) return null;
-      data.payload as Tutor
+      return data.payload as Tutor
     });
   },
   updateTutorProfile(data: Tutor) {

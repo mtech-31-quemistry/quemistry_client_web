@@ -40,7 +40,10 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
 
     const overlayMenuItems = [
         {
-            label: 'View Profile'
+            label: 'View Profile', 
+            command: () => {
+                router.push('/profile/edit');
+            }
         },
         {
             separator: true
@@ -57,8 +60,6 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     .catch((err) => {
                         setIsLogin(false);
                         router.push('/');
-                        console.log('fail to logout.');
-                        console.log(err);
                     });
             }
         }
