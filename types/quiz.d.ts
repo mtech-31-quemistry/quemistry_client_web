@@ -51,11 +51,13 @@ declare namespace Quiz {
         totalPages: number;
         totalRecords: number;
         message?: string;
-        quizzes: [
-            id: number,
-            mcq: Mcq[],
-            status: string,
-            points: number
-        ];
+        quizzes: QuizTaken[];
+    }
+
+    interface QuizTaken {
+        id: number,
+        mcq: Mcq[],
+        status: string,
+        points: number
     }
 } 

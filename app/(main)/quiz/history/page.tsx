@@ -79,7 +79,7 @@ const QuizHistory: React.FC = () => {
                 setQuiz(responseData);
 
                 // Process the data to calculate counts and extract unique topics and skills
-                const processedData = responseData.quizzes.map((quiz: Quiz.CompletedResponse['quizzes'][0]) => {
+                const processedData = responseData.quizzes.map((quiz: Quiz.QuizTaken) => {
                     const topicsMap = new Map<number, Topic>();
                     const skillsMap = new Map<number, Skill>();
                 
@@ -95,7 +95,7 @@ const QuizHistory: React.FC = () => {
                         topics: Array.from(topicsMap.values()),
                         skills: Array.from(skillsMap.values()),
                         points: quiz.points,
-                        mcqsCount: quiz.mcqs.length
+                        mcqsCount: quiz.mcq.length
                     };
                 });
                 setProcessedQuizzes(processedData);

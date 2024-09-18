@@ -20,7 +20,7 @@ const ResultsPage: React.FC = () => {
             <ResultsTopComponent 
                 onQuestionClick={handleQuestionClick} 
                 currentQuestionIndex={currentQuestionIndex} 
-                onReload={handleReload} 
+                //onReload={handleReload} 
             />
             <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} />
         </div>

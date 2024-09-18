@@ -48,14 +48,14 @@ export default function ResultsBottomComponent({ currentQuestionIndex }: Results
 
     const lastQuizIndex = quiz.quizzes.length - 1;
     console.log(lastQuizIndex)
-    const progress = quiz.quizzes[lastQuizIndex].mcqs.map((mcq: Quiz.Mcq) => {
+    const progress = quiz.quizzes[lastQuizIndex].mcq.map((mcq: Quiz.Mcq) => {
         const attemptOption = mcq.attemptOption ?? 0;
         const selectedOption = mcq.options[attemptOption - 1];
         return selectedOption && selectedOption.isAnswer;
         console.log(lastQuizIndex)
     });
 
-    const currentQuestion = quiz.quizzes[lastQuizIndex].mcqs[currentQuestionIndex];
+    const currentQuestion = quiz.quizzes[lastQuizIndex].mcq[currentQuestionIndex];
 
     if (!currentQuestion || !currentQuestion.stem || !currentQuestion.options) {
         return <div>Invalid question data</div>;

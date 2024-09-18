@@ -58,7 +58,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
     const latestQuiz = quiz.quizzes.reduce((latest, current) => (current.id > latest.id ? current : latest), quiz.quizzes[0]);
 
     // Update the progress calculation
-    const progress = latestQuiz.mcqs.map((mcq: Quiz.Mcq) => {
+    const progress = latestQuiz.mcq.map((mcq: Quiz.Mcq) => {
         const attemptOption = mcq.attemptOption ?? 0;
         const selectedOption = mcq.options[attemptOption - 1];
         return selectedOption && selectedOption.isAnswer;
