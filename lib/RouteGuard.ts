@@ -32,6 +32,8 @@ export const RouteGuard = {
                 return true;
             case '/auth/error':
                 return true;
+            case '/profile/edit':
+                return this.accessibleBy(['student', 'tutor']);
             case '/quiz':
                 return this.accessibleBy(['student']);
             case '/test':
