@@ -406,11 +406,7 @@ const QuizPage: React.FC = () => {
                                 </div>
                                 <div className="col-12 md:col-6 mb-5">
                                     Select the (max) question count desired
-                                    <InputText
-                                        type="text"
-                                        value="0"
-                                        onChange={(e) => setQuestionCount(e.target.value)}
-                                    />
+                                    <InputText type="text" value="0" onChange={(e) => setQuestionCount(e.target.value)} />
                                 </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
@@ -513,7 +509,7 @@ const QuizPage: React.FC = () => {
                     )}
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 

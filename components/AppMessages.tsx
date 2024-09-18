@@ -72,7 +72,7 @@ const AppMessages = forwardRef<AppMessage, Props>((props, ref) =>{
         }
     }));
     return (
-        <div className='col-12'>
+        <div className="w-full">
             <Messages ref={msgs} />
         </div>
     )

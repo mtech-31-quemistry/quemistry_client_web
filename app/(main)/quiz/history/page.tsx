@@ -118,12 +118,7 @@ const QuizHistory: React.FC = () => {
     };
 
     const idBodyTemplate = (rowData: ProcessedQuiz) => {
-        return (
-            <Button
-                label={rowData.id.toString()}
-                onClick={() => handleQuizClick(rowData.id)}
-            />
-        );
+        return <Button label={rowData.id.toString()} onClick={() => handleQuizClick(rowData.id)} />;
     };
 
     if (loading) {

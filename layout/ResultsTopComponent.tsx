@@ -64,7 +64,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
     const specificQuiz = quiz.quizzes.find((quiz: Quiz.QuizTaken) => quiz.id === parseInt(quizId, 10));
 
     if (!specificQuiz || !specificQuiz.mcqs || specificQuiz.mcqs.length === 0) {
-        return <div className='card'>No questions available for this quiz</div>;
+        return <div className="card">No questions available for this quiz</div>;
     }
 
     // Update the progress calculation
@@ -92,7 +92,9 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                 ))}
             </div>
             <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} quiz={specificQuiz} />
-            <div className="mb-3"><Button onClick={handleBackToHistory}>Quiz History</Button></div>
+            <div className="mb-3">
+                <Button onClick={handleBackToHistory}>Quiz History</Button>
+            </div>
         </div>
     );
 }

@@ -36,12 +36,7 @@ const ResultsPage: React.FC = () => {
 
     return (
         <div>
-            <ResultsTopComponent
-                onQuestionClick={handleQuestionClick}
-                currentQuestionIndex={currentQuestionIndex}
-                quizId={quizId}
-                onReload={handleReload}
-            />
+            <ResultsTopComponent onQuestionClick={handleQuestionClick} currentQuestionIndex={currentQuestionIndex} quizId={quizId} onReload={handleReload} />
             {quiz && (
                 <ResultsBottomComponent
                     currentQuestionIndex={currentQuestionIndex}

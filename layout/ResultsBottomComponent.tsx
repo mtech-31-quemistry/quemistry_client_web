@@ -38,19 +38,25 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                     {isAttemptedAndIsAnswer && (
                                         <div className="explanation-container-review" style={{ color: 'Green' }}>
-                                            <div className="explanation-container-review"><strong>You chose this. </strong></div>
+                                            <div className="explanation-container-review">
+                                                <strong>You chose this. </strong>
+                                            </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
                                     {isAttemptedAndIsNotAnswer && (
                                         <div className="explanation" style={{ color: 'Red' }}>
-                                            <div className="explanation-container-review"><strong>You chose this.</strong></div>
+                                            <div className="explanation-container-review">
+                                                <strong>You chose this.</strong>
+                                            </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
                                     {isAllUnattempted && (
                                         <div className="explanation" style={{ color: 'Gray' }}>
-                                            <div className="explanation-container-review"><i>You skipped this.</i></div>
+                                            <div className="explanation-container-review">
+                                                <i>You skipped this.</i>
+                                            </div>
                                         </div>
                                     )}
                                     {isNotAttemptedAndIsAnswer && (
