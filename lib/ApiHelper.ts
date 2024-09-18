@@ -12,7 +12,6 @@ export const ApiHelper = {
         if(process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USERROLES && process.env.NEXT_PUBLIC_USERROLES.trim().length > 1){
           headers.append('x-user-roles', process.env.NEXT_PUBLIC_USERROLES);
         }
-        console.log(headers)
         return headers;
     },
 }

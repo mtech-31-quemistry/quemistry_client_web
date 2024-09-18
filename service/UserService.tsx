@@ -54,9 +54,10 @@ export const UserService = {
           console.log("res", res);
           throw new Error(res.status + " at retieving profile.");
       }
-    }).then((data) => 
+    }).then((data) =>{
+      if(data === null) return null;
       data.payload as Tutor
-    );
+    });
   },
   updateTutorProfile(data: Tutor) {
     return fetch(tutorProfileUrl,  
