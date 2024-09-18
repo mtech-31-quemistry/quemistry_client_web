@@ -11,7 +11,7 @@ import api from "./ConnectionService"
 export const UserService = {
   async addClass(data: Class) {
     const res = await api<UserServiceResponseDto>({ url: classUrl, body: JSON.stringify(data), method: "POST" });
-    console.log('res', res);
+    //console.log('res', res);
     // const res = await fetch(classUrl, {
     //   method: 'POST',
     //   headers: {

@@ -34,8 +34,8 @@ const AppMessages = forwardRef<AppMessage, Props>((props, ref) =>{
         showError(messageContent: string){
             msgs.current?.show([{ severity: 'error', summary: '', icon: 'pi pi-error', detail: messageContent, closable: true, sticky: true }]);
         },
-        showWarning(messageContent: string){
-            msgs.current?.show([{ severity: 'warn', summary: '', icon: 'pi pi-warning', detail: messageContent, closable: true, sticky: true }]);
+        showWarning(messageContent: string, life: number = 10000){
+            msgs.current?.show([{ severity: 'warn', summary: '', icon: 'pi pi-warning', detail: messageContent, closable: true, sticky: true, life: life }]);
         },
         showCustomWarning(messageContent: ReactNode){
             msgs.current?.show([{ severity: 'warn', summary: '', icon: 'pi pi-warning', content: messageContent, closable: true, sticky: true }]);

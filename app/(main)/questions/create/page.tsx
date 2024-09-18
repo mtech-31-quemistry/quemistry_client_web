@@ -13,8 +13,8 @@ import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { TreeNode } from 'primereact/treenode';
 import { useRouter } from 'next/navigation';
-import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import AppMessages,  {AppMessage} from '../../../../components/AppMessages'
 
 const EditQuestion = () => {
     const router = useRouter();
@@ -31,16 +31,7 @@ const EditQuestion = () => {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
-    const toast = useRef<Toast>(null);
-
-    const showWarning = (summary: string, message: string) => {
-        toast.current?.show({
-            severity: 'warn',
-            summary: summary,
-            detail: message,
-            life: 3000 //3 secs
-        });
-    };
+    const appMsg = useRef<AppMessage>(null);
 
     useEffect(() => {
         QuestionsService.getTopics().then((data) => {
@@ -207,6 +198,13 @@ const EditQuestion = () => {
         //TODO: call generate question API
         console.log('Invoking handleOnGenerateQuestion');
         var updateQuestion = (data: Genai.MCQ) => {
+            var index =1
+            if(data.options && data.options.map ){
+                data.options.map((item: Genai.Option) => {
+                    item.no = index;
+                    index++;
+                })
+            }
             setStem(data.stem);
             setAddedOptions(data.options);
             setShowSpinner(false);
@@ -219,13 +217,12 @@ const EditQuestion = () => {
 
         //console.debug("selectedTopicNodes", selectedTopicNodes);
         if (!selectedTopicNodes) {
-            console.log('selectedTopicNodes undefined');
-            showWarning('Invalid Input', 'Generate Question works only for 1 topic with 1 or more skills selected');
+            appMsg.current?.showWarning('Generate Question works only for 1 topic with 1 or more skills selected');
             return;
         }
         const { selectedTopics, selectedSkills } = retrieveSelectedTopicSkillsIds();
         if (selectedTopics.length != 1) {
-            showWarning('Invalid Input', 'Generate Question works only for 1 topic with 1 or more skills selected');
+            appMsg.current?.showWarning('Generate Question works only for 1 topic with 1 or more skills selected');
             return;
         }
         //search in listOfTopics
@@ -250,7 +247,7 @@ const EditQuestion = () => {
     };
     return (
         <>
-            <Toast ref={toast} position="top-center" />
+            <AppMessages ref={appMsg} />
             {!showSpinner || <ProgressSpinner style={{ width: '50px', height: '50px', position: 'fixed', left: '50%', top: '50%', opacity: '1', zIndex: '1000', background: 'transparent' }} strokeWidth="8" fill="var(--surface-ground)" />}
             <h5>Add Question</h5>
             <br />
