@@ -59,6 +59,6 @@ interface Tutor {
     firstName: string;
     lastName: string;
     educationLevel: string;
-    tuitionCenter: string;
+    tuitionCentre: string;
 }
 

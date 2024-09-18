@@ -61,7 +61,9 @@ export const UserService = {
               console.log("res", res);
               throw new Error(res.status + " at saving profile.");
           }
-      });
+      }).then((data) => 
+        data.payload as Tutor
+      );
   }
 };
 
