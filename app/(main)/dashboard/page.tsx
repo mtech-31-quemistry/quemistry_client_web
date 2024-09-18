@@ -108,13 +108,12 @@ const Dashboard = () => {
     };
 
     const invitationResponse = (isSucceeded: boolean) => {
-
         let summary = 'Success';
-        let detail = 'We have successfully enrolled you into the class'
+        let detail = 'We have successfully enrolled you into the class';
 
         if (!isSucceeded) {
             summary = 'Error Enrolling';
-            detail = 'Please contact customer support for more info.'
+            detail = 'Please contact customer support for more info.';
         }
 
         toast.current?.show({
@@ -125,8 +124,6 @@ const Dashboard = () => {
         });
     };
 
-
-
     useEffect(() => {
         if (layoutConfig.colorScheme === 'light') {
             applyLightTheme();
@@ -136,17 +133,12 @@ const Dashboard = () => {
 
         setTimeout(() => {
             if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('invitation_result') !== null) {
-                const invitationResult =  sessionStorage.getItem('invitation_result') === "true" || false;
+                const invitationResult = sessionStorage.getItem('invitation_result') === 'true' || false;
                 sessionStorage.removeItem('invitation_result');
                 invitationResponse(invitationResult);
             }
         }, 500);
-
-
-
     }, [layoutConfig.colorScheme, toast]);
-
-
 
     const formatCurrency = (value: number) => {
         return value?.toLocaleString('en-US', {
@@ -156,9 +148,8 @@ const Dashboard = () => {
     };
 
     return (
-
         <div className="grid">
-            <Toast ref={toast} position="top-center" className={"col-12"} />
+            <Toast ref={toast} position="top-center" className={'col-12'} />
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">

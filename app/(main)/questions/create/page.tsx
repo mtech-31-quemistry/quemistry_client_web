@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
 import { Questions, Genai } from '@/types';
-import { QuestionsService } from '../../../../service/QuestionsService';
-import { GenaiService } from '../../../../service/GenaiService';
+import { QuestionsService } from '@/service/QuestionsService';
+import { GenaiService } from '@/service/GenaiService';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { Editor, EditorTextChangeEvent } from 'primereact/editor';
 import { InputSwitch, InputSwitchChangeEvent } from 'primereact/inputswitch';
@@ -30,7 +30,7 @@ const EditQuestion = () => {
     const [showOptionDialog, setShowOptionDialog] = useState<boolean>(false);
     const [activeTab, setActiveTab] = useState<number>(0);
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
-    
+
     const toast = useRef<Toast>(null);
 
     const showWarning = (summary: string, message: string) => {
@@ -171,7 +171,7 @@ const EditQuestion = () => {
             });
         }
         return { selectedTopics: selectedTopics, selectedSkills: selectedSkills };
-    }
+    };
     const handleOnClickDone = () => {
         console.log('handleOnClickDone');
         console.log(selectedTopicNodes);
@@ -183,7 +183,7 @@ const EditQuestion = () => {
         console.log(answer);
         //populate skills for mcq
         const { selectedTopics, selectedSkills } = retrieveSelectedTopicSkillsIds();
-        
+
         //instantiate MCQ object before adding
         let mcq = {
             stem: stem,
@@ -205,35 +205,35 @@ const EditQuestion = () => {
     };
     const handleOnGenerateQuestion = () => {
         //TODO: call generate question API
-        console.log("Invoking handleOnGenerateQuestion");
+        console.log('Invoking handleOnGenerateQuestion');
         var updateQuestion = (data: Genai.MCQ) => {
             setStem(data.stem);
             setAddedOptions(data.options);
             setShowSpinner(false);
-        }
+        };
         setStem('');
         setAddedOptions([]);
         setAnswer('');
         setExplanation('');
         setIsAnswer(false);
-        
+
         //console.debug("selectedTopicNodes", selectedTopicNodes);
-        if(!selectedTopicNodes){
-            console.log("selectedTopicNodes undefined");
-            showWarning("Invalid Input", "Generate Question works only for 1 topic with 1 or more skills selected");
+        if (!selectedTopicNodes) {
+            console.log('selectedTopicNodes undefined');
+            showWarning('Invalid Input', 'Generate Question works only for 1 topic with 1 or more skills selected');
             return;
         }
         const { selectedTopics, selectedSkills } = retrieveSelectedTopicSkillsIds();
-        if(selectedTopics.length !=1){
-            showWarning("Invalid Input", "Generate Question works only for 1 topic with 1 or more skills selected");
+        if (selectedTopics.length != 1) {
+            showWarning('Invalid Input', 'Generate Question works only for 1 topic with 1 or more skills selected');
             return;
         }
         //search in listOfTopics
-        const searchedTopic: Questions.Topic| undefined = listOfTopics.find((t: Questions.Topic) => {
+        const searchedTopic: Questions.Topic | undefined = listOfTopics.find((t: Questions.Topic) => {
             return t.id == selectedTopics[0];
-        })
-        if(searchedTopic){
-            let selectedTopic: Questions.Topic={
+        });
+        if (searchedTopic) {
+            let selectedTopic: Questions.Topic = {
                 id: searchedTopic.id,
                 name: searchedTopic.name,
                 status: '',
@@ -241,17 +241,17 @@ const EditQuestion = () => {
                     return selectedSkills.includes(s.id || -1);
                 }),
                 edited: false
-            }
-            console.debug("selectedTopic", selectedTopic)
-            setActiveTab(3)
+            };
+            console.debug('selectedTopic', selectedTopic);
+            setActiveTab(3);
             setShowSpinner(true);
             GenaiService.generateMCQByTopicStream(1, selectedTopic, updateQuestion);
         }
-    }
+    };
     return (
         <>
             <Toast ref={toast} position="top-center" />
-            {!showSpinner || <ProgressSpinner style={{width: '50px', height: '50px', position: 'fixed', left: '50%', top: '50%', opacity: '1', zIndex: '1000', background: 'transparent'}} strokeWidth="8" fill="var(--surface-ground)"  />}
+            {!showSpinner || <ProgressSpinner style={{ width: '50px', height: '50px', position: 'fixed', left: '50%', top: '50%', opacity: '1', zIndex: '1000', background: 'transparent' }} strokeWidth="8" fill="var(--surface-ground)" />}
             <h5>Add Question</h5>
             <br />
             <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
@@ -377,4 +377,3 @@ const EditQuestion = () => {
 };
 
 export default EditQuestion;
-

@@ -72,10 +72,12 @@ const QuizPage: React.FC = () => {
             return;
         }
         if (currentQuestion.options) {
-            setExplanationsVisible(currentQuestion.options.reduce((acc, option) => {
-                acc[option.no] = true;
-                return acc;
-            }, {} as { [key: number]: boolean }));
+            setExplanationsVisible(
+                currentQuestion.options.reduce((acc, option) => {
+                    acc[option.no] = true;
+                    return acc;
+                }, {} as { [key: number]: boolean })
+            );
         }
         setIsAnswerSubmitted(true);
         setIsRadioDisabled(true);
@@ -289,26 +291,26 @@ const QuizPage: React.FC = () => {
 
     const calculateScore = () => {
         if (!quiz) return;
-    
+
         let score = 0;
         quiz.mcqs.forEach((mcq) => {
             const selectedOption = selectedOptions[mcq.id];
             if (mcq.options) {
                 const correctOption = mcq.options.find((option) => option.isAnswer)?.no;
-    
+
                 if (selectedOption === correctOption) {
                     score++;
                 }
             }
         });
-    
+
         return score;
     };
 
     const displayScore = () => {
         const score = calculateScore();
         const totalQuestions = quiz?.mcqs.length || 0;
-        setCurrentQuestionIndex(currentQuestionIndex + 1)
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
         setShowScore(true);
         localStorage.setItem('currentQuestionIndex', '0');
         setShowScoreMessage(`You answered ${score} of ${totalQuestions} questions correctly.`);
@@ -404,10 +406,7 @@ const QuizPage: React.FC = () => {
                                 <div className="col-12 md:col-6 mb-5"></div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                <Button
-                                    onClick={startNewQuiz}
-                                    disabled={isDisabled || isStartingNewQuiz}
-                                >
+                                <Button onClick={startNewQuiz} disabled={isDisabled || isStartingNewQuiz}>
                                     {isStartingNewQuiz ? 'Loading Quiz...' : 'Submit'}
                                 </Button>
                             </div>
@@ -417,39 +416,50 @@ const QuizPage: React.FC = () => {
                         <div key={currentQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ minWidth: '120px' }}><h6>Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
-                                    <b><div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div></b>
+                                    <div style={{ minWidth: '120px' }}>
+                                        <h6>
+                                            Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
+                                        </h6>
+                                    </div>
+                                    <b>
+                                        <div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
+                                    </b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
                                 </div>
-                                {currentQuestion.options && currentQuestion.options.map((option) => (
-                                    <div key={option.no} className="cardOption">
-                                        <label className="option-label">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                {option.no !== null}
-                                                <input
-                                                    type="radio"
-                                                    name={`mcq-${currentQuestion.id}`}
-                                                    checked={selectedOptions[currentQuestion.id] === option.no}
-                                                    onChange={() => handleOptionClick(currentQuestion.id, option.no)}
-                                                    disabled={isRadioDisabled}
-                                                />
-                                                <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
-                                            </div>
-                                        </label>
-                                        {explanationsVisible[option.no] && (
-                                            <div>
-                                                {option.isAnswer ? (
-                                                    <div className="explanation-container" style={{ color: 'green' }}>Correct Answer</div>
-                                                ) : (
-                                                    <div className="explanation-container" style={{ color: 'red' }}>Incorrect Answer</div>
-                                                )}
-                                                <div className="explanation-container">{option.explanation}</div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                {currentQuestion.options &&
+                                    currentQuestion.options.map((option) => (
+                                        <div key={option.no} className="cardOption">
+                                            <label className="option-label">
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    {option.no !== null}
+                                                    <input
+                                                        type="radio"
+                                                        name={`mcq-${currentQuestion.id}`}
+                                                        checked={selectedOptions[currentQuestion.id] === option.no}
+                                                        onChange={() => handleOptionClick(currentQuestion.id, option.no)}
+                                                        disabled={isRadioDisabled}
+                                                    />
+                                                    <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
+                                                </div>
+                                            </label>
+                                            {explanationsVisible[option.no] && (
+                                                <div>
+                                                    {option.isAnswer ? (
+                                                        <div className="explanation-container" style={{ color: 'green' }}>
+                                                            Correct Answer
+                                                        </div>
+                                                    ) : (
+                                                        <div className="explanation-container" style={{ color: 'red' }}>
+                                                            Incorrect Answer
+                                                        </div>
+                                                    )}
+                                                    <div className="explanation-container">{option.explanation}</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
                                 {isAnswerSubmitted ? (
                                     currentQuestionIndex < quiz.mcqs.length - 1 ? (
                                         <Button
@@ -464,31 +474,30 @@ const QuizPage: React.FC = () => {
                                             disabled={!isAnswerSubmitted || !quizIdAvailable}
                                         ></Button>
                                     ) : (
-                                        <Button
-                                            label="Submit Quiz"
-                                            onClick={displayScore}
-                                        ></Button>
+                                        <Button label="Submit Quiz" onClick={displayScore}></Button>
                                     )
                                 ) : (
                                     <Button
                                         label="Submit"
                                         onClick={() => {
                                             submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
-                                            handleSubmitAnswer()
+                                            handleSubmitAnswer();
                                         }}
                                         disabled={isAnswerSubmitted}
                                     ></Button>
                                 )}
                             </div>
-                            <h6><b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
+                            <h6>
+                                <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
+                            </h6>
                             <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz?.mcqs?.length) * 100)} />
                         </div>
                     )}
                     {showScore && showScoreMessage && (
-                        <div><p>
-                            <div className="score-message">
-                                {showScoreMessage}
-                            </div></p>
+                        <div>
+                            <p>
+                                <div className="score-message">{showScoreMessage}</div>
+                            </p>
                             <div>
                                 <Button onClick={handleViewResults}>View latest Quiz Results</Button>
                             </div>
@@ -497,7 +506,7 @@ const QuizPage: React.FC = () => {
                 </div>
             </div>
         </div>
-    );    
+    );
 };
 
 export default QuizPage;

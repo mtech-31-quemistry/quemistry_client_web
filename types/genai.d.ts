@@ -1,4 +1,4 @@
-import{ Option } from './questions';
+import { Option } from './questions';
 
 declare namespace Genai {
     interface MCQ {
@@ -7,19 +7,17 @@ declare namespace Genai {
         isAnswer?: number;
     }
     interface InvokeResult {
-        output: MCQ,
-        metadata: Metadata
+        output: MCQ;
+        metadata: Metadata;
     }
 
     interface Metadata {
-        run_id: string,
-        feedback_tokens: []
+        run_id: string;
+        feedback_tokens: [];
     }
 
     interface StreamEvent {
-        event: string,
-        data: MCQ | Metadata
+        event: string;
+        data: MCQ | Metadata;
     }
-
-
 }

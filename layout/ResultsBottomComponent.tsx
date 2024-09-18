@@ -47,12 +47,12 @@ export default function ResultsBottomComponent({ currentQuestionIndex }: Results
     }
 
     const lastQuizIndex = quiz.quizzes.length - 1;
-    console.log(lastQuizIndex)
+    console.log(lastQuizIndex);
     const progress = quiz.quizzes[lastQuizIndex].mcq.map((mcq: Quiz.Mcq) => {
         const attemptOption = mcq.attemptOption ?? 0;
         const selectedOption = mcq.options[attemptOption - 1];
         return selectedOption && selectedOption.isAnswer;
-        console.log(lastQuizIndex)
+        console.log(lastQuizIndex);
     });
 
     const currentQuestion = quiz.quizzes[lastQuizIndex].mcq[currentQuestionIndex];
@@ -66,47 +66,55 @@ export default function ResultsBottomComponent({ currentQuestionIndex }: Results
             <h5>Question {currentQuestionIndex + 1}</h5>
             <p dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></p>
             <ul>
-                {currentQuestion.options && currentQuestion.options.map((option: Quiz.Option, index: number) => {
-                    const isAttempted = (option.no === currentQuestion.attemptOption);
-                    const isAttemptedAndIsAnswer = (option.no === currentQuestion.attemptOption && option.isAnswer);       //Black
-                    const isAttemptedAndIsNotAnswer = (option.no === currentQuestion.attemptOption) && !option.isAnswer;   //Red
-                    const isNotAttemptedAndIsAnswer = (option.no != currentQuestion.attemptOption) && option.isAnswer;    //Green
-                    const isAllUnattempted = (null === currentQuestion.attemptOption);                                  //All options
-                    // console.log(option.no)
-                    // console.log(isAttempted + ' ' + isAttemptedAndIsAnswer + ' ' + isAttemptedAndIsNotAnswer + ' ' + isNotAttemptedAndIsAnswer + ' ' + isAllUnattempted)
-                    return (
-                        <div key={option.no} className="cardOption">
-                            <div className="card">
-                                <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
-                                {isAttemptedAndIsAnswer && (
-                                    <div className="explanation-container" style={{ color: 'Green' }}><strong>You chose this. </strong>
-                                    <div className="explanation-container">{option.explanation}</div></div>
-                                )}
-                                {!isAttemptedAndIsAnswer && isAttemptedAndIsNotAnswer && (
-                                    <div className="explanation-container" style={{ color: 'Red' }}><strong>You chose this.</strong>
-                                    <div className="explanation-container">{option.explanation}</div>
-                                    </div>
-                                )}
-                                {!isAttemptedAndIsNotAnswer && !isAttemptedAndIsAnswer && isAllUnattempted && (
-                                    <div className="explanation-container" style={{ color: 'Red' }}><strong>You chose the incorrect answer.</strong>
-                                    </div>
-                                )}
-                                {!isAttemptedAndIsNotAnswer && !isAttemptedAndIsAnswer && !isAllUnattempted && !isAttemptedAndIsNotAnswer && isNotAttemptedAndIsAnswer && !currentQuestion.attemptOption && (
-                                    <div className="explanation-container" style={{ color: 'Black' }}><strong>You skipped this.</strong>
-                                    </div>
-                                )}
-                                {!isAttemptedAndIsNotAnswer && !isAttemptedAndIsAnswer && !isAllUnattempted && !isAttemptedAndIsNotAnswer && isNotAttemptedAndIsAnswer && (
-                                    <div className="explanation-container" style={{ color: 'Green' }}>
-                                    <div className="explanation-container">{option.explanation}</div></div>
-                                )}
-                                {isAttemptedAndIsNotAnswer || isAttemptedAndIsAnswer || isAllUnattempted || isAttemptedAndIsNotAnswer || isNotAttemptedAndIsAnswer || !(currentQuestion.attemptOption === 0) || (
-                                    <div className="explanation-container" style={{ color: 'Red' }}>
-                                    <div className="explanation-container">{option.explanation}</div></div>
-                                )}
+                {currentQuestion.options &&
+                    currentQuestion.options.map((option: Quiz.Option, index: number) => {
+                        const isAttempted = option.no === currentQuestion.attemptOption;
+                        const isAttemptedAndIsAnswer = option.no === currentQuestion.attemptOption && option.isAnswer; //Black
+                        const isAttemptedAndIsNotAnswer = option.no === currentQuestion.attemptOption && !option.isAnswer; //Red
+                        const isNotAttemptedAndIsAnswer = option.no != currentQuestion.attemptOption && option.isAnswer; //Green
+                        const isAllUnattempted = null === currentQuestion.attemptOption; //All options
+                        // console.log(option.no)
+                        // console.log(isAttempted + ' ' + isAttemptedAndIsAnswer + ' ' + isAttemptedAndIsNotAnswer + ' ' + isNotAttemptedAndIsAnswer + ' ' + isAllUnattempted)
+                        return (
+                            <div key={option.no} className="cardOption">
+                                <div className="card">
+                                    <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
+                                    {isAttemptedAndIsAnswer && (
+                                        <div className="explanation-container" style={{ color: 'Green' }}>
+                                            <strong>You chose this. </strong>
+                                            <div className="explanation-container">{option.explanation}</div>
+                                        </div>
+                                    )}
+                                    {!isAttemptedAndIsAnswer && isAttemptedAndIsNotAnswer && (
+                                        <div className="explanation-container" style={{ color: 'Red' }}>
+                                            <strong>You chose this.</strong>
+                                            <div className="explanation-container">{option.explanation}</div>
+                                        </div>
+                                    )}
+                                    {!isAttemptedAndIsNotAnswer && !isAttemptedAndIsAnswer && isAllUnattempted && (
+                                        <div className="explanation-container" style={{ color: 'Red' }}>
+                                            <strong>You chose the incorrect answer.</strong>
+                                        </div>
+                                    )}
+                                    {!isAttemptedAndIsNotAnswer && !isAttemptedAndIsAnswer && !isAllUnattempted && !isAttemptedAndIsNotAnswer && isNotAttemptedAndIsAnswer && !currentQuestion.attemptOption && (
+                                        <div className="explanation-container" style={{ color: 'Black' }}>
+                                            <strong>You skipped this.</strong>
+                                        </div>
+                                    )}
+                                    {!isAttemptedAndIsNotAnswer && !isAttemptedAndIsAnswer && !isAllUnattempted && !isAttemptedAndIsNotAnswer && isNotAttemptedAndIsAnswer && (
+                                        <div className="explanation-container" style={{ color: 'Green' }}>
+                                            <div className="explanation-container">{option.explanation}</div>
+                                        </div>
+                                    )}
+                                    {isAttemptedAndIsNotAnswer || isAttemptedAndIsAnswer || isAllUnattempted || isAttemptedAndIsNotAnswer || isNotAttemptedAndIsAnswer || !(currentQuestion.attemptOption === 0) || (
+                                        <div className="explanation-container" style={{ color: 'Red' }}>
+                                            <div className="explanation-container">{option.explanation}</div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })}
             </ul>
         </div>
     );
