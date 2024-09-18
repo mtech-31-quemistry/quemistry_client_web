@@ -5,8 +5,11 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { UserService } from '@/service/UserService';
+import AppMessages,  {AppMessage} from '../../../components/AppMessages'
+import Link from 'next/link';
+
 
 interface ClassMap {
     descriptionName: string;
@@ -20,9 +23,12 @@ const Classes = () => {
     const [addClass, setAddClass] = useState(false);
     const [classes, setClasses] = useState<ClassResponse[]>([]);
 
+    const appMsg = useRef<AppMessage>(null);
+
     useEffect(() => {
         fetchClasses();
-    }, [addClass]);
+    }, []);
+
 
     const useGenerateClassMap = (descriptionName: string, apiName: string, defaultValue = ''): ClassMap => {
         const [value, setValue] = useState(defaultValue);
@@ -48,6 +54,22 @@ const Classes = () => {
         clearNewClass();
         await fetchClasses();
     };
+    const onClickAddClass = () => {
+        //Check tutor already created profile
+        UserService.getTutorProfile().then((response) => {
+            if (response.ok) {
+                setAddClass(true);
+                return;
+            }
+            else if(response.status === 404) {
+                appMsg.current?.showCustomWarning(<div>Please update your profile before adding a class. Click <Link href="/profile/edit">here</Link> to update profile.</div>);
+            }
+            else{
+                throw new Error(response.statusText);
+            }
+        });
+        //setAddClass(true)
+    };
 
     const addClassFooter = (
         <div>
@@ -68,11 +90,12 @@ const Classes = () => {
     );
 
     return (
-        <div className="grid" style={{ width: '150vw' }}>
-            <div className="col-12 xl:col-6">
+        <div className="grid">
+            <AppMessages ref={appMsg} />
+            <div className="col-12">
                 <div className="card">
                     <Fragment>
-                        <Button label="New" icon="pi pi-plus" onClick={() => setAddClass(true)} />
+                        <Button label="New" icon="pi pi-plus" onClick={() => onClickAddClass()} />
                     </Fragment>
                     <Dialog header="Add Class" style={{ width: '50vw' }} visible={addClass} onHide={() => addClass && clearNewClass()} footer={addClassFooter}>
                         {classMapList.map(({ descriptionName, value, setValue }) => renderField(descriptionName, value, ({ target }) => setValue(target.value)))}

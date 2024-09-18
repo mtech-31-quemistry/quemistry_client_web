@@ -41,3 +41,24 @@ interface InputClass {
   name: string;
   code: string;
 }
+
+interface UserServiceResponseDto {
+    statusCode: string;
+    statusMessage: string;
+    serviceName: string;
+    errors: ErrorDto[];
+    payload: any;
+}
+
+interface ErrorDto {
+    code: string;
+    displayMessage: string;
+}
+
+interface Tutor {
+    firstName: string;
+    lastName: string;
+    educationLevel: string;
+    tuitionCenter: string;
+}
+
