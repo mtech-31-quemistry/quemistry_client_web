@@ -10,9 +10,17 @@ const ResultsPage: React.FC = () => {
     const [quiz, setQuiz] = useState(null); // Add state for the quiz data
 
     const searchParams = useSearchParams();
-    const quizId = searchParams.get('quizId');
+    const quizIdParam = searchParams.get('quizId');
+
+    // Retrieve the last visited quizId from local storage
+    const [quizId, setQuizId] = useState(quizIdParam || localStorage.getItem('lastVisitedQuizId') || null);
 
     useEffect(() => {
+        // Store the current quizId in local storage
+        if (quizId) {
+            localStorage.setItem('lastVisitedQuizId', quizId);
+        }
+
         // Fetch quiz data based on quizId
         const fetchQuiz = async () => {
             // Replace this with your data fetching logic
@@ -36,12 +44,7 @@ const ResultsPage: React.FC = () => {
 
     return (
         <div>
-            <ResultsTopComponent
-                onQuestionClick={handleQuestionClick}
-                currentQuestionIndex={currentQuestionIndex}
-                quizId={quizId}
-                onReload={handleReload}
-            />
+            <ResultsTopComponent onQuestionClick={handleQuestionClick} currentQuestionIndex={currentQuestionIndex} quizId={quizId} onReload={handleReload} />
             {quiz && (
                 <ResultsBottomComponent
                     currentQuestionIndex={currentQuestionIndex}

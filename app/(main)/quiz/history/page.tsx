@@ -32,7 +32,7 @@ const topicsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
             {rowData.topics.map((topic) => (
-                <Tag key={topic.id} style={{ marginRight: '1em' }} severity="info" value={topic.name} />
+                <Tag key={topic.id} style={{ marginRight: '0em' }} severity="info" value={topic.name} />
             ))}
         </React.Fragment>
     );
@@ -42,7 +42,7 @@ const skillsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
             {rowData.skills.map((skill) => (
-                <Tag key={skill.id} style={{ marginRight: '1em' }} value={skill.name} />
+                <Tag key={skill.id} style={{ marginRight: '0em' }} value={skill.name} />
             ))}
         </React.Fragment>
     );
@@ -60,7 +60,7 @@ const achievementBodyTemplate = (rowData: ProcessedQuiz) => {
         severity = 'warning';
     }
 
-    return <Tag severity={severity} value={`Points: ${earnedPoints}/${totalPoints} (${percentage.toFixed(2)}%)`} />;
+    return <Tag severity={severity} value={`Score: ${percentage.toFixed(0)}% Points: ${earnedPoints}/${totalPoints}`} />;
 };
 
 const QuizHistory: React.FC = () => {
@@ -118,12 +118,7 @@ const QuizHistory: React.FC = () => {
     };
 
     const idBodyTemplate = (rowData: ProcessedQuiz) => {
-        return (
-            <Button
-                label={rowData.id.toString()}
-                onClick={() => handleQuizClick(rowData.id)}
-            />
-        );
+        return <Button label={rowData.id.toString()} onClick={() => handleQuizClick(rowData.id)} />;
     };
 
     if (loading) {
@@ -141,10 +136,10 @@ const QuizHistory: React.FC = () => {
                     <h5>History</h5>
                     <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
                     <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="id" sortOrder={-1} defaultSortOrder={1}>
-                        <Column body={idBodyTemplate} header="Quiz Number" sortable></Column>
-                        <Column body={topicsBodyTemplate} header="Topics"></Column>
-                        <Column body={skillsBodyTemplate} header="Skills"></Column>
-                        <Column body={achievementBodyTemplate} header="Achievement"></Column>
+                        <Column body={idBodyTemplate} header="Quiz Number" sortable field="id"></Column>
+                        <Column body={topicsBodyTemplate} header="Topics" sortable field="topic"></Column>
+                        <Column body={skillsBodyTemplate} header="Skills" sortable field="skill"></Column>
+                        <Column body={achievementBodyTemplate} header="Achievement" sortable field="score"></Column>
                     </DataTable>
                 </div>
             </div>

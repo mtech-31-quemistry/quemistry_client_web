@@ -28,6 +28,8 @@
   }
   
 .option-label {
+        display: block;
+        cursor: pointer;
     display: flex;
     align-items: center;
 }

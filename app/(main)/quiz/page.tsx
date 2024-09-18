@@ -365,6 +365,13 @@ const QuizPage: React.FC = () => {
         }
     };
 
+    const handleOptionClickQuiz = (questionId: number, optionNo: number) => {
+        setSelectedOptions((prevSelectedOptions) => ({
+            ...prevSelectedOptions,
+            [questionId]: optionNo
+        }));
+    };
+
     return (
         <div className="grid">
             <div className="col-12">
@@ -406,11 +413,7 @@ const QuizPage: React.FC = () => {
                                 </div>
                                 <div className="col-12 md:col-6 mb-5">
                                     Select the (max) question count desired
-                                    <InputText
-                                        type="text"
-                                        value="0"
-                                        onChange={(e) => setQuestionCount(e.target.value)}
-                                    />
+                                    <InputText type="text" value="0" onChange={(e) => setQuestionCount(e.target.value)} />
                                 </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
@@ -430,28 +433,26 @@ const QuizPage: React.FC = () => {
                                         </h6>
                                     </div>
                                     <b>
-                                        <div className="cardOption">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
+                                        <div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
                                     </b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
                                 </div>
-                                {currentQuestion.options &&
-                                    currentQuestion.options.map((option) => (
-                                        <div key={option.no} className="card">
-                                            <label className="option-label">
-                                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    {option.no !== null}
-                                                    <input
-                                                        type="radio"
-                                                        name={`mcq-${currentQuestion.id}`}
-                                                        checked={selectedOptions[currentQuestion.id] === option.no}
-                                                        onChange={() => handleOptionClick(currentQuestion.id, option.no)}
-                                                        disabled={isRadioDisabled}
-                                                    />
-                                                    <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
-                                                </div>
-                                            </label>
+                                {currentQuestion.options.map((option) => (
+                                    <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
+                                        <div className="card">
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <input
+                                                    type="radio"
+                                                    id={`option-${option.no}`}
+                                                    name={`mcq-${currentQuestion.id}`}
+                                                    checked={selectedOptions[currentQuestion.id] === option.no}
+                                                    onChange={() => handleOptionClickQuiz(currentQuestion.id, option.no)}
+                                                    disabled={isRadioDisabled}
+                                                />
+                                                <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
+                                            </div>
                                             {explanationsVisible[option.no] && (
                                                 <div>
                                                     {option.isAnswer ? (
@@ -467,7 +468,8 @@ const QuizPage: React.FC = () => {
                                                 </div>
                                             )}
                                         </div>
-                                    ))}
+                                    </label>
+                                ))}
                                 {isAnswerSubmitted ? (
                                     currentQuestionIndex < quiz.mcqs.length - 1 ? (
                                         <Button
@@ -495,9 +497,11 @@ const QuizPage: React.FC = () => {
                                     ></Button>
                                 )}
                             </div>
-                            <h6>
-                                <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
-                            </h6>
+                            <div style={{ marginBottom: '30px' }}>
+                                <h6>
+                                    <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
+                                </h6>
+                            </div>
                             <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz?.mcqs?.length) * 100)} />
                         </div>
                     )}
@@ -513,7 +517,7 @@ const QuizPage: React.FC = () => {
                     )}
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 

@@ -329,6 +329,13 @@ const QuizPage: React.FC = () => {
         }
     };
 
+    const handleOptionClickTest = (questionId: number, optionNo: number) => {
+        setSelectedOptions((prevSelectedOptions) => ({
+            ...prevSelectedOptions,
+            [questionId]: optionNo
+        }));
+    };
+
     return (
         <div className="grid">
             <div className="col-12">
@@ -393,37 +400,37 @@ const QuizPage: React.FC = () => {
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentTestQuestion.stem }} />
                                 </div>
-                                {currentTestQuestion.options &&
-                                    currentTestQuestion.options.map((option) => (
-                                        <div key={option.no} className="cardOption">
-                                            <label className="option-label">
-                                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    <input
-                                                        type="radio"
-                                                        name={`mcq-${currentTestQuestion.id}`}
-                                                        checked={selectedOptions[currentTestQuestion.id] === option.no}
-                                                        onChange={() => handleOptionClick(currentTestQuestion.id, option.no)}
-                                                        disabled={isRadioDisabled}
-                                                    />
-                                                    <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
-                                                </div>
-                                            </label>
+                                {currentTestQuestion.options.map((option) => (
+                                    <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
+                                        <div className="card">
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <input
+                                                    type="radio"
+                                                    id={`option-${option.no}`}
+                                                    name={`mcq-${currentTestQuestion.id}`}
+                                                    checked={selectedOptions[currentTestQuestion.id] === option.no}
+                                                    onChange={() => handleOptionClickTest(currentTestQuestion.id, option.no)}
+                                                    disabled={isRadioDisabled}
+                                                />
+                                                <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
+                                            </div>
                                             {explanationsVisible[option.no] && (
                                                 <div>
                                                     {option.isAnswer ? (
                                                         <div className="explanation-container" style={{ color: 'green' }}>
-                                                            Correct Answer
+                                                            <strong>Correct Answer</strong>
                                                         </div>
                                                     ) : (
                                                         <div className="explanation-container" style={{ color: 'red' }}>
-                                                            Incorrect Answer
+                                                            <strong>Incorrect Answer</strong>
                                                         </div>
                                                     )}
                                                     <div className="explanation-container">{option.explanation}</div>
                                                 </div>
                                             )}
                                         </div>
-                                    ))}
+                                    </label>
+                                ))}
                                 {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
                                     <Button
                                         label="Next Question"
@@ -451,9 +458,11 @@ const QuizPage: React.FC = () => {
                                     ></Button>
                                 )}
                             </div>
-                            <h6>
-                                <b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b>
-                            </h6>
+                            <div style={{ marginBottom: '30px' }}>
+                                <h6>
+                                    <b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b>
+                                </h6>
+                            </div>
                             <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
                         </div>
                     )}

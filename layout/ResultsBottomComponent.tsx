@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { Quiz } from '@/types';
+import '../app/(main)/quiz/quiz.css';
 import './results.css';
 
 interface ResultsBottomComponentProps {
@@ -21,8 +22,19 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
 
     return (
         <div className="card">
-            <h5>Question {currentQuestionIndex + 1}</h5>
-            <p dangerouslySetInnerHTML={{ __html: currentQuestion.stem }}></p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ minWidth: '200px' }}>
+                    <h6>
+                        Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
+                    </h6>
+                </div>
+                <b>
+                    <div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
+                </b>
+            </div>
+            <div className="cardOption">
+                <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
+            </div>
             <ul>
                 {currentQuestion.options &&
                     currentQuestion.options.map((option: Quiz.Option, index: number) => {
@@ -33,24 +45,30 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                         const isAllUnattempted = currentQuestion.attemptOption === 0; // All options
 
                         return (
-                            <div key={option.no} className="cardOption">
+                            <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
                                 <div className="card">
                                     <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                     {isAttemptedAndIsAnswer && (
                                         <div className="explanation-container-review" style={{ color: 'Green' }}>
-                                            <div className="explanation-container-review"><strong>You chose this. </strong></div>
+                                            <div className="explanation-container-review">
+                                                <strong>You chose this. </strong>
+                                            </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
                                     {isAttemptedAndIsNotAnswer && (
                                         <div className="explanation" style={{ color: 'Red' }}>
-                                            <div className="explanation-container-review"><strong>You chose this.</strong></div>
+                                            <div className="explanation-container-review">
+                                                <strong>You chose this.</strong>
+                                            </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
                                     {isAllUnattempted && (
                                         <div className="explanation" style={{ color: 'Gray' }}>
-                                            <div className="explanation-container-review"><i>You skipped this.</i></div>
+                                            <div className="explanation-container-review">
+                                                <i>You skipped this.</i>
+                                            </div>
                                         </div>
                                     )}
                                     {isNotAttemptedAndIsAnswer && (
@@ -59,10 +77,15 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                         </div>
                                     )}
                                 </div>
-                            </div>
+                            </label>
                         );
                     })}
             </ul>
+            <div style={{ marginTop: '40px' }}>
+                <h6>
+                    <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
+                </h6>
+            </div>
         </div>
     );
 }
