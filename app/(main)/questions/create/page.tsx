@@ -14,7 +14,7 @@ import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { TreeNode } from 'primereact/treenode';
 import { useRouter } from 'next/navigation';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import AppMessages,  {AppMessage} from '../../../../components/AppMessages'
+import AppMessages, { AppMessage } from '../../../../components/AppMessages';
 
 const EditQuestion = () => {
     const router = useRouter();
@@ -198,12 +198,12 @@ const EditQuestion = () => {
         //TODO: call generate question API
         console.log('Invoking handleOnGenerateQuestion');
         var updateQuestion = (data: Genai.MCQ) => {
-            var index =1
-            if(data.options && data.options.map ){
+            var index = 1;
+            if (data.options && data.options.map) {
                 data.options.map((item: Genai.Option) => {
                     item.no = index;
                     index++;
-                })
+                });
             }
             setStem(data.stem);
             setAddedOptions(data.options);

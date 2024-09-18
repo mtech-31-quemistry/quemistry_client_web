@@ -10,21 +10,11 @@ import api from "./ConnectionService"
 
 export const UserService = {
   async addClass(data: Class) {
-    const res = await api<UserServiceResponseDto>({ url: classUrl, body: JSON.stringify(data), method: "POST" });
-    //console.log('res', res);
-    // const res = await fetch(classUrl, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   credentials: 'include',
-    //   body: JSON.stringify(data)
-    // });
-    return res;
+    return await api<UserServiceResponseDto>({ url: classUrl, body: JSON.stringify(data), method: "POST" });
   },
 
-  async updateClass(data: Class) {
-    return (await api<UserServiceResponse<ClassResponse[]>>({ url: classUrl, body: JSON.stringify(data), method: "PUT" })).payload;
+  async updateClass(data: Class, classId: number) {
+    return (await api<UserServiceResponse<ClassResponse[]>>({ url: classUrl, body: JSON.stringify({...data, id: classId}), method: "PUT" })).payload;
   },
 
   async getClasses() {

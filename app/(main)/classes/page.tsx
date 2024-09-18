@@ -7,9 +7,9 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { UserService } from '@/service/UserService';
-import AppMessages,  {AppMessage} from '../../../components/AppMessages'
+import AppMessages, { AppMessage } from '../../../components/AppMessages';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
 
 interface ClassMap {
     descriptionName: string;
@@ -23,13 +23,13 @@ const Classes = () => {
     const [addClass, setAddClass] = useState(false);
     const [classId, setClassId] = useState<number>(0);
     const [classes, setClasses] = useState<ClassResponse[]>([]);
+    const router = useRouter();
 
     const appMsg = useRef<AppMessage>(null);
 
     useEffect(() => {
         fetchClasses();
     }, []);
-
 
     const useGenerateClassMap = (descriptionName: string, apiName: string, defaultValue = ''): ClassMap => {
         const [value, setValue] = useState(defaultValue);
@@ -54,11 +54,8 @@ const Classes = () => {
         const selectedClass = classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class;
         console.log(selectedClass);
 
-        if (addClass) await UserService.addClass(selectedClass);
-
-        if (classId > 0) {
-            await UserService.updateClass(selectedClass);
-        }
+        if (classId > 0) await UserService.updateClass(selectedClass, classId);
+        else await UserService.addClass(selectedClass);
 
         clearNewClass();
         await fetchClasses();
@@ -69,8 +66,14 @@ const Classes = () => {
             if (data !== null) {
                 setAddClass(true);
                 return;
-            }else{
-                appMsg.current?.showCustomWarning(<div>Please update your profile before adding a class. Click <Link href="/profile/edit">here</Link> to update profile.</div>);
+            } else {
+                appMsg.current?.showCustomWarning(
+                    <div>
+                        Please update your profile before adding a class. Click <Link href="/profile/edit">here</Link> to update profile.
+                    </div>,
+                    true,
+                    10
+                );
             }
         });
         //setAddClass(true)
@@ -100,13 +103,22 @@ const Classes = () => {
         classMapList.forEach((classMap, index) => classMapList[index].setValue((selectedClass as any)[classMap.apiName]));
     };
 
-    const EditButtonTemplate = (selectedClass: ClassResponse) => {
-        return <Button label="Edit" icon="pi pi-pencil" onClick={() => EditClass(selectedClass)} />;
+    const ViewDetails = (selectedClass: ClassResponse) => {
+        router.push(`/classes/details?id=${selectedClass.id}`);
+    };
+
+    const ActionColumnTemplate = (selectedClass: ClassResponse) => {
+        return (
+            <div className="flex align-items-center gap-2">
+                <Button label="Edit" icon="pi pi-pencil" onClick={() => EditClass(selectedClass)} />
+                <Button label="Details" icon="pi pi-book" onClick={() => ViewDetails(selectedClass)} />
+            </div>
+        );
     };
 
     return (
         <div className="grid">
-            <AppMessages ref={appMsg} />
+            <AppMessages ref={appMsg} isAutoDismiss={true} />
             <div className="col-12">
                 <div className="card">
                     <Fragment>
@@ -128,7 +140,7 @@ const Classes = () => {
                             />
                         ))}
 
-                        <Column header="Action" body={EditButtonTemplate}></Column>
+                        <Column header="Action" body={ActionColumnTemplate}></Column>
                     </DataTable>
                 </div>
             </div>
