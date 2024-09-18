@@ -40,7 +40,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
 
     const overlayMenuItems = [
         {
-            label: 'View Profile', 
+            label: 'View Profile',
             command: () => {
                 router.push('/profile/edit');
             }

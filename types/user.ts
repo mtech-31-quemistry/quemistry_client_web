@@ -61,4 +61,3 @@ interface Tutor {
     educationLevel: string;
     tuitionCentre: string;
 }
-
