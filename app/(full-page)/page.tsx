@@ -68,7 +68,7 @@ const LandingPage = () => {
                             <span className="font-light block">MTECH SE 31</span>Quemistry
                         </h1>
                         <p className="font-normal text-2xl line-height-3 md:mt-3 text-gray-700">Platform manages multiple choice questions to test and improve your knowlege in chemistry ... </p>
-                        <Link href="/dashboard">
+                        <Link href="/quiz">
                             <Button type="button" label="Get Started" rounded className="text-xl border-none mt-3 bg-blue-500 font-normal line-height-3 px-3 text-white"></Button>
                         </Link>
                     </div>
