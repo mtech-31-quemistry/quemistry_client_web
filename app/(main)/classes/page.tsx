@@ -65,16 +65,12 @@ const Classes = () => {
     };
     const onClickAddClass = () => {
         //Check tutor already created profile
-        UserService.getTutorProfile().then((response) => {
-            if (response.ok) {
+        UserService.getTutorProfile().then((data) => {
+            if (data !== null) {
                 setAddClass(true);
                 return;
-            }
-            else if(response.status === 404) {
+            }else{
                 appMsg.current?.showCustomWarning(<div>Please update your profile before adding a class. Click <Link href="/profile/edit">here</Link> to update profile.</div>);
-            }
-            else{
-                throw new Error(response.statusText);
             }
         });
         //setAddClass(true)

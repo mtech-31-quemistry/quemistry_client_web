@@ -40,13 +40,16 @@ export const UserService = {
       const body = JSON.stringify(inviteStudent);
       return (await api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: "POST" })).payload;
   },
-  getTutorProfile() {
+  getTutorProfile(): Promise<Tutor>{
     return fetch(tutorProfileUrl,  { 
       headers: ApiHelper.getRequestHeaders(),
       credentials: 'include'
     }).then((res) => {
       if(res.status === 200)
           return res.json();
+      else if(res.status === 404){
+         return null;
+      }
       else{
           console.log("res", res);
           throw new Error(res.status + " at retieving profile.");
