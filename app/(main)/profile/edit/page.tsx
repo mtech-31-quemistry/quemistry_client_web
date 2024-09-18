@@ -13,7 +13,7 @@ const EditProfile = () => {
 
     useEffect(() => {
         UserService.getTutorProfile().then((data) => {
-            reset(data);
+            if(data) reset(data);
         })
     },[]);
     const onSubmit = (data: Tutor) => {

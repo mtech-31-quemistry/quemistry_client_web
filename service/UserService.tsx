@@ -40,7 +40,7 @@ export const UserService = {
       const body = JSON.stringify(inviteStudent);
       return (await api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: "POST" })).payload;
   },
-  getTutorProfile(): Promise<Tutor>{
+  getTutorProfile(): Promise<Tutor| null| undefined>{
     return fetch(tutorProfileUrl,  { 
       headers: ApiHelper.getRequestHeaders(),
       credentials: 'include'
