@@ -41,7 +41,7 @@ export const UserService = {
       return (await api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: "POST" })).payload;
   },
   getTutorProfile(): Promise<Tutor| null| undefined>{
-    return fetch(tutorProfileUrl,  { 
+    return fetch(tutorProfileUrl,  {
       headers: ApiHelper.getRequestHeaders(),
       credentials: 'include'
     }).then((res) => {
@@ -60,8 +60,8 @@ export const UserService = {
     });
   },
   updateTutorProfile(data: Tutor) {
-    return fetch(tutorProfileUrl,  
-        { 
+    return fetch(tutorProfileUrl,
+        {
           method: 'POST',
           headers: ApiHelper.getRequestHeaders(),
           credentials: 'include',
@@ -74,7 +74,7 @@ export const UserService = {
               console.log("res", res);
               throw new Error(res.status + " at saving profile.");
           }
-      }).then((data) => 
+      }).then((data) =>
         data.payload as Tutor
       );
   }
