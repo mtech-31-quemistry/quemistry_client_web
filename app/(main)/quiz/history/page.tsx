@@ -82,12 +82,12 @@ const QuizHistory: React.FC = () => {
                 const processedData = responseData.quizzes.map((quiz: Quiz.QuizTaken) => {
                     const topicsMap = new Map<number, Topic>();
                     const skillsMap = new Map<number, Skill>();
-                
+
                     quiz.mcq.forEach((mcq: Quiz.Mcq) => {
                         mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
                         mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
                     });
-                
+
                     return {
                         id: quiz.id,
                         topicsCount: topicsMap.size,

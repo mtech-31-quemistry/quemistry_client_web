@@ -35,7 +35,9 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 {
-                    label: 'Quiz', icon: 'pi pi-fw pi-folder', visible: accessibleBy(['student']),
+                    label: 'Quiz',
+                    icon: 'pi pi-fw pi-folder',
+                    visible: accessibleBy(['student']),
                     items: [
                         { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz', visible: accessibleBy(['student']) },
                         { label: 'Quiz Results', icon: 'pi pi-fw pi-chart-scatter', to: '/quiz/results', visible: accessibleBy(['student']) },
@@ -43,14 +45,16 @@ const AppMenu = () => {
                     ]
                 },
                 {
-                    label: 'Class Test', icon: 'pi pi-fw pi-folder', visible: accessibleBy(['student']), 
+                    label: 'Class Test',
+                    icon: 'pi pi-fw pi-folder',
+                    visible: accessibleBy(['student']),
                     items: [
                         { label: 'Take Class Test', icon: 'pi pi-fw pi-pencil', to: '/test', visible: accessibleBy(['student']) },
                         { label: 'Test Results', icon: 'pi pi-fw pi-chart-bar', visible: accessibleBy(['student']) },
                         { label: 'Test History', icon: 'pi pi-fw pi-history', visible: accessibleBy(['student']) }
                     ]
-                },
-            ],
+                }
+            ]
         },
         {
             label: 'Manage',

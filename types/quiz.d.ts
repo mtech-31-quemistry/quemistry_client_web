@@ -16,7 +16,7 @@ declare namespace Quiz {
         name: string;
         topicId: number | null;
     }
-    
+
     interface Mcq {
         id: number;
         stem: string;
@@ -55,9 +55,9 @@ declare namespace Quiz {
     }
 
     interface QuizTaken {
-        id: number,
-        mcq: Mcq[],
-        status: string,
-        points: number
+        id: number;
+        mcq: Mcq[];
+        status: string;
+        points: number;
     }
-} 
+}

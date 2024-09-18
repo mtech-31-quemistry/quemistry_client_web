@@ -24,11 +24,11 @@ export const UserService = {
   },
 
   async updateClass(data: Class) {
-    return (await api<UserServiceResponse<ClassResponse[]>>({ url: classUrl, body: JSON.stringify(data), method: "PUT" })).payload;
+    return (await api<UserServiceResponse<ClassResponse[]>>({ url: classUrl, body: JSON.stringify(data), method: "PUT", userId: '8da3cf6e-2822-4ea9-8cfc-4a83f3c4b7a2' })).payload;
   },
 
   async getClasses() {
-    return (await api<UserServiceResponse<ClassResponse[]>>({ url: getAllClassesUrl })).payload;
+    return (await api<UserServiceResponse<ClassResponse[]>>({ url: getAllClassesUrl, userId: '8da3cf6e-2822-4ea9-8cfc-4a83f3c4b7a2' })).payload;
   },
 
   async acceptInvitation(studentInvitation: StudentInvitation) {

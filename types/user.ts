@@ -38,8 +38,8 @@ interface InviteStudent {
 }
 
 interface InputClass {
-  name: string;
-  code: string;
+    name: string;
+    code: string;
 }
 
 interface UserServiceResponseDto {

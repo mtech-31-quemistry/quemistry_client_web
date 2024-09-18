@@ -39,7 +39,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
     }, [reload]); // Add reload as a dependency to re-fetch data when reload state changes
 
     const handleReload = () => {
-        setReload(prevReload => !prevReload);
+        setReload((prevReload) => !prevReload);
     };
 
     if (loading) {
@@ -71,9 +71,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                 {progress.map((correct: boolean, index: number) => (
                     <div key={index} className="progress-bar-segment">
                         <a onClick={() => onQuestionClick(index)}>
-                            <div className={`progress-label ${index === currentQuestionIndex ? 'current' : ''}`}>
-                                {index + 1}
-                            </div>
+                            <div className={`progress-label ${index === currentQuestionIndex ? 'current' : ''}`}>{index + 1}</div>
                             <div className={`progress-bar ${index === currentQuestionIndex ? 'current' : correct ? 'correct' : 'incorrect'}`} />
                         </a>
                     </div>

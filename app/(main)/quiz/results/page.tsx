@@ -12,15 +12,15 @@ const ResultsPage: React.FC = () => {
     };
 
     const handleReload = () => {
-        setReload(prevReload => !prevReload);
+        setReload((prevReload) => !prevReload);
     };
 
     return (
         <div>
-            <ResultsTopComponent 
-                onQuestionClick={handleQuestionClick} 
-                currentQuestionIndex={currentQuestionIndex} 
-                //onReload={handleReload} 
+            <ResultsTopComponent
+                onQuestionClick={handleQuestionClick}
+                currentQuestionIndex={currentQuestionIndex}
+                //onReload={handleReload}
             />
             <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} />
         </div>

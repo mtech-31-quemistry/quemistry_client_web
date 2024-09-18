@@ -274,7 +274,7 @@ const QuizPage: React.FC = () => {
     }, [selectedTopics, selectedSkills]);
 
     const displayScore = () => {
-        setCurrentTestQuestionIndex(currentTestQuestionIndex + 1)
+        setCurrentTestQuestionIndex(currentTestQuestionIndex + 1);
         setShowTestScore(true);
         localStorage.setItem('showTestScore', 'false');
         localStorage.setItem('currentTestQuestionIndex', '0');
@@ -329,14 +329,14 @@ const QuizPage: React.FC = () => {
         }
     };
 
-   return (
+    return (
         <div className="grid">
             <div className="col-12">
                 <div className="card">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Class Tests</h5>
                         <Fragment>
-                            <Button icon="pi pi-times" style={{ marginLeft: 'auto' }}  onClick={() => isQuizOngoing ? setVisible(true) : confirmExit()} visible={isQuizOngoing && !showTestScore} />
+                            <Button icon="pi pi-times" style={{ marginLeft: 'auto' }} onClick={() => (isQuizOngoing ? setVisible(true) : confirmExit())} visible={isQuizOngoing && !showTestScore} />
                         </Fragment>
                         <Dialog
                             header="Exit Test"
@@ -371,10 +371,7 @@ const QuizPage: React.FC = () => {
                                 <div className="col-12 md:col-6 mb-5"></div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                            <Button
-                                    onClick={startNewQuiz}
-                                    disabled={isDisabled || isStartingNewQuiz}
-                                >
+                                <Button onClick={startNewQuiz} disabled={isDisabled || isStartingNewQuiz}>
                                     {isStartingNewQuiz ? 'Loading Quiz...' : 'Submit'}
                                 </Button>
                             </div>
@@ -384,74 +381,83 @@ const QuizPage: React.FC = () => {
                         <div key={currentTestQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ minWidth: '120px' }}><h6>Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}</h6></div>
-                                <b><div className="card">{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</div></b>
+                                    <div style={{ minWidth: '120px' }}>
+                                        <h6>
+                                            Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
+                                        </h6>
+                                    </div>
+                                    <b>
+                                        <div className="card">{currentTestQuestion.skills.map((skill) => skill.name).join(', ')}</div>
+                                    </b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentTestQuestion.stem }} />
                                 </div>
-                                {currentTestQuestion.options && currentTestQuestion.options.map((option) => (
-                                    <div key={option.no} className="cardOption">
-                                        <label className="option-label">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                <input
-                                                    type="radio"
-                                                    name={`mcq-${currentTestQuestion.id}`}
-                                                    checked={selectedOptions[currentTestQuestion.id] === option.no}
-                                                    onChange={() => handleOptionClick(currentTestQuestion.id, option.no)}
-                                                    disabled={isRadioDisabled}
-                                                />
-                                                <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
-                                            </div>
-                                        </label>
-                                        {explanationsVisible[option.no] && (
-                                            <div>
-                                                {option.isAnswer ? (
-                                                    <div className="explanation-container" style={{ color: 'green' }}>Correct Answer</div>
-                                                ) : (
-                                                    <div className="explanation-container" style={{ color: 'red' }}>Incorrect Answer</div>
-                                                )}
-                                                <div className="explanation-container">{option.explanation}</div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                               {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
-                                   <Button
-                                       label="Next Question"
-                                       onClick={() => {
-                                           if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
-                                               submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
-                                               handleNextQuestion();
-                                           } else {
-                                               console.error('Test ID is undefined or selected option is null');
-                                           }
-                                       }}
-                                       disabled={!quizIdAvailable}
-                                   ></Button>
-                               ) : (
-                                   <Button
-                                       label="Submit Test"
-                                       onClick={() => {
-                                           if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
-                                               submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
-                                               displayScore();
-                                           } else {
-                                               console.error('Test ID is undefined or selected option is null');
-                                           }
-                                       }}
-                                   ></Button>
-                               )}
-                           </div>
-                            <h6><b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b></h6>
+                                {currentTestQuestion.options &&
+                                    currentTestQuestion.options.map((option) => (
+                                        <div key={option.no} className="cardOption">
+                                            <label className="option-label">
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    <input
+                                                        type="radio"
+                                                        name={`mcq-${currentTestQuestion.id}`}
+                                                        checked={selectedOptions[currentTestQuestion.id] === option.no}
+                                                        onChange={() => handleOptionClick(currentTestQuestion.id, option.no)}
+                                                        disabled={isRadioDisabled}
+                                                    />
+                                                    <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
+                                                </div>
+                                            </label>
+                                            {explanationsVisible[option.no] && (
+                                                <div>
+                                                    {option.isAnswer ? (
+                                                        <div className="explanation-container" style={{ color: 'green' }}>
+                                                            Correct Answer
+                                                        </div>
+                                                    ) : (
+                                                        <div className="explanation-container" style={{ color: 'red' }}>
+                                                            Incorrect Answer
+                                                        </div>
+                                                    )}
+                                                    <div className="explanation-container">{option.explanation}</div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
+                                    <Button
+                                        label="Next Question"
+                                        onClick={() => {
+                                            if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                                submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
+                                                handleNextQuestion();
+                                            } else {
+                                                console.error('Test ID is undefined or selected option is null');
+                                            }
+                                        }}
+                                        disabled={!quizIdAvailable}
+                                    ></Button>
+                                ) : (
+                                    <Button
+                                        label="Submit Test"
+                                        onClick={() => {
+                                            if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                                submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
+                                                displayScore();
+                                            } else {
+                                                console.error('Test ID is undefined or selected option is null');
+                                            }
+                                        }}
+                                    ></Button>
+                                )}
+                            </div>
+                            <h6>
+                                <b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b>
+                            </h6>
                             <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
                         </div>
                     )}
-                    {showTestScore && showTestScoreMessage && (
-                        <div className="score-message">
-                            {showTestScoreMessage}
-                        </div>
-                    )}
+                    {showTestScore && showTestScoreMessage && <div className="score-message">{showTestScoreMessage}</div>}
                 </div>
             </div>
         </div>

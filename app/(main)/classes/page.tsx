@@ -21,6 +21,7 @@ interface ClassMap {
 
 const Classes = () => {
     const [addClass, setAddClass] = useState(false);
+    const [classId, setClassId] = useState<number>(0);
     const [classes, setClasses] = useState<ClassResponse[]>([]);
 
     const appMsg = useRef<AppMessage>(null);
@@ -50,7 +51,15 @@ const Classes = () => {
     const fetchClasses = async () => setClasses(await UserService.getClasses());
 
     const saveClass = async () => {
-        await UserService.addClass(classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class);
+        const selectedClass = classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class;
+        console.log(selectedClass);
+
+        if (addClass) await UserService.addClass(selectedClass);
+
+        if (classId > 0) {
+            await UserService.updateClass(selectedClass);
+        }
+
         clearNewClass();
         await fetchClasses();
     };
@@ -89,6 +98,16 @@ const Classes = () => {
         </div>
     );
 
+    const EditClass = (selectedClass: ClassResponse) => {
+        setClassId(selectedClass.id);
+        setAddClass(true);
+        classMapList.forEach((classMap, index) => classMapList[index].setValue((selectedClass as any)[classMap.apiName]));
+    };
+
+    const EditButtonTemplate = (selectedClass: ClassResponse) => {
+        return <Button label="Edit" icon="pi pi-pencil" onClick={() => EditClass(selectedClass)} />;
+    };
+
     return (
         <div className="grid">
             <AppMessages ref={appMsg} />
@@ -97,7 +116,7 @@ const Classes = () => {
                     <Fragment>
                         <Button label="New" icon="pi pi-plus" onClick={() => onClickAddClass()} />
                     </Fragment>
-                    <Dialog header="Add Class" style={{ width: '50vw' }} visible={addClass} onHide={() => addClass && clearNewClass()} footer={addClassFooter}>
+                    <Dialog header="Add/Edit Class" style={{ width: '50vw' }} visible={addClass} onHide={() => addClass && clearNewClass()} footer={addClassFooter}>
                         {classMapList.map(({ descriptionName, value, setValue }) => renderField(descriptionName, value, ({ target }) => setValue(target.value)))}
                     </Dialog>
                     <h5>Manage Classes</h5>
@@ -112,6 +131,8 @@ const Classes = () => {
                                     .join(' ')}
                             />
                         ))}
+
+                        <Column header="Action" body={EditButtonTemplate}></Column>
                     </DataTable>
                 </div>
             </div>
