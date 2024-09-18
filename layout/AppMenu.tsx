@@ -35,25 +35,16 @@ const AppMenu = () => {
             label: 'Home',
             items: [
                 {
-                    label: 'Quiz',
+                    label: 'Practice',
                     icon: 'pi pi-fw pi-folder',
                     visible: accessibleBy(['student']),
                     items: [
                         { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz', visible: accessibleBy(['student']) },
-                        { label: 'Quiz Results', icon: 'pi pi-fw pi-chart-scatter', to: '/quiz/results', visible: accessibleBy(['student']) },
-                        { label: 'Quiz History', icon: 'pi pi-fw pi-history', to: '/quiz/history', visible: accessibleBy(['student']) }
+                        { label: 'History', icon: 'pi pi-fw pi-history', to: '/quiz/history', visible: accessibleBy(['student']) },
+                        { label: 'Results', icon: 'pi pi-fw pi-chart-bar', to: '/quiz/results', visible: accessibleBy(['student']) }
                     ]
                 },
-                {
-                    label: 'Class Test',
-                    icon: 'pi pi-fw pi-folder',
-                    visible: accessibleBy(['student']),
-                    items: [
-                        { label: 'Take Class Test', icon: 'pi pi-fw pi-pencil', to: '/test', visible: accessibleBy(['student']) },
-                        { label: 'Test Results', icon: 'pi pi-fw pi-chart-bar', visible: accessibleBy(['student']) },
-                        { label: 'Test History', icon: 'pi pi-fw pi-history', visible: accessibleBy(['student']) }
-                    ]
-                }
+                { label: 'Take Test', icon: 'pi pi-fw pi-graduation-cap', to: '/test', visible: accessibleBy(['student']) }
             ]
         },
         {

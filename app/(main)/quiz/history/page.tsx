@@ -5,6 +5,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { QuizService } from '../../../../service/QuizService';
 import { Tag } from 'primereact/tag';
+import { useRouter } from 'next/navigation';
+import { Button } from 'primereact/button';
 
 interface Topic {
     id: number;
@@ -67,12 +69,14 @@ const QuizHistory: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
+    const router = useRouter();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
-                if (responseData.message === 'History not found') {
-                    setError('History not found');
+                if (responseData.message === 'Quiz not found') {
+                    setError('Quiz not found');
                     setLoading(false);
                     return;
                 }
@@ -83,7 +87,7 @@ const QuizHistory: React.FC = () => {
                     const topicsMap = new Map<number, Topic>();
                     const skillsMap = new Map<number, Skill>();
 
-                    quiz.mcq.forEach((mcq: Quiz.Mcq) => {
+                    quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
                         mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
                         mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
                     });
@@ -95,7 +99,7 @@ const QuizHistory: React.FC = () => {
                         topics: Array.from(topicsMap.values()),
                         skills: Array.from(skillsMap.values()),
                         points: quiz.points,
-                        mcqsCount: quiz.mcq.length
+                        mcqsCount: quiz.mcqs.length
                     };
                 });
                 setProcessedQuizzes(processedData);
@@ -109,6 +113,19 @@ const QuizHistory: React.FC = () => {
         fetchData();
     }, []);
 
+    const handleQuizClick = (id: number) => {
+        router.push(`/quiz/results?quizId=${id}`);
+    };
+
+    const idBodyTemplate = (rowData: ProcessedQuiz) => {
+        return (
+            <Button
+                label={rowData.id.toString()}
+                onClick={() => handleQuizClick(rowData.id)}
+            />
+        );
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -121,10 +138,10 @@ const QuizHistory: React.FC = () => {
         <div className="grid">
             <div className="col-12">
                 <div className="card">
-                    <h5>Quizzes</h5>
+                    <h5>History</h5>
                     <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
                     <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="id" sortOrder={-1} defaultSortOrder={1}>
-                        <Column field="id" header="Quiz Number" sortable></Column>
+                        <Column body={idBodyTemplate} header="Quiz Number" sortable></Column>
                         <Column body={topicsBodyTemplate} header="Topics"></Column>
                         <Column body={skillsBodyTemplate} header="Skills"></Column>
                         <Column body={achievementBodyTemplate} header="Achievement"></Column>

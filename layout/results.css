@@ -1,3 +1,27 @@
+/* Ensure the container aligns its children to the left */
+.card {
+  text-align: left;
+}
+
+/* Ensure the list items are aligned to the left */
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Ensure the options are aligned to the left */
+.cardOption {
+  text-align: left;
+  margin-bottom: 10px; /* Add some space between options */
+}
+
+/* Ensure the explanations are aligned to the left */
+.explanation-container-review {
+  text-align: left;
+  margin: 0.3rem 0; /* Adds 1rem of space above and below the div */
+}
+
 .progress-bar-container {
   display: flex;
   flex-wrap: wrap; /* Allow wrapping of items */
@@ -74,47 +98,4 @@
   .progress-label {
       margin-bottom: 4px; /* Adjust margin for better spacing */
   }
-}
-
-/* General styles for the card */
-.card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.multi-line-treeselect .p-treeselect-label-container {
-  white-space: normal !important;
-  overflow-wrap: break-word !important;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
-}
-
-.multi-line-treeselect .p-treeselect-label {
-  white-space: normal !important;
-  overflow-wrap: break-word !important;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
-}
-
-.cardOption {
-  margin-bottom: 0px; /* Adjust this value as needed */
-  padding: 10px; /* Adjust this value as needed */
-}
-
-.explanation-container {
-  margin: 0.3rem 0; /* Adds 1rem of space above and below the div */
-  padding-left: 36px; /* Adjust this value to match the indentation of the option text */
-}
-
-.option-label {
-  display: flex;
-  align-items: center;
-}
-
-.option-label input[type="radio"] {
-  margin-right: 18px; /* Adjust this value to align the radio button and text correctly */
-  margin-bottom: 3px; /* Adjust this value to align the radio button and text correctly */
 }

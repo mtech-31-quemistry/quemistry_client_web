@@ -22,6 +22,11 @@
     padding-left: 36px; /* Adjust this value to match the indentation of the option text */
 }
 
+.explanation-container-review {
+    text-align: left;
+    margin: 0.3rem 0; /* Adds 1rem of space above and below the div */
+  }
+  
 .option-label {
     display: flex;
     align-items: center;

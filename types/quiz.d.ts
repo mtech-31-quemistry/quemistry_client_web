@@ -56,7 +56,7 @@ declare namespace Quiz {
 
     interface QuizTaken {
         id: number;
-        mcq: Mcq[];
+        mcqs: Mcq[];
         status: string;
         points: number;
     }

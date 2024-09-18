@@ -5,24 +5,34 @@ import ResultsBottomComponent from './ResultsBottomComponent';
 import { QuizService } from '@/service/QuizService';
 import { Button } from 'primereact/button';
 import './results.css';
+import { useRouter } from 'next/navigation';
 
 interface ResultsTopComponentProps {
     onQuestionClick: (index: number) => void;
     currentQuestionIndex: number;
+    quizId: string | null;
+    onReload: () => void;
 }
 
-export default function ResultsTopComponent({ onQuestionClick, currentQuestionIndex }: ResultsTopComponentProps) {
+export default function ResultsTopComponent({ onQuestionClick, currentQuestionIndex, quizId, onReload }: ResultsTopComponentProps) {
     const [quiz, setQuiz] = useState<Quiz.CompletedResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [reload, setReload] = useState<boolean>(false);
+
+    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                if (!quizId) {
+                    setError('Quiz ID not found, please select a Quiz from History');
+                    setLoading(false);
+                    return;
+                }
+
                 const responseData = await QuizService.getQuizCompleted();
-                if (responseData.message === 'History not found') {
-                    setError('History not found');
+                if (responseData.message === 'Quiz not found') {
+                    setError('Quiz not found');
                     setLoading(false);
                     return;
                 }
@@ -36,38 +46,42 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
         };
 
         fetchData();
-    }, [reload]); // Add reload as a dependency to re-fetch data when reload state changes
-
-    const handleReload = () => {
-        setReload((prevReload) => !prevReload);
-    };
+    }, [quizId, onReload]); // Add quizId and onReload as dependencies to re-fetch data when they change
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className="card">Loading...</div>;
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
+    if (error || !quizId) {
+        return <div className="card">{error}</div>;
     }
 
     if (!quiz || !quiz.quizzes || quiz.quizzes.length === 0) {
-        return <div>No quiz data available</div>;
+        return <div className="card">No quiz data available</div>;
     }
 
-    // Find the latest quiz by ID
-    const latestQuiz = quiz.quizzes.reduce((latest, current) => (current.id > latest.id ? current : latest), quiz.quizzes[0]);
+    // Find the specific quiz by ID
+    const specificQuiz = quiz.quizzes.find((quiz: Quiz.QuizTaken) => quiz.id === parseInt(quizId, 10));
+
+    if (!specificQuiz || !specificQuiz.mcqs || specificQuiz.mcqs.length === 0) {
+        return <div className='card'>No questions available for this quiz</div>;
+    }
 
     // Update the progress calculation
-    const progress = latestQuiz.mcq.map((mcq: Quiz.Mcq) => {
+    const progress = specificQuiz.mcqs.map((mcq: Quiz.Mcq) => {
         const attemptOption = mcq.attemptOption ?? 0;
         const selectedOption = mcq.options[attemptOption - 1];
         return selectedOption && selectedOption.isAnswer;
     });
 
+    const handleBackToHistory = () => {
+        router.push('/quiz/history');
+    };
+
     return (
         <div className="card">
-            <h5>Quiz Results</h5>
-            <div className="progress-bar-container mb-6">
+            <h5>Results for Quiz ID: {specificQuiz.id}</h5>
+            <div className="progress-bar-container mb-3">
                 {progress.map((correct: boolean, index: number) => (
                     <div key={index} className="progress-bar-segment">
                         <a onClick={() => onQuestionClick(index)}>
@@ -77,8 +91,8 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                     </div>
                 ))}
             </div>
-            <Button onClick={handleReload}>Reload Page</Button>
-            {/* <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} /> */}
+            <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} quiz={specificQuiz} />
+            <div className="mb-3"><Button onClick={handleBackToHistory}>Quiz History</Button></div>
         </div>
     );
 }

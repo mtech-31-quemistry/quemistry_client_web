@@ -381,7 +381,7 @@ const QuizPage: React.FC = () => {
                         <div key={currentTestQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ minWidth: '120px' }}>
+                                    <div style={{ minWidth: '200px' }}>
                                         <h6>
                                             Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
                                         </h6>

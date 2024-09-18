@@ -30,10 +30,11 @@ const QuizPage: React.FC = () => {
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
     const [quizIdAvailable, setQuizIdAvailable] = useState(false);
     const [isAbandoning, setIsAbandoning] = useState(false);
+    const [questionCount, setQuestionCount] = useState<string>();
     const router = useRouter();
 
     const handleViewResults = () => {
-        router.push('/quiz/results');
+        router.push('/quiz/history');
     };
 
     useEffect(() => {
@@ -367,7 +368,7 @@ const QuizPage: React.FC = () => {
     return (
         <div className="grid">
             <div className="col-12">
-                <div className="card">
+                <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Quizzes</h5>
                         <Fragment>
@@ -403,7 +404,14 @@ const QuizPage: React.FC = () => {
                                         showClear
                                     ></TreeSelect>
                                 </div>
-                                <div className="col-12 md:col-6 mb-5"></div>
+                                <div className="col-12 md:col-6 mb-5">
+                                    Select the (max) question count desired
+                                    <InputText
+                                        type="text"
+                                        value="0"
+                                        onChange={(e) => setQuestionCount(e.target.value)}
+                                    />
+                                </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                 <Button onClick={startNewQuiz} disabled={isDisabled || isStartingNewQuiz}>
@@ -416,13 +424,13 @@ const QuizPage: React.FC = () => {
                         <div key={currentQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ minWidth: '120px' }}>
+                                    <div style={{ minWidth: '200px' }}>
                                         <h6>
                                             Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
                                         </h6>
                                     </div>
                                     <b>
-                                        <div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
+                                        <div className="cardOption">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
                                     </b>
                                 </div>
                                 <div className="cardOption">
@@ -448,7 +456,7 @@ const QuizPage: React.FC = () => {
                                                 <div>
                                                     {option.isAnswer ? (
                                                         <div className="explanation-container" style={{ color: 'green' }}>
-                                                            Correct Answer
+                                                            <strong>Correct Answer</strong>
                                                         </div>
                                                     ) : (
                                                         <div className="explanation-container" style={{ color: 'red' }}>
@@ -499,13 +507,13 @@ const QuizPage: React.FC = () => {
                                 <div className="score-message">{showScoreMessage}</div>
                             </p>
                             <div>
-                                <Button onClick={handleViewResults}>View latest Quiz Results</Button>
+                                <Button onClick={handleViewResults}>View History</Button>
                             </div>
                         </div>
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
