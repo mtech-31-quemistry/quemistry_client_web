@@ -368,7 +368,7 @@ const QuizPage: React.FC = () => {
     return (
         <div className="grid">
             <div className="col-12">
-                <div>
+                <div className="card">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Quizzes</h5>
                         <Fragment>
@@ -438,7 +438,7 @@ const QuizPage: React.FC = () => {
                                 </div>
                                 {currentQuestion.options &&
                                     currentQuestion.options.map((option) => (
-                                        <div key={option.no} className="cardOption">
+                                        <div key={option.no} className="card">
                                             <label className="option-label">
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
                                                     {option.no !== null}
@@ -460,7 +460,7 @@ const QuizPage: React.FC = () => {
                                                         </div>
                                                     ) : (
                                                         <div className="explanation-container" style={{ color: 'red' }}>
-                                                            Incorrect Answer
+                                                            <strong>Incorrect Answer</strong>
                                                         </div>
                                                     )}
                                                     <div className="explanation-container">{option.explanation}</div>

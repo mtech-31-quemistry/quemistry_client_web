@@ -30,7 +30,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                         const isAttemptedAndIsAnswer = isAttempted && option.isAnswer; // Black
                         const isAttemptedAndIsNotAnswer = isAttempted && !option.isAnswer; // Red
                         const isNotAttemptedAndIsAnswer = !isAttempted && option.isAnswer; // Green
-                        const isAllUnattempted = currentQuestion.attemptOption === null; // All options
+                        const isAllUnattempted = currentQuestion.attemptOption === 0; // All options
 
                         return (
                             <div key={option.no} className="cardOption">
@@ -49,13 +49,12 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                         </div>
                                     )}
                                     {isAllUnattempted && (
-                                        <div className="explanation" style={{ color: 'Red' }}>
-                                            <div className="explanation-container-review"><strong>You chose the incorrect answer.</strong></div>
+                                        <div className="explanation" style={{ color: 'Gray' }}>
+                                            <div className="explanation-container-review"><i>You skipped this.</i></div>
                                         </div>
                                     )}
                                     {isNotAttemptedAndIsAnswer && (
                                         <div className="explanation" style={{ color: 'Green' }}>
-                                            <div className="explanation-container-review"><strong>You skipped this.</strong></div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
