@@ -5,12 +5,17 @@ import { Button } from 'primereact/button';
 import { useForm, Controller } from 'react-hook-form';
 import { UserService } from '../../../../service/UserService';
 import AppMessages,  {AppMessage} from '../../../../components/AppMessages'
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 const EditProfile = () => {
     const {control, formState: { errors, isDirty }, handleSubmit, reset} = useForm<Tutor>({ defaultValues: { firstName: '', lastName: '', educationLevel: '', tuitionCentre: '' } });
     const appMsg = useRef<AppMessage>(null);
 
+    useEffect(() => {
+        UserService.getTutorProfile().then((data) => {
+            reset(data);
+        })
+    },[]);
     const onSubmit = (data: Tutor) => {
         UserService.updateTutorProfile(data).then((data) => {
             console.log("Saved outout",data);

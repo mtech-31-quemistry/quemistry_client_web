@@ -44,7 +44,16 @@ export const UserService = {
     return fetch(tutorProfileUrl,  { 
       headers: ApiHelper.getRequestHeaders(),
       credentials: 'include'
-    });
+    }).then((res) => {
+      if(res.status === 200)
+          return res.json();
+      else{
+          console.log("res", res);
+          throw new Error(res.status + " at retieving profile.");
+      }
+    }).then((data) => 
+      data.payload as Tutor
+    );
   },
   updateTutorProfile(data: Tutor) {
     return fetch(tutorProfileUrl,  
