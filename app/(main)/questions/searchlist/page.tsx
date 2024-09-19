@@ -10,7 +10,6 @@ import { Editor } from 'primereact/editor';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { TreeNode } from 'primereact/treenode';
 import './searchlist.css'; // Custom styles
-import { userAgent } from 'next/server';
 
 const DEFAULT_PAGE_SIZE = 5;
 const QuestionSearchList = () => {
@@ -20,7 +19,7 @@ const QuestionSearchList = () => {
     const [dataScrollerRow, setDataScrollerRow] = useState(0);
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
     const [topicNodes, setTopicNodes] = useState<TreeNode[]>([]);
-    const [retrieveMCQRequest, setRetrieveMCQRequest] = useState<Questions.RetrieveQuestionRequest>({ pageNumber:0, pageSize: DEFAULT_PAGE_SIZE});
+    const [retrieveMCQRequest, setRetrieveMCQRequest] = useState<Questions.RetrieveQuestionRequest>({ pageNumber: 0, pageSize: DEFAULT_PAGE_SIZE });
     const [search, toggleSearch] = useState(false);
     const [totalRecords, setTotalRecords] = useState(0);
 
@@ -55,7 +54,7 @@ const QuestionSearchList = () => {
             return;
         }
         //console.log('load data current page', loadPage);
-        retrieveMCQRequest.pageNumber = loadPage
+        retrieveMCQRequest.pageNumber = loadPage;
         QuestionsService.retrieveMCQ(retrieveMCQRequest)
             .then((data) => {
                 //console.log('MCQ', data.mcqs);
@@ -70,19 +69,19 @@ const QuestionSearchList = () => {
     }, [dataScrollerRow]);
     //when click search
     useEffect(() => {
-         QuestionsService.retrieveMCQ(retrieveMCQRequest)
-             .then((data) => {
-                 //console.log('MCQ', data.mcqs);
-                 setMCQ(data.mcqs);
-                 setTotalPages(data.totalPages || 0);
-                 setRetrieveMCQRequest(retrieveMCQRequest);
-                 setTotalRecords(data.totalRecords || 0);
-             })
-             .finally(() => {
-                 setLoading(false);
-             });
-    },[search]);
-    
+        QuestionsService.retrieveMCQ(retrieveMCQRequest)
+            .then((data) => {
+                //console.log('MCQ', data.mcqs);
+                setMCQ(data.mcqs);
+                setTotalPages(data.totalPages || 0);
+                setRetrieveMCQRequest(retrieveMCQRequest);
+                setTotalRecords(data.totalRecords || 0);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [search]);
+
     const formatDate = (value: Date | undefined) => {
         if (value == undefined) return '';
 
@@ -133,49 +132,44 @@ const QuestionSearchList = () => {
         );
     };
     const handleOnSearch = () => {
-        console.log()
-         //populate skills for mcq
-         let selectedSkills: number[] = [];
- 
-         if (selectedTopicNodes) {
-             Object.entries(selectedTopicNodes).forEach(([key, data]) => {
-                 //console.log('key', key, 'data', data);
-                 let topic_skill = key.split('-');
-                 if (topic_skill.length > 1) {
-                     selectedSkills.push(parseInt(topic_skill[1]));
-                 }
-             });
-         }
-         retrieveMCQRequest.skills = selectedSkills;
-         retrieveMCQRequest.pageNumber = 0;
-         setRetrieveMCQRequest(retrieveMCQRequest);
-         toggleSearch(!search);
-    }
+        //populate skills for mcq
+        let selectedSkills: number[] = [];
+
+        if (selectedTopicNodes) {
+            Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                //console.log('key', key, 'data', data);
+                let topic_skill = key.split('-');
+                if (topic_skill.length > 1) {
+                    selectedSkills.push(parseInt(topic_skill[1]));
+                }
+            });
+        }
+        retrieveMCQRequest.skills = selectedSkills;
+        retrieveMCQRequest.pageNumber = 0;
+        setRetrieveMCQRequest(retrieveMCQRequest);
+        toggleSearch(!search);
+    };
     const startContent = (
         <React.Fragment>
-            <div className='grid'>
-            <Link href="/questions/create">
-                <Button icon="pi pi-plus" className="mr-2" />
-            </Link>
-            <div className="flex stretch">
-                <TreeSelect 
-                    style={{ width: '30rem', maxWidth: '100%' }}
-                    value={selectedTopicNodes}
-                    onChange={(e) => setSelectedTopicNodes(e.value)}
-                    options={topicNodes}
-                    metaKeySelection={false}
-                    selectionMode="checkbox"
-                    display="chip"
-                    placeholder="Select Topics / Skills"
-                    showClear
-                />
-                <Button
-                    icon="pi pi-search"
-                    className="ml-2 mr-2"
-                    onClick={() =>handleOnSearch()}
-                />
+            <div className="grid">
+                <Link href="/questions/create">
+                    <Button icon="pi pi-plus" className="mr-2" />
+                </Link>
+                <div className="flex stretch">
+                    <TreeSelect
+                        style={{ width: '30rem', maxWidth: '100%' }}
+                        value={selectedTopicNodes}
+                        onChange={(e) => setSelectedTopicNodes(e.value)}
+                        options={topicNodes}
+                        metaKeySelection={false}
+                        selectionMode="checkbox"
+                        display="chip"
+                        placeholder="Select Topics / Skills"
+                        showClear
+                    />
+                    <Button icon="pi pi-search" className="ml-2 mr-2" onClick={() => handleOnSearch()} />
+                </div>
             </div>
-        </div>
         </React.Fragment>
     );
 

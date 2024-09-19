@@ -9,7 +9,7 @@ import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { SelectButton } from 'primereact/selectbutton';
-import { Toast } from 'primereact/toast';
+import AppMessages, { AppMessage } from '@/components/AppMessages';
 
 const ManageTopics = () => {
     const [topicNodes, setTopicNodes] = useState<any[]>([]); //for display
@@ -18,27 +18,11 @@ const ManageTopics = () => {
     const [expandedKeys, setExpandedKeys] = useState<Record<string, boolean>>(); //for expanding and collapsing nodes in tree table
     const [addTopic, setAddTopic] = useState(false); //for adding new topics dialog
     const [newTopicName, setNewTopicName] = useState(''); //for adding new topics dialog
-    const toast = useRef<Toast>(null);
+    const appMsg = useRef<AppMessage>(null);
 
-    const saveSuccess = () => {
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Changes have been saved',
-            life: 3000 //3 secs
-        });
-    };
-    const reloadSuccess = () => {
-        toast.current?.show({
-            severity: 'info',
-            summary: 'Reloaded',
-            detail: 'Changes undone',
-            life: 3000 //3 secs
-        });
-    };
     const reload = () => {
         QuestionsService.getTopics().then((t) => {
-            reloadSuccess();
+            appMsg.current?.showInformation('Changes undone');
             setEdited(false);
             setTopics(t);
         });
@@ -205,7 +189,7 @@ const ManageTopics = () => {
         let topicsChanges: Questions.Topic[] = [newTopic];
         console.log('Add topic', newTopic);
         QuestionsService.saveTopics(topicsChanges).then((t) => {
-            saveSuccess();
+            appMsg.current?.showSuccess('Changes have been saved');
             setTopics(t);
             setEdited(false);
         });
@@ -224,7 +208,7 @@ const ManageTopics = () => {
         });
         //console.log("Add topic", topicsChanges);
         QuestionsService.saveTopics(topicsChanges).then((t) => {
-            saveSuccess();
+            appMsg.current?.showSuccess('Changes have been saved');
             setTopics(t);
             setEdited(false);
         });
@@ -278,7 +262,7 @@ const ManageTopics = () => {
 
     return (
         <div className="grid">
-            <Toast ref={toast} position="bottom-left" />
+            <AppMessages ref={appMsg} isAutoDismiss={true} />
             <div className="col-12">
                 <div className="card">
                     <Toolbar start={startContent} />
