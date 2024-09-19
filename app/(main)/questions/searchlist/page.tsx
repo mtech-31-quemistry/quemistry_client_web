@@ -1,27 +1,50 @@
 'use client';
 import { QuestionsService } from '../../../../service/QuestionsService';
+import React, { useEffect, useState, useRef, use } from 'react';
+import Link from 'next/link';
 import { Button } from 'primereact/button';
 import { DataScroller } from 'primereact/datascroller';
-import React, { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
 import { Toolbar } from 'primereact/toolbar';
 import { Tag } from 'primereact/tag';
 import { Editor } from 'primereact/editor';
+import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
+import { TreeNode } from 'primereact/treenode';
 import './searchlist.css'; // Custom styles
+import { userAgent } from 'next/server';
 
 const DEFAULT_PAGE_SIZE = 5;
 const QuestionSearchList = () => {
     const [MCQ, setMCQ] = useState<Questions.MCQ[]>([]);
     const [loading, setLoading] = useState(false); // what is this for
-    const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [dataScrollerRow, setDataScrollerRow] = useState(0);
+    const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
+    const [topicNodes, setTopicNodes] = useState<TreeNode[]>([]);
+    const [retrieveMCQRequest, setRetrieveMCQRequest] = useState<Questions.RetrieveQuestionRequest>({ pageNumber:0, pageSize: DEFAULT_PAGE_SIZE});
+    const [search, toggleSearch] = useState(false);
+    const [totalRecords, setTotalRecords] = useState(0);
 
+    useEffect(() => {
+        QuestionsService.getTopics().then((topics) => {
+            var nodes = topics.map((topic) => {
+                let childnode: any[] = [];
+                if (topic.skills) {
+                    childnode = topic.skills.map((skill) => {
+                        return { key: topic.id + '-' + skill.id, label: skill.name, data: { id: skill.id, name: skill.name, type: 'skill', topicId: topic.id } };
+                    });
+                }
+                return { key: topic.id, label: topic.name, data: { id: topic.id, name: topic.name, type: 'topic' }, children: childnode };
+            });
+            setTopicNodes(nodes);
+        });
+    }, []);
+    //lazing load when scrolling
     useEffect(() => {
         if (loading) return;
         setLoading(true);
         //console.log('dataScrollerRow:', dataScrollerRow);
         //console.log("calPage", Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE));
+        var currentPage = retrieveMCQRequest.pageNumber || 0;
         var loadPage = currentPage;
         if (Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE) > currentPage) {
             //load next page
@@ -31,23 +54,35 @@ const QuestionSearchList = () => {
             setLoading(false);
             return;
         }
-
         //console.log('load data current page', loadPage);
-        const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
-            pageNumber: loadPage,
-            pageSize: DEFAULT_PAGE_SIZE
-        };
-        QuestionsService.retrieveMCQ(retrieveQuestionRequest)
+        retrieveMCQRequest.pageNumber = loadPage
+        QuestionsService.retrieveMCQ(retrieveMCQRequest)
             .then((data) => {
                 //console.log('MCQ', data.mcqs);
                 setMCQ([...MCQ, ...data.mcqs]);
                 setTotalPages(data.totalPages || 0);
-                setCurrentPage(loadPage);
+                setRetrieveMCQRequest(retrieveMCQRequest);
+                setTotalRecords(data.totalRecords || 0);
             })
             .finally(() => {
                 setLoading(false);
             });
     }, [dataScrollerRow]);
+    //when click search
+    useEffect(() => {
+         QuestionsService.retrieveMCQ(retrieveMCQRequest)
+             .then((data) => {
+                 //console.log('MCQ', data.mcqs);
+                 setMCQ(data.mcqs);
+                 setTotalPages(data.totalPages || 0);
+                 setRetrieveMCQRequest(retrieveMCQRequest);
+                 setTotalRecords(data.totalRecords || 0);
+             })
+             .finally(() => {
+                 setLoading(false);
+             });
+    },[search]);
+    
     const formatDate = (value: Date | undefined) => {
         if (value == undefined) return '';
 
@@ -97,19 +132,50 @@ const QuestionSearchList = () => {
             </div>
         );
     };
-
+    const handleOnSearch = () => {
+        console.log()
+         //populate skills for mcq
+         let selectedSkills: number[] = [];
+ 
+         if (selectedTopicNodes) {
+             Object.entries(selectedTopicNodes).forEach(([key, data]) => {
+                 //console.log('key', key, 'data', data);
+                 let topic_skill = key.split('-');
+                 if (topic_skill.length > 1) {
+                     selectedSkills.push(parseInt(topic_skill[1]));
+                 }
+             });
+         }
+         retrieveMCQRequest.skills = selectedSkills;
+         retrieveMCQRequest.pageNumber = 0;
+         setRetrieveMCQRequest(retrieveMCQRequest);
+         toggleSearch(!search);
+    }
     const startContent = (
         <React.Fragment>
+            <div className='grid'>
             <Link href="/questions/create">
                 <Button icon="pi pi-plus" className="mr-2" />
             </Link>
-            <Button
-                icon="pi pi-upload"
-                onClick={() => {
-                    setCurrentPage(currentPage + 1);
-                    setTotalPages(totalPages + 1);
-                }}
-            />
+            <div className="flex stretch">
+                <TreeSelect 
+                    style={{ width: '30rem', maxWidth: '100%' }}
+                    value={selectedTopicNodes}
+                    onChange={(e) => setSelectedTopicNodes(e.value)}
+                    options={topicNodes}
+                    metaKeySelection={false}
+                    selectionMode="checkbox"
+                    display="chip"
+                    placeholder="Select Topics / Skills"
+                    showClear
+                />
+                <Button
+                    icon="pi pi-search"
+                    className="ml-2 mr-2"
+                    onClick={() =>handleOnSearch()}
+                />
+            </div>
+        </div>
         </React.Fragment>
     );
 
@@ -118,7 +184,7 @@ const QuestionSearchList = () => {
             <div className="col-12">
                 <div className="card">
                     <Toolbar start={startContent} />
-                    <h5>List of Questions</h5>
+                    <h5>Questions ({totalRecords} records)</h5>
 
                     <DataScroller
                         value={MCQ}
