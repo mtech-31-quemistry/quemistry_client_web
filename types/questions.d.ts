@@ -50,4 +50,12 @@ declare namespace Questions {
         pageNumber?: number;
         pageSize?: number;
     }
+
+    interface RetrieveQuestionResponse {
+        mcqs: MCQ[];
+        pageNumber?: number;
+        pageSize?: number;
+        totalPages?: number;
+        totalRecords?: number;
+    }
 }

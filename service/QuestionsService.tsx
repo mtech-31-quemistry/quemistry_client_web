@@ -56,7 +56,7 @@ export const QuestionsService = {
                 }
             })
             .then((data) => {
-                return data.mcqs as Questions.MCQ[]}
+                return data as Questions.RetrieveQuestionResponse}
             );
     },
     retrieveMCQByIds(data : Questions.RetrieveQuestionRequest) {

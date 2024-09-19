@@ -273,7 +273,7 @@ const QuizPage: React.FC = () => {
             };
 
             try {
-                const mcqResponse = await QuestionsService.retrieveMCQ(retrieveQuestionRequest);
+                const mcqResponse = (await QuestionsService.retrieveMCQ(retrieveQuestionRequest)).mcqs;
                 if (mcqResponse && mcqResponse) {
                     const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
                     const count = uniqueIds.size;

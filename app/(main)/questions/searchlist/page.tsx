@@ -2,58 +2,53 @@
 import { QuestionsService } from '../../../../service/QuestionsService';
 import { Button } from 'primereact/button';
 import { DataScroller } from 'primereact/datascroller';
-import React, { useEffect, useState, createContext, useContext } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { Toolbar } from 'primereact/toolbar';
 import { Tag } from 'primereact/tag';
 import { Editor } from 'primereact/editor';
 import './searchlist.css'; // Custom styles
-import { QuestionProvider } from '../context/QuestionContext';
-import { useQuestion } from '../context/QuestionContext';
 
-const QuestioSearchList = () => {
-    return (
-        <QuestionProvider>
-            <QuestioSearchListChild />
-        </QuestionProvider>
-    );
-};
-
-const QuestioSearchListChild = () => {
+const DEFAULT_PAGE_SIZE = 5;
+const QuestionSearchList = () => {
     const [MCQ, setMCQ] = useState<Questions.MCQ[]>([]);
-    const [loading, setLoading] = useState(true); // what is this for
+    const [loading, setLoading] = useState(false); // what is this for
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [dataScrollerRow, setDataScrollerRow] = useState(0);
 
-    const { setQuestion } = useQuestion();
+     useEffect(() => {
+        if(loading)
+            return;
+        setLoading(true);
+        //console.log('dataScrollerRow:', dataScrollerRow);
+        //console.log("calPage", Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE));
+        var loadPage = currentPage;
+        if(Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE) > currentPage){ //load next page
+            loadPage++;
+        }
+        if(currentPage !=0 && loadPage!=0 && (loadPage >= totalPages  || loadPage <= currentPage)){
+            setLoading(false);
+            return;
+        }
 
-    const handleClickEdit = (selectedQuestion: Questions.MCQ) => {
-        setQuestion(selectedQuestion);
-        console.log('question selected', selectedQuestion);
-    };
-
-    useEffect(() => {
+        //console.log('load data current page', loadPage);
         const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
-            pageNumber: 0,
-            pageSize: 10
-        };
-        QuestionsService.retrieveMCQ(retrieveQuestionRequest)
-            .then((data) => {
-                setMCQ(data);
+             pageNumber: loadPage,
+             pageSize: DEFAULT_PAGE_SIZE
+         };
+         QuestionsService.retrieveMCQ(retrieveQuestionRequest)
+             .then((data) => {
+                //console.log('MCQ', data.mcqs);
+                setMCQ([...MCQ, ...data.mcqs]);
+                setTotalPages(data.totalPages || 0);
+                setCurrentPage(loadPage);
+             }).finally(() => {
                 setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
-    }, []);
-
-    // useEffect(() => {
-    //     QuestionsService.getMCQ().then((data) => {
-    //         setMCQ(data);
-    //         setLoading(false);
-    //     }).catch(()=>{
-    //         setLoading(false);
-    //     });
-    // }, []);
-    const formatDate = (value: Date | undefined) => {
+             }
+            );
+     }, [dataScrollerRow]);
+     const formatDate = (value: Date | undefined) => {
         if (value == undefined) return '';
 
         var datevalue = new Date(value);
@@ -94,34 +89,39 @@ const QuestioSearchListChild = () => {
                         <span></span>
                         {/* <Link href="/questions/edit"><Button icon="pi pi-pencil" rounded text/></Link> */}
                         <Link href={`/questions/edit?id=${rowData.id}`} passHref>
-                            <Button icon="pi pi-pencil" rounded text onClick={() => handleClickEdit(rowData)} />
+                            <Button icon="pi pi-pencil" size="large" rounded text />
                         </Link>
-                        <Button icon="pi pi-trash" rounded severity="danger" text />
+                        {/* <Button icon="pi pi-trash" size='large' rounded severity="danger" text /> */}
                     </div>
                 </div>
             </div>
         );
     };
-
+   
     const startContent = (
         <React.Fragment>
             <Link href="/questions/create">
                 <Button icon="pi pi-plus" className="mr-2" />
             </Link>
-            <Button icon="pi pi-upload" />
+            <Button icon="pi pi-upload" onClick={() => {setCurrentPage(currentPage+1); setTotalPages(totalPages+1)}} />
         </React.Fragment>
     );
+
     return (
         <div className="grid nested-grid">
             <div className="col-12">
                 <div className="card">
                     <Toolbar start={startContent} />
                     <h5>List of Questions</h5>
-                    <DataScroller value={MCQ} itemTemplate={itemTemplate} rows={5} buffer={0.4}></DataScroller>
+
+                    <DataScroller value={MCQ} itemTemplate={itemTemplate} 
+                        rows={DEFAULT_PAGE_SIZE} buffer={0.9} lazy
+                        onLazyLoad={(e) => {setDataScrollerRow(e.first);}} 
+                    />
                 </div>
             </div>
         </div>
     );
 };
 
-export default QuestioSearchList;
+export default QuestionSearchList;
