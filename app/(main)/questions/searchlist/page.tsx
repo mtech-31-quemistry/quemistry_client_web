@@ -17,38 +17,38 @@ const QuestionSearchList = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [dataScrollerRow, setDataScrollerRow] = useState(0);
 
-     useEffect(() => {
-        if(loading)
-            return;
+    useEffect(() => {
+        if (loading) return;
         setLoading(true);
         //console.log('dataScrollerRow:', dataScrollerRow);
         //console.log("calPage", Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE));
         var loadPage = currentPage;
-        if(Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE) > currentPage){ //load next page
+        if (Math.floor(dataScrollerRow / DEFAULT_PAGE_SIZE) > currentPage) {
+            //load next page
             loadPage++;
         }
-        if(currentPage !=0 && loadPage!=0 && (loadPage >= totalPages  || loadPage <= currentPage)){
+        if (currentPage != 0 && loadPage != 0 && (loadPage >= totalPages || loadPage <= currentPage)) {
             setLoading(false);
             return;
         }
 
         //console.log('load data current page', loadPage);
         const retrieveQuestionRequest: Questions.RetrieveQuestionRequest = {
-             pageNumber: loadPage,
-             pageSize: DEFAULT_PAGE_SIZE
-         };
-         QuestionsService.retrieveMCQ(retrieveQuestionRequest)
-             .then((data) => {
+            pageNumber: loadPage,
+            pageSize: DEFAULT_PAGE_SIZE
+        };
+        QuestionsService.retrieveMCQ(retrieveQuestionRequest)
+            .then((data) => {
                 //console.log('MCQ', data.mcqs);
                 setMCQ([...MCQ, ...data.mcqs]);
                 setTotalPages(data.totalPages || 0);
                 setCurrentPage(loadPage);
-             }).finally(() => {
+            })
+            .finally(() => {
                 setLoading(false);
-             }
-            );
-     }, [dataScrollerRow]);
-     const formatDate = (value: Date | undefined) => {
+            });
+    }, [dataScrollerRow]);
+    const formatDate = (value: Date | undefined) => {
         if (value == undefined) return '';
 
         var datevalue = new Date(value);
@@ -97,13 +97,19 @@ const QuestionSearchList = () => {
             </div>
         );
     };
-   
+
     const startContent = (
         <React.Fragment>
             <Link href="/questions/create">
                 <Button icon="pi pi-plus" className="mr-2" />
             </Link>
-            <Button icon="pi pi-upload" onClick={() => {setCurrentPage(currentPage+1); setTotalPages(totalPages+1)}} />
+            <Button
+                icon="pi pi-upload"
+                onClick={() => {
+                    setCurrentPage(currentPage + 1);
+                    setTotalPages(totalPages + 1);
+                }}
+            />
         </React.Fragment>
     );
 
@@ -114,9 +120,15 @@ const QuestionSearchList = () => {
                     <Toolbar start={startContent} />
                     <h5>List of Questions</h5>
 
-                    <DataScroller value={MCQ} itemTemplate={itemTemplate} 
-                        rows={DEFAULT_PAGE_SIZE} buffer={0.9} lazy
-                        onLazyLoad={(e) => {setDataScrollerRow(e.first);}} 
+                    <DataScroller
+                        value={MCQ}
+                        itemTemplate={itemTemplate}
+                        rows={DEFAULT_PAGE_SIZE}
+                        buffer={0.9}
+                        lazy
+                        onLazyLoad={(e) => {
+                            setDataScrollerRow(e.first);
+                        }}
                     />
                 </div>
             </div>
