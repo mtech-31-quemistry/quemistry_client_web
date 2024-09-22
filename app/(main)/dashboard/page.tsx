@@ -12,6 +12,7 @@ import { LayoutContext } from '../../../layout/context/layoutcontext';
 //import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
 import { Toast } from 'primereact/toast';
+import AppMessages, { AppMessage } from '@/components/AppMessages';
 
 const lineData: ChartData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -41,7 +42,7 @@ const Dashboard = () => {
     const menu2 = useRef<Menu>(null);
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const { layoutConfig } = useContext(LayoutContext);
-    const toast = useRef<Toast>(null);
+    const appMsg = useRef<AppMessage>(null);
 
     const applyLightTheme = () => {
         const lineOptions: ChartOptions = {
@@ -108,20 +109,11 @@ const Dashboard = () => {
     };
 
     const invitationResponse = (isSucceeded: boolean) => {
-        let summary = 'Success';
-        let detail = 'We have successfully enrolled you into the class';
-
         if (!isSucceeded) {
-            summary = 'Error Enrolling';
-            detail = 'Please contact customer support for more info.';
+            appMsg.current?.showError("Error enrolling to the class. Please contact customer support for more info.")
+        } else {
+            appMsg.current?.showSuccess("We have successfully enrolled you into the class");
         }
-
-        toast.current?.show({
-            severity: isSucceeded ? 'success' : 'error',
-            summary: summary,
-            detail: detail,
-            life: 5000 //3 secs
-        });
     };
 
     useEffect(() => {
@@ -138,7 +130,7 @@ const Dashboard = () => {
                 invitationResponse(invitationResult);
             }
         }, 500);
-    }, [layoutConfig.colorScheme, toast]);
+    }, [layoutConfig.colorScheme]);
 
     const formatCurrency = (value: number) => {
         return value?.toLocaleString('en-US', {
@@ -149,7 +141,7 @@ const Dashboard = () => {
 
     return (
         <div className="grid">
-            <Toast ref={toast} position="top-center" className={'col-12'} />
+            <AppMessages ref={appMsg}></AppMessages>
             <div className="col-12 lg:col-6 xl:col-3">
                 <div className="card mb-0">
                     <div className="flex justify-content-between mb-3">
