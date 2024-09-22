@@ -21,6 +21,10 @@ export const UserService = {
     return (await api<UserServiceResponse<ClassResponse[]>>({ url: getAllClassesUrl })).payload;
   },
 
+    async getClassById(id: String) {
+        return (await api<UserServiceResponse<ClassResponse>>({ url: classUrl + "/" + id })).payload;
+    },
+
   async acceptInvitation(studentInvitation: StudentInvitation) {
       const body = JSON.stringify(studentInvitation);
       return api<UserServiceResponse<boolean>>({ url: acceptInvitationUrl, body, method: "POST" });

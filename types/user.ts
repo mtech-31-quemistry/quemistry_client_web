@@ -8,6 +8,11 @@ interface Class {
     description: string;
     educationLevel: string;
     subject: string;
+    classInvitations?: ClassInvitation[];
+    tutorEmails: String[];
+    startDate?: Date;
+    endDate?: Date;
+    status: string;
 }
 
 interface Student {
@@ -21,6 +26,15 @@ interface Student {
 interface ClassResponse extends Class {
     id: number;
     userId: string | null;
+    tutors: Tutor[];
+}
+
+interface ClassInvitation {
+    id: number;
+    userEmail: string;
+    code: string;
+    userType: number;
+    status: string;
 }
 
 interface StudentInvitation {
@@ -58,6 +72,7 @@ interface ErrorDto {
 interface Tutor {
     firstName: string;
     lastName: string;
+    email: string;
     educationLevel: string;
     tuitionCentre: string;
 }

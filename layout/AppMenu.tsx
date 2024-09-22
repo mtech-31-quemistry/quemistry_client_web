@@ -62,8 +62,7 @@ const AppMenu = () => {
                     to: '/questions/topics',
                     visible: accessibleBy(['admin', 'tutor'])
                 },
-                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: accessibleBy(['tutor']) },
-                { label: 'Students', icon: 'pi pi-fw pi-users', to: '/students', visible: accessibleBy(['tutor']) }
+                { label: 'Classes', icon: 'pi pi-fw pi-sitemap', to: '/classes', visible: accessibleBy(['tutor']) }
             ],
             visible: accessibleBy(['admin', 'tutor'])
         }
