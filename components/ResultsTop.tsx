@@ -25,7 +25,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
         const fetchData = async () => {
             try {
                 if (!quizId) {
-                    setError('Quiz ID not found, please select a Quiz from History');
+                    setError('Please select a Quiz from History');
                     setLoading(false);
                     return;
                 }

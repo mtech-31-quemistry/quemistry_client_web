@@ -297,9 +297,7 @@ const QuizPage: React.FC = () => {
                         <div>
                             {/* <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b> */}
                             <div>
-                                <div className="col-12 md:col-6 mb-5">
-                                    Your tutor hasn&apos;t created a test yet.
-                                </div>
+                                <div className="col-12 md:col-6 mb-5">Your tutor hasn&apos;t created a test yet.</div>
                                 <div className="col-12 md:col-6 mb-5"></div>
                             </div>
                         </div>

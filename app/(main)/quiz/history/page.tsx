@@ -77,37 +77,40 @@ const QuizHistory: React.FC = () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
                 if (responseData.message === 'Quiz not found') {
-                    setError('Quiz not found');
+                    setError('No history to display');
                     setLoading(false);
                     return;
                 }
                 setQuiz(responseData);
 
                 // Process the data to calculate counts and extract unique topics and skills
-                const processedData = responseData.quizzes.map((quiz: Quiz.QuizTaken) => {
-                    const topicsMap = new Map<number, Topic>();
-                    const skillsMap = new Map<number, Skill>();
+                const processedData = responseData.quizzes
+                    .map((quiz: Quiz.QuizTaken) => {
+                        const topicsMap = new Map<number, Topic>();
+                        const skillsMap = new Map<number, Skill>();
 
-                    quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
-                        mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
-                        mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
-                    });
+                        quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
+                            mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
+                            mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
+                        });
 
-                    return {
-                        attemptOn: quiz.mcqs[0].attemptOn,
-                        id: quiz.id,
-                        topicsCount: topicsMap.size,
-                        skillsCount: skillsMap.size,
-                        topics: Array.from(topicsMap.values()),
-                        skills: Array.from(skillsMap.values()),
-                        points: quiz.points,
-                        mcqsCount: quiz.mcqs.length
-                    };
-                }).filter(quiz => quiz.attemptOn && !isNaN(new Date(quiz.attemptOn).getTime())).sort((a, b) => new Date(b.attemptOn).getTime() - new Date(a.attemptOn).getTime()); // Sort by attemptOn in descending order
+                        return {
+                            attemptOn: quiz.mcqs[0].attemptOn,
+                            id: quiz.id,
+                            topicsCount: topicsMap.size,
+                            skillsCount: skillsMap.size,
+                            topics: Array.from(topicsMap.values()),
+                            skills: Array.from(skillsMap.values()),
+                            points: quiz.points,
+                            mcqsCount: quiz.mcqs.length
+                        };
+                    })
+                    .filter((quiz) => quiz.attemptOn && !isNaN(new Date(quiz.attemptOn).getTime()))
+                    .sort((a, b) => new Date(b.attemptOn).getTime() - new Date(a.attemptOn).getTime()); // Sort by attemptOn in descending order
 
                 setProcessedQuizzes(processedData);
             } catch (error) {
-                setError('Error fetching data');
+                setError('No history to display');
             } finally {
                 setLoading(false);
             }
@@ -127,13 +130,15 @@ const QuizHistory: React.FC = () => {
     const dateBodyTemplate = (rowData: ProcessedQuiz) => {
         const date = new Date(rowData.attemptOn);
 
-        const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${getDayOfWeek(date.getDay())} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+        const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${getDayOfWeek(date.getDay())} ${String(date.getHours()).padStart(2, '0')}:${String(
+            date.getMinutes()
+        ).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
 
         return <Button key={rowData.attemptOn.toString()} label={formattedDate} onClick={() => handleQuizClick(rowData.id)} />;
     };
 
     const getDayOfWeek = (dayIndex: number) => {
-        const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         return daysOfWeek[dayIndex];
     };
 
@@ -142,7 +147,7 @@ const QuizHistory: React.FC = () => {
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div className="card">{error}</div>;
     }
 
     return (
