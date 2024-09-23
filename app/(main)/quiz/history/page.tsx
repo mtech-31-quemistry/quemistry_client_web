@@ -77,7 +77,7 @@ const QuizHistory: React.FC = () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
                 if (responseData.message === 'Quiz not found') {
-                    setError('No history to display');
+                    setError('No history to display ');
                     setLoading(false);
                     return;
                 }
