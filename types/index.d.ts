@@ -51,6 +51,7 @@ export type {
     Questions,
     Quiz,
     UserProfile,
+    ClassTest,
     Genai,
     PKCECodeChallenge
 };

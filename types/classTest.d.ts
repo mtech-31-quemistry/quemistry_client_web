@@ -1,4 +1,4 @@
-declare namespace Test {
+declare namespace ClassTest {
     interface Option {
         no: number;
         text: string;

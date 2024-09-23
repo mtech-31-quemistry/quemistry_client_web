@@ -1,4 +1,4 @@
-import { Test } from '@/types';
+import { ClassTest } from '@/types';
 import ApiHelper from '@/lib/ApiHelper';
 
 export const TestService = {
@@ -35,7 +35,7 @@ export const TestService = {
     });
   },
 
-  getTestInProgress: async (): Promise<Test.ApiResponse> => {
+  getTestInProgress: async (): Promise<ClassTest.ApiResponse> => {
     try {
       console.log('Fetching data from API...');
       const headers = ApiHelper.getRequestHeaders();
@@ -55,7 +55,7 @@ export const TestService = {
     }
   },
 
-  getTestCompleted: async (): Promise<Test.CompletedResponse> => {
+  getTestCompleted: async (): Promise<ClassTest.CompletedResponse> => {
     try {
       console.log('Fetching data from API...');
       const headers = ApiHelper.getRequestHeaders();

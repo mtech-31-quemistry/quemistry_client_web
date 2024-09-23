@@ -19,7 +19,7 @@ interface Skill {
 }
 
 interface ProcessedQuiz {
-    attemptOn: string;
+    attemptOn: number;
     id: number;
     topicsCount: number;
     skillsCount: number;
@@ -103,10 +103,9 @@ const QuizHistory: React.FC = () => {
                             skills: Array.from(skillsMap.values()),
                             points: quiz.points,
                             mcqsCount: quiz.mcqs.length
-                        };
+                        } as ProcessedQuiz;
                     })
-                    .filter((quiz) => quiz.attemptOn && !isNaN(new Date(quiz.attemptOn).getTime()))
-                    .sort((a, b) => new Date(b.attemptOn).getTime() - new Date(a.attemptOn).getTime()); // Sort by attemptOn in descending order
+                    .sort((a, b) => new Date(b.attemptOn!).getTime() - new Date(a.attemptOn!).getTime()); // Sort by attemptOn in descending order
 
                 setProcessedQuizzes(processedData);
             } catch (error) {

@@ -1,8 +1,8 @@
 'use client';
 import './test.css';
 import React, { useEffect, useState, Fragment } from 'react';
-import { Quiz } from '@/types';
-import { QuizService } from '../../../service/QuizService';
+import { ClassTest } from '@/types';
+import { TestService } from '@/service/TestService';
 import { Button } from 'primereact/button';
 import { QuestionsService } from '@/service/QuestionsService';
 import { Questions } from '@/types';
@@ -16,7 +16,7 @@ const QuizPage: React.FC = () => {
     const [topicNodes, setTopicNodes] = useState<any>(null);
     const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
-    const [quiz, setQuiz] = useState<Test.ApiResponse | null>(null);
+    const [quiz, setQuiz] = useState<ClassTest.ApiResponse | null>(null);
     const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(false);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentTestQuestionIndex, setCurrentTestQuestionIndex] = useState<number>(0);
@@ -97,7 +97,7 @@ const QuizPage: React.FC = () => {
     const submitAttempt = async (quizId: number, mcqId: number, attempt: number | null | undefined) => {
         const attemptValue = attempt ?? 0;
         try {
-            await QuizService.submitAttempt(quizId, mcqId, attemptValue);
+            await TestService.submitAttempt(quizId, mcqId, attemptValue);
         } catch (error) {
             console.error(`Error submitting attempt for MCQ`, error);
         }
@@ -269,7 +269,7 @@ const QuizPage: React.FC = () => {
         }
         setIsStartingNewQuiz(true); // Set isStartingNewQuiz to true to disable the button
         try {
-            await QuizService.startNewQuiz(selectedTopics, selectedSkills);
+            await TestService.startNewTest(selectedTopics, selectedSkills);
         } catch (error) {
             console.error('Error starting new test:', error);
         } finally {
