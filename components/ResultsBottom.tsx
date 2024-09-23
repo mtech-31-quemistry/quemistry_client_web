@@ -38,10 +38,11 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                 {currentQuestion.options &&
                     currentQuestion.options.map((option: Quiz.Option, index: number) => {
                         const isAttempted = option.no === currentQuestion.attemptOption;
-                        const isAttemptedAndIsAnswer = isAttempted && option.isAnswer; // Black
+                        const isAttemptedAndIsAnswer = isAttempted && option.isAnswer; // Green
                         const isAttemptedAndIsNotAnswer = isAttempted && !option.isAnswer; // Red
+                        const isAllUnattempted = currentQuestion.attemptOption === 0; // Gray
                         const isNotAttemptedAndIsAnswer = !isAttempted && option.isAnswer; // Green
-                        const isAllUnattempted = currentQuestion.attemptOption === 0; // All options
+                        const isNotAttemptedAndIsNotAnswer = !isAttempted && !option.isAnswer; // Gray
 
                         return (
                             <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
@@ -58,22 +59,28 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAttemptedAndIsNotAnswer && (
                                         <div className="explanation" style={{ color: 'Red' }}>
                                             <div className="explanation-container-review">
-                                                <b>You chose the correct answer.</b>
+                                                <b>You chose the incorrect answer.</b>
                                             </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
-                                    {isAllUnattempted && (
+                                    {/* {isAllUnattempted && (
                                         <div className="explanation" style={{ color: 'Gray' }}>
                                             <div className="explanation-container-review">
-                                                <i><b>You skipped this question.</b></i>
+                                                <b>You skipped this question.</b>
+                                                <div className="explanation-container-review">{option.explanation}</div>
                                             </div>
                                         </div>
                                     )
-                                    }
+                                    } */}
                                     {isNotAttemptedAndIsAnswer && (
                                         <div className="explanation" style={{ color: 'Green' }}>
                                             <b>This was the correct answer.</b>
+                                            <div className="explanation-container-review">{option.explanation}</div>
+                                        </div>
+                                    )}
+                                    {isNotAttemptedAndIsNotAnswer && (
+                                        <div className="explanation" style={{ color: 'Red' }}>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
