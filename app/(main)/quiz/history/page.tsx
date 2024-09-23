@@ -33,7 +33,7 @@ const topicsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
             {rowData.topics.map((topic) => (
-                <Button text outlined key={topic.id} style={{ marginRight: '0em' }} severity="info" label={topic.name} />
+                <Button outlined key={topic.id} style={{ marginRight: '0em' }} severity="info" label={topic.name} />
             ))}
         </React.Fragment>
     );
@@ -43,7 +43,7 @@ const skillsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
             {rowData.skills.map((skill) => (
-                <Button text outlined key={skill.id} style={{ marginRight: '0em' }} label={skill.name} />
+                <Button outlined key={skill.id} style={{ marginRight: '0em' }} label={skill.name} />
             ))}
         </React.Fragment>
     );

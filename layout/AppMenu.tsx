@@ -40,8 +40,8 @@ const AppMenu = () => {
                     visible: accessibleBy(['student']),
                     items: [
                         { label: 'Take Quiz', icon: 'pi pi-fw pi-pencil', to: '/quiz', visible: accessibleBy(['student']) },
-                        { label: 'History', icon: 'pi pi-fw pi-history', to: '/quiz/history', visible: accessibleBy(['student']) },
-                        { label: 'Results', icon: 'pi pi-fw pi-chart-bar', to: '/quiz/results', visible: accessibleBy(['student']) }
+                        { label: 'History', icon: 'pi pi-fw pi-history', to: '/quiz/history', visible: accessibleBy(['student']) }
+                        // { label: 'Results', icon: 'pi pi-fw pi-chart-bar', to: '/quiz/results', visible: accessibleBy(['student']) }
                     ]
                 },
                 { label: 'Take Test', icon: 'pi pi-fw pi-graduation-cap', to: '/test', visible: accessibleBy(['student']) }

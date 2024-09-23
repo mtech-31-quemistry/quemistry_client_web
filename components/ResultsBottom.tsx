@@ -50,7 +50,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAttemptedAndIsAnswer && (
                                         <div className="explanation-container-review" style={{ color: 'Green' }}>
                                             <div className="explanation-container-review">
-                                                You chose this.
+                                                <b>You chose the correct answer.</b>
                                             </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
@@ -58,7 +58,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAttemptedAndIsNotAnswer && (
                                         <div className="explanation" style={{ color: 'Red' }}>
                                             <div className="explanation-container-review">
-                                                You chose this.
+                                                <b>You chose the correct answer.</b>
                                             </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
@@ -66,25 +66,27 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAllUnattempted && (
                                         <div className="explanation" style={{ color: 'Gray' }}>
                                             <div className="explanation-container-review">
-                                                <i>You skipped this question.</i>
+                                                <i><b>You skipped this question.</b></i>
                                             </div>
                                         </div>
-                                    )}
+                                    )
+                                    }
                                     {isNotAttemptedAndIsAnswer && (
                                         <div className="explanation" style={{ color: 'Green' }}>
+                                            <b>This was the correct answer.</b>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
                                     )}
                                 </div>
-                            </label>
+                            </label >
                         );
                     })}
-            </ul>
+            </ul >
             <div style={{ marginTop: '40px' }}>
                 <h6>
                     <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
                 </h6>
             </div>
-        </div>
+        </div >
     );
 }
