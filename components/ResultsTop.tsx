@@ -39,7 +39,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                 setQuiz(responseData);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setError('Error fetching data');
+                setError('An unknown error has occured.');
             } finally {
                 setLoading(false);
             }
