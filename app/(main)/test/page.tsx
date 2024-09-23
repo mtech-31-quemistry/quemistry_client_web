@@ -11,13 +11,13 @@ import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { ProgressBar } from 'primereact/progressbar';
 
-const QuizPage: React.FC = () => {
+const TestPage: React.FC = () => {
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
     const [topicNodes, setTopicNodes] = useState<any>(null);
     const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
-    const [quiz, setQuiz] = useState<ClassTest.ApiResponse | null>(null);
-    const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(false);
+    const [test, setTest] = useState<ClassTest.ApiResponse | null>(null);
+    const [isTestOngoing, setIsTestOngoing] = useState<boolean>(false);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentTestQuestionIndex, setCurrentTestQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -26,7 +26,7 @@ const QuizPage: React.FC = () => {
     const [showTestScore, setShowTestScore] = useState(false);
     const [showTestScoreMessage, setShowTestScoreMessage] = useState('');
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
-    const [quizIdAvailable, setQuizIdAvailable] = useState(false);
+    const [testIdAvailable, setTestIdAvailable] = useState(false);
 
     // Retrieve currentTestQuestionIndex from local storage when the component mounts
     useEffect(() => {
@@ -72,16 +72,16 @@ const QuizPage: React.FC = () => {
             try {
                 const responseData = await TestService.getTestInProgress();
                 if (responseData.message === 'Test not found') {
-                    setIsQuizOngoing(false);
+                    setIsTestOngoing(false);
                     return;
                 }
-                setQuiz(responseData);
+                setTest(responseData);
                 const initialSelectedOptions: { [key: number]: number | 0 } = {};
                 responseData.mcqs.forEach((mcq) => {
                     initialSelectedOptions[mcq.id] = 0;
                 });
                 setSelectedOptions(initialSelectedOptions);
-                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
+                setTestIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
                 setExplanationsVisible({}); // Initialize explanationsVisible
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -91,13 +91,13 @@ const QuizPage: React.FC = () => {
         fetchData();
     }, []);
 
-    const currentTestQuestion = quiz?.mcqs?.[currentTestQuestionIndex];
-    const currentQuestionLength = quiz?.mcqs?.length ?? 0;
+    const currentTestQuestion = test?.mcqs?.[currentTestQuestionIndex];
+    const currentQuestionLength = test?.mcqs?.length ?? 0;
 
-    const submitAttempt = async (quizId: number, mcqId: number, attempt: number | null | undefined) => {
+    const submitAttempt = async (testId: number, mcqId: number, attempt: number | null | undefined) => {
         const attemptValue = attempt ?? 0;
         try {
-            await TestService.submitAttempt(quizId, mcqId, attemptValue);
+            await TestService.submitAttempt(testId, mcqId, attemptValue);
         } catch (error) {
             console.error(`Error submitting attempt for MCQ`, error);
         }
@@ -245,16 +245,16 @@ const QuizPage: React.FC = () => {
     }, [showTestScoreMessage]);
 
     useEffect(() => {
-        if (!isQuizOngoing) {
+        if (!isTestOngoing) {
             setShowTestScore(false);
             localStorage.setItem('showTestScore', 'false');
             localStorage.setItem('currentTestQuestionIndex', '0');
         }
-    }, [isQuizOngoing]);
+    }, [isTestOngoing]);
 
-    const [isStartingNewQuiz, setIsStartingNewQuiz] = useState(false);
+    const [isStartingNewTest, setIsStartingNewTest] = useState(false);
 
-    const startNewQuiz = async () => {
+    const startNewTest = async () => {
         let selectedTopics: number[] = [];
         let selectedSkills: number[] = [];
         if (selectedTopicNodes) {
@@ -267,13 +267,13 @@ const QuizPage: React.FC = () => {
                 }
             });
         }
-        setIsStartingNewQuiz(true); // Set isStartingNewQuiz to true to disable the button
+        setIsStartingNewTest(true); // Set isStartingNewQuiz to true to disable the button
         try {
             await TestService.startNewTest(selectedTopics, selectedSkills);
         } catch (error) {
             console.error('Error starting new test:', error);
         } finally {
-            setIsStartingNewQuiz(false); // Set isStartingNewQuiz to false once the call is complete
+            setIsStartingNewTest(false); // Set isStartingNewQuiz to false once the call is complete
             window.location.reload();
         }
     };
@@ -292,8 +292,8 @@ const QuizPage: React.FC = () => {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Class Tests</h5>
                     </div>
-                    {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
-                    {!isQuizOngoing && (
+                    {test && Array.isArray(test.mcqs) && test.mcqs.length === 0 && <div>No questions generated.</div>}
+                    {!isTestOngoing && (
                         <div>
                             {/* <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b> */}
                             <div>
@@ -302,13 +302,13 @@ const QuizPage: React.FC = () => {
                             </div>
                         </div>
                     )}
-                    {currentTestQuestion && (
+                    {isTestOngoing && currentTestQuestion && (
                         <div key={currentTestQuestion.id}>
                             <div className="card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ minWidth: '200px' }}>
                                         <h6>
-                                            Question {currentTestQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
+                                            Question {currentTestQuestionIndex + 1} of {test?.mcqs?.length || 0}
                                         </h6>
                                     </div>
                                     <b>
@@ -349,25 +349,25 @@ const QuizPage: React.FC = () => {
                                         </div>
                                     </label>
                                 ))}
-                                {currentTestQuestionIndex < quiz.mcqs.length - 1 ? (
+                                {currentTestQuestionIndex < test.mcqs.length - 1 ? (
                                     <Button
                                         label="Next Question"
                                         onClick={() => {
-                                            if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
-                                                submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
+                                            if (test.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                                submitAttempt(test.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
                                                 handleNextQuestion();
                                             } else {
                                                 console.error('Test ID is undefined or selected option is null');
                                             }
                                         }}
-                                        disabled={!quizIdAvailable}
+                                        disabled={!testIdAvailable}
                                     ></Button>
                                 ) : (
                                     <Button
                                         label="End Test"
                                         onClick={() => {
-                                            if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
-                                                submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
+                                            if (test.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
+                                                submitAttempt(test.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);
                                                 displayScore();
                                             } else {
                                                 console.error('Test ID is undefined or selected option is null');
@@ -381,7 +381,7 @@ const QuizPage: React.FC = () => {
                                     <b>{currentTestQuestion.topics.map((topic) => topic.name).join(', ')}</b>
                                 </h6>
                             </div>
-                            <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / quiz.mcqs.length) * 100)} />
+                            <ProgressBar value={Math.round(((currentTestQuestionIndex + 1) / test.mcqs.length) * 100)} />
                         </div>
                     )}
                     {showTestScore && showTestScoreMessage && <div className="score-message">{showTestScoreMessage}</div>}
@@ -391,4 +391,4 @@ const QuizPage: React.FC = () => {
     );
 };
 
-export default QuizPage;
+export default TestPage;
