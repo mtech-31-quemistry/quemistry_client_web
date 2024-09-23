@@ -1,8 +1,8 @@
-import { Quiz } from '@/types';
+import { Test } from '@/types';
 import ApiHelper from '@/lib/ApiHelper';
 
-export const QuizService = {
-  startNewQuiz: (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
+export const TestService = {
+  startNewTest: (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
     return new Promise(async (resolve, reject) => {
       try {
         console.log('Fetching data from API...');
@@ -35,7 +35,7 @@ export const QuizService = {
     });
   },
 
-  getQuizInProgress: async (): Promise<Quiz.ApiResponse> => {
+  getTestInProgress: async (): Promise<Test.ApiResponse> => {
     try {
       console.log('Fetching data from API...');
       const headers = ApiHelper.getRequestHeaders();
@@ -55,7 +55,7 @@ export const QuizService = {
     }
   },
 
-  getQuizCompleted: async (): Promise<Quiz.CompletedResponse> => {
+  getTestCompleted: async (): Promise<Test.CompletedResponse> => {
     try {
       console.log('Fetching data from API...');
       const headers = ApiHelper.getRequestHeaders();
@@ -75,7 +75,7 @@ export const QuizService = {
     }
   },
 
-  getQuizById: async (quizId: number): Promise<Response> => {
+  getTestById: async (quizId: number): Promise<Response> => {
     const headers = ApiHelper.getRequestHeaders();
     try {
       const response = await fetch(

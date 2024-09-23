@@ -411,10 +411,10 @@ const QuizPage: React.FC = () => {
                                         showClear
                                     ></TreeSelect>
                                 </div>
-                                <div className="col-12 md:col-6 mb-5">
-                                    Select the (max) question count desired
+                                {/* <div className="col-12 md:col-6 mb-5">
+                                    Select the (max) question count desired&nbsp;
                                     <InputText type="text" value="0" onChange={(e) => setQuestionCount(e.target.value)} />
-                                </div>
+                                </div> */}
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                 <Button onClick={startNewQuiz} disabled={isDisabled || isStartingNewQuiz}>
@@ -464,7 +464,7 @@ const QuizPage: React.FC = () => {
                                                             <strong>Incorrect Answer</strong>
                                                         </div>
                                                     )}
-                                                    <div className="explanation-container">{option.explanation}</div>
+                                                    <div className="explanation-container" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                                 </div>
                                             )}
                                         </div>
@@ -484,7 +484,7 @@ const QuizPage: React.FC = () => {
                                             disabled={!isAnswerSubmitted || !quizIdAvailable}
                                         ></Button>
                                     ) : (
-                                        <Button label="Submit Quiz" onClick={displayScore}></Button>
+                                        <Button label="End Quiz" onClick={displayScore}></Button>
                                     )
                                 ) : (
                                     <Button

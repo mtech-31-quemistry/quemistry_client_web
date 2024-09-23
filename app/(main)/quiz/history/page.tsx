@@ -19,6 +19,7 @@ interface Skill {
 }
 
 interface ProcessedQuiz {
+    attemptOn: string;
     id: number;
     topicsCount: number;
     skillsCount: number;
@@ -32,7 +33,7 @@ const topicsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
             {rowData.topics.map((topic) => (
-                <Tag key={topic.id} style={{ marginRight: '0em' }} severity="info" value={topic.name} />
+                <Button text outlined key={topic.id} style={{ marginRight: '0em' }} severity="info" label={topic.name} />
             ))}
         </React.Fragment>
     );
@@ -42,7 +43,7 @@ const skillsBodyTemplate = (rowData: ProcessedQuiz) => {
     return (
         <React.Fragment>
             {rowData.skills.map((skill) => (
-                <Tag key={skill.id} style={{ marginRight: '0em' }} value={skill.name} />
+                <Button text outlined key={skill.id} style={{ marginRight: '0em' }} label={skill.name} />
             ))}
         </React.Fragment>
     );
@@ -60,7 +61,7 @@ const achievementBodyTemplate = (rowData: ProcessedQuiz) => {
         severity = 'warning';
     }
 
-    return <Tag severity={severity} value={`Score: ${percentage.toFixed(0)}% Points: ${earnedPoints}/${totalPoints}`} />;
+    return <Button text outlined severity={severity} label={`Score: ${percentage.toFixed(0)}% Points: ${earnedPoints}/${totalPoints}`} />;
 };
 
 const QuizHistory: React.FC = () => {
@@ -93,6 +94,7 @@ const QuizHistory: React.FC = () => {
                     });
 
                     return {
+                        attemptOn: quiz.mcqs[0].attemptOn,
                         id: quiz.id,
                         topicsCount: topicsMap.size,
                         skillsCount: skillsMap.size,
@@ -101,7 +103,8 @@ const QuizHistory: React.FC = () => {
                         points: quiz.points,
                         mcqsCount: quiz.mcqs.length
                     };
-                });
+                }).filter(quiz => quiz.attemptOn && !isNaN(new Date(quiz.attemptOn).getTime())).sort((a, b) => new Date(b.attemptOn).getTime() - new Date(a.attemptOn).getTime()); // Sort by attemptOn in descending order
+
                 setProcessedQuizzes(processedData);
             } catch (error) {
                 setError('Error fetching data');
@@ -121,6 +124,19 @@ const QuizHistory: React.FC = () => {
         return <Button label={rowData.id.toString()} onClick={() => handleQuizClick(rowData.id)} />;
     };
 
+    const dateBodyTemplate = (rowData: ProcessedQuiz) => {
+        const date = new Date(rowData.attemptOn);
+
+        const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${getDayOfWeek(date.getDay())} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+
+        return <Button key={rowData.attemptOn.toString()} label={formattedDate} onClick={() => handleQuizClick(rowData.id)} />;
+    };
+
+    const getDayOfWeek = (dayIndex: number) => {
+        const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        return daysOfWeek[dayIndex];
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -135,11 +151,12 @@ const QuizHistory: React.FC = () => {
                 <div className="card">
                     <h5>History</h5>
                     <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
-                    <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="id" sortOrder={-1} defaultSortOrder={1}>
-                        <Column body={idBodyTemplate} header="Quiz Number" sortable field="id"></Column>
-                        <Column body={topicsBodyTemplate} header="Topics" sortable field="topic"></Column>
-                        <Column body={skillsBodyTemplate} header="Skills" sortable field="skill"></Column>
-                        <Column body={achievementBodyTemplate} header="Achievement" sortable field="score"></Column>
+                    <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="attemptOn" sortOrder={-1} defaultSortOrder={1}>
+                        <Column body={dateBodyTemplate} header="Attempted On" sortable field="attemptOn"></Column>
+                        {/* <Column body={idBodyTemplate} header="Quiz Number" sortable field="id"></Column> */}
+                        <Column body={topicsBodyTemplate} header="Topics" field="topic"></Column>
+                        <Column body={skillsBodyTemplate} header="Skills" field="skill"></Column>
+                        <Column body={achievementBodyTemplate} header="Achievement" field="score"></Column>
                     </DataTable>
                 </div>
             </div>

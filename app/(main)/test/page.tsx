@@ -16,8 +16,8 @@ const QuizPage: React.FC = () => {
     const [topicNodes, setTopicNodes] = useState<any>(null);
     const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
-    const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null);
-    const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(true);
+    const [quiz, setQuiz] = useState<Test.ApiResponse | null>(null);
+    const [isQuizOngoing, setIsQuizOngoing] = useState<boolean>(false);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: number | 0 }>({});
     const [currentTestQuestionIndex, setCurrentTestQuestionIndex] = useState<number>(0);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -27,7 +27,6 @@ const QuizPage: React.FC = () => {
     const [showTestScoreMessage, setShowTestScoreMessage] = useState('');
     const [isRadioDisabled, setIsRadioDisabled] = useState(false);
     const [quizIdAvailable, setQuizIdAvailable] = useState(false);
-    const [isAbandoning, setIsAbandoning] = useState(false);
 
     // Retrieve currentTestQuestionIndex from local storage when the component mounts
     useEffect(() => {
@@ -71,8 +70,8 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const responseData = await QuizService.getQuizInProgress();
-                if (responseData.message === 'Quiz not found') {
+                const responseData = await TestService.getTestInProgress();
+                if (responseData.message === 'Test not found') {
                     setIsQuizOngoing(false);
                     return;
                 }
@@ -113,35 +112,6 @@ const QuizPage: React.FC = () => {
         }
     };
 
-    const abandonQuiz = async () => {
-        if (!quiz) {
-            console.error('No quiz to abandon');
-            return;
-        }
-        setIsAbandoning(true); // Set isAbandoning to true to disable further actions
-        try {
-            await QuizService.abandonQuiz(quiz.id);
-            setQuiz((prevQuiz: any) => ({
-                ...prevQuiz,
-                status: 'abandoned'
-            }));
-            const initialSelectedOptions: { [key: number]: number | 0 } = {};
-            quiz.mcqs.forEach((mcq: any) => {
-                initialSelectedOptions[mcq.id] = 0;
-            });
-            setSelectedOptions(initialSelectedOptions);
-            setShowTestScore(false);
-            localStorage.setItem('showTestScore', 'false');
-            localStorage.setItem('currentTestQuestionIndex', '0');
-        } catch (error) {
-            console.error('Error abandoning quiz:', error);
-        } finally {
-            setIsQuizOngoing(false);
-            setIsAbandoning(false); // Set isAbandoning to false once the call is complete
-            window.location.reload();
-        }
-    };
-
     useEffect(() => {
         QuestionsService.getTopics().then((data) => {
             setListOfTopics(data);
@@ -160,27 +130,6 @@ const QuizPage: React.FC = () => {
         });
         setTopicNodes(nodes);
     }, [listOfTopics]);
-
-    const confirmExit = () => {
-        abandonQuiz();
-    };
-
-    const cancelExit = () => {
-        setVisible(false);
-    };
-
-    const cancelFooter = (
-        <div>
-            <Button label="Cancel" icon="pi pi-times" onClick={cancelExit} className="p-button-text" />
-            <Button
-                label="Quit"
-                icon="pi pi-save"
-                onClick={confirmExit}
-                autoFocus
-                disabled={isAbandoning} // Disable the button while the quiz is being abandoned
-            />
-        </div>
-    );
 
     const renderField = (labelTextName: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => (
         <div className="field grid">
@@ -342,20 +291,6 @@ const QuizPage: React.FC = () => {
                 <div className="card">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <h5>Class Tests</h5>
-                        <Fragment>
-                            <Button icon="pi pi-times" style={{ marginLeft: 'auto' }} onClick={() => (isQuizOngoing ? setVisible(true) : confirmExit())} visible={isQuizOngoing && !showTestScore} />
-                        </Fragment>
-                        <Dialog
-                            header="Exit Test"
-                            style={{ width: '50vw' }}
-                            visible={visible}
-                            onHide={() => {
-                                visible && cancelExit();
-                            }}
-                            footer={cancelFooter}
-                        >
-                            Are you sure you want to exit the test?
-                        </Dialog>
                     </div>
                     {quiz && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
@@ -363,24 +298,9 @@ const QuizPage: React.FC = () => {
                             {/* <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b> */}
                             <div>
                                 <div className="col-12 md:col-6 mb-5">
-                                    <TreeSelect
-                                        value={selectedTopicNodes}
-                                        onChange={(e) => setSelectedTopicNodes(e.value)}
-                                        options={topicNodes}
-                                        className="md:w-50rem w-full"
-                                        metaKeySelection={false}
-                                        selectionMode="checkbox"
-                                        display="chip"
-                                        placeholder="Select Topics / Skills"
-                                        showClear
-                                    ></TreeSelect>
+                                    Your tutor hasn&apos;t created a test yet.
                                 </div>
                                 <div className="col-12 md:col-6 mb-5"></div>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
-                                <Button onClick={startNewQuiz} disabled={isDisabled || isStartingNewQuiz}>
-                                    {isStartingNewQuiz ? 'Loading Quiz...' : 'Submit'}
-                                </Button>
                             </div>
                         </div>
                     )}
@@ -425,7 +345,7 @@ const QuizPage: React.FC = () => {
                                                             <strong>Incorrect Answer</strong>
                                                         </div>
                                                     )}
-                                                    <div className="explanation-container">{option.explanation}</div>
+                                                    <div className="explanation-container" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                                 </div>
                                             )}
                                         </div>
@@ -446,7 +366,7 @@ const QuizPage: React.FC = () => {
                                     ></Button>
                                 ) : (
                                     <Button
-                                        label="Submit Test"
+                                        label="End Test"
                                         onClick={() => {
                                             if (quiz.id !== undefined && selectedOptions[currentTestQuestion.id] !== null) {
                                                 submitAttempt(quiz.id, currentTestQuestion.id, selectedOptions[currentTestQuestion.id]);

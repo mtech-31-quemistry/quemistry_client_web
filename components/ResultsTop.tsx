@@ -1,10 +1,10 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { Quiz } from '@/types';
-import ResultsBottomComponent from './ResultsBottomComponent';
+import ResultsBottomComponent from './ResultsBottom';
 import { QuizService } from '@/service/QuizService';
 import { Button } from 'primereact/button';
-import './results.css';
+import '../app/(main)/quiz/results/results.css';
 import { useRouter } from 'next/navigation';
 
 interface ResultsTopComponentProps {
@@ -91,10 +91,10 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                     </div>
                 ))}
             </div>
-            <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} quiz={specificQuiz} />
+            {/* <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} quiz={specificQuiz} />
             <div className="mb-3">
                 <Button onClick={handleBackToHistory}>Quiz History</Button>
-            </div>
+            </div> */}
         </div>
     );
 }

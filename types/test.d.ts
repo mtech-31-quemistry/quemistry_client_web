@@ -1,4 +1,4 @@
-declare namespace Quiz {
+declare namespace Test {
     interface Option {
         no: number;
         text: string;
@@ -52,10 +52,10 @@ declare namespace Quiz {
         totalPages: number;
         totalRecords: number;
         message?: string;
-        quizzes: QuizTaken[];
+        quizzes: TestTaken[];
     }
 
-    interface QuizTaken {
+    interface TestTaken {
         id: number;
         mcqs: Mcq[];
         status: string;

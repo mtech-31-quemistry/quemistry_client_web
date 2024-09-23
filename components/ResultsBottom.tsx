@@ -1,8 +1,7 @@
 'use client';
 import React from 'react';
 import { Quiz } from '@/types';
-import '../app/(main)/quiz/quiz.css';
-import './results.css';
+import '../app/(main)/quiz/results/results.css';
 
 interface ResultsBottomComponentProps {
     currentQuestionIndex: number;
@@ -21,7 +20,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
     }
 
     return (
-        <div className="card">
+        <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ minWidth: '200px' }}>
                     <h6>
@@ -51,7 +50,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAttemptedAndIsAnswer && (
                                         <div className="explanation-container-review" style={{ color: 'Green' }}>
                                             <div className="explanation-container-review">
-                                                <strong>You chose this. </strong>
+                                                You chose this.
                                             </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
@@ -59,7 +58,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAttemptedAndIsNotAnswer && (
                                         <div className="explanation" style={{ color: 'Red' }}>
                                             <div className="explanation-container-review">
-                                                <strong>You chose this.</strong>
+                                                You chose this.
                                             </div>
                                             <div className="explanation-container-review">{option.explanation}</div>
                                         </div>
@@ -67,7 +66,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isAllUnattempted && (
                                         <div className="explanation" style={{ color: 'Gray' }}>
                                             <div className="explanation-container-review">
-                                                <i>You skipped this.</i>
+                                                <i>You skipped this question.</i>
                                             </div>
                                         </div>
                                     )}
