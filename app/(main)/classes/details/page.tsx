@@ -107,7 +107,7 @@ const ClassDetails = () => {
                     </div>
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
-                            <label className="font-bold text-lg">Description</label>
+                            <label className="font-bold text-lg">Name</label>
                             <p>{classDetails?.description}</p>
                         </div>
                     </div>

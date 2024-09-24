@@ -38,7 +38,7 @@ const Classes = () => {
 
     const classMapList = [
         useGenerateClassMap('Class Code', 'code'),
-        useGenerateClassMap('Class Description', 'description'),
+        useGenerateClassMap('Class Name', 'description'),
         useGenerateClassMap('Class Education Level', 'educationLevel'),
         useGenerateClassMap('Class Subject', 'subject', 'Chemistry')
     ];
