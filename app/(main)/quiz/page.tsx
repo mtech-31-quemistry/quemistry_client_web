@@ -1,7 +1,7 @@
 'use client';
 import './quiz.css';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
 import { Button } from 'primereact/button';
@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { ProgressBar } from 'primereact/progressbar';
 import { Dropdown } from 'primereact/dropdown';
+import AppMessages, { AppMessage } from '@/components/AppMessages';
 
 const QuizPage: React.FC = () => {
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
@@ -33,6 +34,7 @@ const QuizPage: React.FC = () => {
     const [isAbandoning, setIsAbandoning] = useState(false);
     const [questionCount, setQuestionCount] = useState<string>();
     const router = useRouter();
+    const appMsg = useRef<AppMessage>(null);
 
     const handleViewResults = () => {
         router.push('/quiz/history');
@@ -107,7 +109,24 @@ const QuizPage: React.FC = () => {
         };
 
         fetchData();
+
+        setTimeout(() => {
+            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('invitation_result') !== null) {
+                const invitationResult = sessionStorage.getItem('invitation_result') === 'true' || false;
+                sessionStorage.removeItem('invitation_result');
+                invitationResponse(invitationResult);
+            }
+        }, 500);
+
     }, []);
+
+    const invitationResponse = (isSucceeded: boolean) => {
+        if (!isSucceeded) {
+            appMsg.current?.showError('Error enrolling to the class. Please contact customer support for more info.');
+        } else {
+            appMsg.current?.showSuccess('We have successfully enrolled you into the class');
+        }
+    };
 
     const currentQuestion = quiz?.mcqs?.[currentQuestionIndex];
     const currentQuestionLength = quiz?.mcqs?.length ?? 0;
@@ -375,11 +394,12 @@ const QuizPage: React.FC = () => {
 
     const questionOptions = Array.from({ length: generatedQuestionCount }, (_, i) => ({
         label: `${i + 1} question${i + 1 > 1 ? 's' : ''}`,
-        value: i + 1,
+        value: i + 1
     }));
 
     return (
         <div className="grid">
+            <AppMessages ref={appMsg}></AppMessages>
             <div className="col-12">
                 <div className="card">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
