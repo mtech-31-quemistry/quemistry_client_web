@@ -32,7 +32,7 @@ const ClassDetails = () => {
             setTutors(classResponse.tutors);
 
             if (classResponse.classInvitations && classResponse.classInvitations.length > 0) {
-                setStudents(classResponse.classInvitations.map((v, i) => ({ userEmail: v.userEmail, status: v.status } as ClassInvitation)));
+                setStudents(classResponse.classInvitations.map((v) => ({ userEmail: v.userEmail, status: v.status, firstName: v.firstName || '-', lastName: v.lastName || '-' } as ClassInvitation)));
             }
         });
     }, [inviteStudentStatus]);
@@ -157,6 +157,8 @@ const ClassDetails = () => {
             <Panel header="Students" className="col-12" toggleable headerTemplate={headerTemplate}>
                 <DataTable value={students} tableStyle={{ minWidth: '20rem' }}>
                     <Column field="userEmail" header="Email" />
+                    <Column field="firstName" header="First Name" />
+                    <Column field="lastName" header="Last Name" />
                     <Column field="status" header="Status" />
                 </DataTable>
             </Panel>

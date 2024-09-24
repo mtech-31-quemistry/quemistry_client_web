@@ -35,6 +35,8 @@ interface ClassInvitation {
     code: string;
     userType: number;
     status: string;
+    firstName?: string;
+    lastName?: string;
 }
 
 interface StudentInvitation {
