@@ -126,13 +126,13 @@ const ClassDetails = () => {
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
                             <label className="font-bold text-lg">Start Date</label>
-                            <p>{moment(classDetails?.startDate).format('DD MMM YYYY hh:mm a')}</p>
+                            <p>{classDetails?.startDate && moment(classDetails?.startDate).format('DD MMM YYYY')}</p>
                         </div>
                     </div>
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
                             <label className="font-bold text-lg">End Date </label>
-                            <p>{classDetails?.endDate && moment(classDetails?.endDate).format('DD MMM YYYY hh:mm a')}</p>
+                            <p>{classDetails?.endDate && moment(classDetails?.endDate).format('DD MMM YYYY')}</p>
                         </div>
                     </div>
 
