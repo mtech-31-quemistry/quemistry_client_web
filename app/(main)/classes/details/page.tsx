@@ -63,8 +63,8 @@ const ClassDetails = () => {
         setLoading(true);
         try {
             await UserService.sendInvitation({
-                studentEmail: email,
-                studentFullName: fullName,
+                studentEmail: email.trim(),
+                studentFullName: fullName.trim(),
                 classCode: classDetails!.code
             });
             invitationResponse(true);
