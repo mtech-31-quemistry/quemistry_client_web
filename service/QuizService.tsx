@@ -2,7 +2,7 @@ import { Quiz } from '@/types';
 import ApiHelper from '@/lib/ApiHelper';
 
 export const QuizService = {
-  startNewQuiz: (topics: number[], skills: number[]): Promise<Quiz.ApiResponse | false> => {
+  startNewQuiz: (topics: number[], skills: number[], questionCount: number): Promise<Quiz.ApiResponse | false> => {
     return new Promise(async (resolve, reject) => {
       try {
         console.log('Fetching data from API...');
@@ -14,8 +14,9 @@ export const QuizService = {
           body: JSON.stringify({
             topics: topics,
             skills: skills,
-            totalSize: 60,
+            totalSize: 1,
             pageSize: 60,
+            questionCount: questionCount
           }),
         });
 

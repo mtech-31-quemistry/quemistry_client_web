@@ -11,6 +11,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { ProgressBar } from 'primereact/progressbar';
+import { Dropdown } from 'primereact/dropdown';
 
 const QuizPage: React.FC = () => {
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
@@ -356,7 +357,7 @@ const QuizPage: React.FC = () => {
         }
         setIsStartingNewQuiz(true); // Set isStartingNewQuiz to true to disable the button
         try {
-            await QuizService.startNewQuiz(selectedTopics, selectedSkills);
+            await QuizService.startNewQuiz(selectedTopics, selectedSkills, selectedQuestionCount);
         } catch (error) {
             console.error('Error starting new quiz:', error);
         } finally {
@@ -371,6 +372,11 @@ const QuizPage: React.FC = () => {
             [questionId]: optionNo
         }));
     };
+
+    const questionOptions = Array.from({ length: generatedQuestionCount }, (_, i) => ({
+        label: `${i + 1} question${i + 1 > 1 ? 's' : ''}`,
+        value: i + 1,
+    }));
 
     return (
         <div className="grid">
@@ -396,7 +402,6 @@ const QuizPage: React.FC = () => {
                     {quiz && quiz.mcqs && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
-                            {/* <b>{selectedQuestionCount ? selectedQuestionCount : generatedQuestionCount} question(s) will be generated.</b> */}
                             <div>
                                 <div className="col-12 md:col-6 mb-5">
                                     <TreeSelect
@@ -411,10 +416,16 @@ const QuizPage: React.FC = () => {
                                         showClear
                                     ></TreeSelect>
                                 </div>
-                                {/* <div className="col-12 md:col-6 mb-5">
-                                    Select the (max) question count desired&nbsp;
-                                    <InputText type="text" value="0" onChange={(e) => setQuestionCount(e.target.value)} />
-                                </div> */}
+                                <div className="col-12 md:col-6 mb-5">
+                                    <Dropdown
+                                        value={selectedQuestionCount}
+                                        options={questionOptions}
+                                        onChange={(e) => {
+                                            setSelectedQuestionCount(e.value);
+                                        }}
+                                        placeholder="Select number of questions"
+                                    />
+                                </div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                                 <Button onClick={startNewQuiz} disabled={isDisabled || isStartingNewQuiz}>
