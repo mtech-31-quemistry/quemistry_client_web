@@ -124,7 +124,7 @@ const QuizPage: React.FC = () => {
         if (!isSucceeded) {
             appMsg.current?.showError('Error enrolling to the class. Please contact customer support for more info.');
         } else {
-            appMsg.current?.showSuccess('We have successfully enrolled you into the class');
+            appMsg.current?.showSuccess('We have successfully enrolled you into the class', true, 5);
         }
     };
 

@@ -52,7 +52,6 @@ const Classes = () => {
 
     const saveClass = async () => {
         const selectedClass = classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class;
-        console.log(selectedClass);
 
         if (classId > 0) await UserService.updateClass(selectedClass, classId);
         else await UserService.addClass(selectedClass);
