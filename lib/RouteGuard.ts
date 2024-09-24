@@ -63,8 +63,8 @@ export const RouteGuard = {
         }
     },
     accessibleBy (roles: string[]): boolean {
-        const canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
-        console.log('can access', canAccess);
+        var canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
+
         if (!canAccess) {
             sessionStorage.setItem("redirection",  queryParameters);
         }

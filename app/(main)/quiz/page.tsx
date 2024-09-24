@@ -113,8 +113,7 @@ const QuizPage: React.FC = () => {
         setTimeout(() => {
             if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('invitation_result') !== null) {
                 const invitationResult = sessionStorage.getItem('invitation_result') === 'true' || false;
-                console.log('invitation result', invitationResult);
-                //sessionStorage.removeItem('invitation_result');
+                sessionStorage.removeItem('invitation_result');
                 invitationResponse(invitationResult);
             }
         }, 500);

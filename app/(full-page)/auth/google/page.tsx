@@ -27,7 +27,7 @@ const GoogleAuthPage = () => {
 
             if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('redirection') !== null) {
                 redirectionUrl = sessionStorage.getItem('redirection') || '/quiz';
-                //sessionStorage.removeItem('redirection');
+                sessionStorage.removeItem('redirection');
             }
 
             redirect(redirectionUrl);
