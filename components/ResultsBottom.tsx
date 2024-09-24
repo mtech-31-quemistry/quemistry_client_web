@@ -53,7 +53,7 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                             <div className="explanation-container-review">
                                                 <b>You chose the correct answer.</b>
                                             </div>
-                                            <div className="explanation-container-review">{option.explanation}</div>
+                                            <div className="explanation-container-review" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                         </div>
                                     )}
                                     {isAttemptedAndIsNotAnswer && (
@@ -61,14 +61,14 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                             <div className="explanation-container-review">
                                                 <b>You chose the incorrect answer.</b>
                                             </div>
-                                            <div className="explanation-container-review">{option.explanation}</div>
+                                            <div className="explanation-container-review" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                         </div>
                                     )}
                                     {/* {isAllUnattempted && (
                                         <div className="explanation" style={{ color: 'Gray' }}>
                                             <div className="explanation-container-review">
                                                 <b>You skipped this question.</b>
-                                                <div className="explanation-container-review">{option.explanation}</div>
+                                                <div className="explanation-container-review" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                             </div>
                                         </div>
                                     )
@@ -76,16 +76,16 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
                                     {isNotAttemptedAndIsAnswer && (
                                         <div className="explanation" style={{ color: 'Green' }}>
                                             <b>This was the correct answer.</b>
-                                            <div className="explanation-container-review">{option.explanation}</div>
+                                            <div className="explanation-container-review" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                         </div>
                                     )}
                                     {isNotAttemptedAndIsNotAnswer && (
                                         <div className="explanation" style={{ color: 'Red' }}>
-                                            <div className="explanation-container-review">{option.explanation}</div>
+                                            <div className="explanation-container-review" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
                                         </div>
                                     )}
                                 </div>
-                            </label >
+                            </label>
                         );
                     })}
             </ul >
