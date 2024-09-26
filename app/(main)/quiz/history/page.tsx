@@ -76,20 +76,20 @@ const QuizHistory: React.FC = () => {
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
-                if (responseData.message === 'Quiz not found') {
-                    setError('Quiz not found');
-                    setLoading(false);
-                    return;
-                }
+                // if (responseData.message === 'Quiz not found') {
+                //     setError('Quiz not found');
+                //     setLoading(false);
+                //     return;
+                // }
                 setQuiz(responseData);
 
                 // Process the data to calculate counts and extract unique topics and skills
-                const processedData = responseData.quizzes
+                const processedData = responseData.content
                     .map((quiz: Quiz.QuizTaken) => {
                         const topicsMap = new Map<number, Topic>();
                         const skillsMap = new Map<number, Skill>();
 
-                        quiz.mcqs.forEach((mcq: Quiz.Mcq) => {
+                        quiz.mcqs.forEach((mcq: Quiz.SimpleQuizResponse) => {
                             mcq.topics.forEach((topic) => topicsMap.set(topic.id, topic));
                             mcq.skills.forEach((skill) => skillsMap.set(skill.id, skill));
                         });
@@ -154,7 +154,7 @@ const QuizHistory: React.FC = () => {
             <div className="col-12">
                 <div className="card">
                     <h5>History</h5>
-                    <p>You currently have completed {quiz?.quizzes ? quiz.quizzes.length : 0} quizzes.</p>
+                    <p>You currently have completed {quiz?.content ? quiz.content.length : 0} quizzes.</p>
                     <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="attemptOn" sortOrder={-1} defaultSortOrder={1}>
                         <Column body={dateBodyTemplate} header="Attempted On" sortable field="attemptOn"></Column>
                         {/* <Column body={idBodyTemplate} header="Quiz Number" sortable field="id"></Column> */}

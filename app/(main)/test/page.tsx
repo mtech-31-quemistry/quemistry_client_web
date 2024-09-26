@@ -68,25 +68,7 @@ const TestPage: React.FC = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const responseData = await TestService.getTestInProgress();
-                if (responseData.message === 'Test not found') {
-                    setIsTestOngoing(false);
-                    return;
-                }
-                setTest(responseData);
-                const initialSelectedOptions: { [key: number]: number | 0 } = {};
-                responseData.mcqs.forEach((mcq) => {
-                    initialSelectedOptions[mcq.id] = 0;
-                });
-                setSelectedOptions(initialSelectedOptions);
-                setTestIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
-                setExplanationsVisible({}); // Initialize explanationsVisible
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+        const fetchData = async () => {};
 
         fetchData();
     }, []);

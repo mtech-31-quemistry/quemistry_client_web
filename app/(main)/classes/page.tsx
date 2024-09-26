@@ -36,12 +36,7 @@ const Classes = () => {
         return { descriptionName, apiName, defaultValue, value, setValue };
     };
 
-    const classMapList = [
-        useGenerateClassMap('Class Code', 'code'),
-        useGenerateClassMap('Class Name', 'description'),
-        useGenerateClassMap('Class Education Level', 'educationLevel'),
-        useGenerateClassMap('Class Subject', 'subject', 'Chemistry')
-    ];
+    const classMapList = [useGenerateClassMap('Class Code', 'code'), useGenerateClassMap('Class Name', 'description'), useGenerateClassMap('Class Education Level', 'educationLevel'), useGenerateClassMap('Class Subject', 'subject', 'Chemistry')];
 
     const clearNewClass = () => {
         setAddClass(false);

@@ -101,14 +101,14 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const responseData = await QuizService.getQuizInProgress();
+                const responseData = await QuizService.getQuizInProgress(selectedQuestionCount);
                 if (responseData.message === 'Quiz not found') {
                     setIsQuizOngoing(false);
                     return;
                 }
                 setQuiz(responseData);
                 const initialSelectedOptions: { [key: number]: number | 0 } = {};
-                responseData.mcqs.forEach((mcq) => {
+                responseData.mcqs.content.forEach((mcq) => {
                     initialSelectedOptions[mcq.id] = 0;
                 });
                 setSelectedOptions(initialSelectedOptions);
@@ -127,7 +127,6 @@ const QuizPage: React.FC = () => {
                 invitationResponse(invitationResult);
             }
         }, 500);
-
     }, []);
 
     const invitationResponse = (isSucceeded: boolean) => {
@@ -315,7 +314,6 @@ const QuizPage: React.FC = () => {
         };
 
         fetchData();
-        
     }, [selectedTopics, selectedSkills]);
 
     const calculateScore = () => {
@@ -432,7 +430,7 @@ const QuizPage: React.FC = () => {
 
     const questionOptions = Array.from({ length: generatedQuestionCount }, (_, i) => ({
         label: `${i + 1} question${i + 1 > 1 ? 's' : ''}`,
-        value: i + 1,
+        value: i + 1
     })).reverse(); // Reverse the array
 
     return (
@@ -571,7 +569,7 @@ const QuizPage: React.FC = () => {
                                     <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
                                 </h6>
                             </div>
-                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz?.mcqs?.length) * 100)} />
+                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz?.mcqs?.content?.length) * 100)} />
                         </div>
                     )}
                     {showScore && showScoreMessage && (

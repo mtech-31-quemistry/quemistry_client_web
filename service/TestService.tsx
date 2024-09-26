@@ -35,46 +35,6 @@ export const TestService = {
     });
   },
 
-  getTestInProgress: async (): Promise<ClassTest.ApiResponse> => {
-    try {
-      console.log('Fetching data from API...');
-      const headers = ApiHelper.getRequestHeaders();
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=60`,
-        {
-          headers: headers,
-          credentials: "include"
-        }
-      );
-      const responseData: Quiz.ApiResponse = await response.json();
-      console.log('Data fetched successfully:', responseData);
-      return responseData;
-    } catch (error) {
-      console.error('No data could be displayed: ', error);
-      throw error;
-    }
-  },
-
-  getTestCompleted: async (): Promise<ClassTest.CompletedResponse> => {
-    try {
-      console.log('Fetching data from API...');
-      const headers = ApiHelper.getRequestHeaders();
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/completed?pageNumber=0&pageSize=60`,
-        {
-          headers: headers,
-          credentials: "include"
-        }
-      );
-      const responseData: Quiz.CompletedResponse = await response.json();
-      console.log('Data fetched successfully:', responseData);
-      return responseData;
-    } catch (error) {
-      console.error('No data could be displayed: ', error);
-      throw error;
-    }
-  },
-
   getTestById: async (quizId: number): Promise<Response> => {
     const headers = ApiHelper.getRequestHeaders();
     try {

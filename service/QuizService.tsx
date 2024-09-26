@@ -94,7 +94,7 @@ export const QuizService = {
     }
   },
 
-  fetchQuizById: async (quizId: number): Promise<Quiz.ApiResponse> => {
+  fetchQuizById: async (quizId: number): Promise<Quiz.QuizTaken> => {
     const headers = ApiHelper.getRequestHeaders();
     try {
       const response = await fetch(
@@ -110,7 +110,7 @@ export const QuizService = {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: Quiz.ApiResponse = await response.json();
+      const data: Quiz.QuizTaken = await response.json();
       return data;
     } catch (error) {
       console.error(`Error fetching quiz for Quiz ID: ${quizId}`, error);

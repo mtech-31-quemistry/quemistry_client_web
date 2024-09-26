@@ -8,7 +8,7 @@ import { QuizService } from '@/service/QuizService';
 const ResultsPage: React.FC = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [reload, setReload] = useState(false);
-    const [quiz, setQuiz] = useState<Quiz.ApiResponse | null>(null); // Add state for the quiz data
+    const [quiz, setQuiz] = useState<Quiz.QuizTaken | null>(null); // Add state for the quiz data
 
     const searchParams = useSearchParams();
     const quizIdParam = searchParams.get('quizId');

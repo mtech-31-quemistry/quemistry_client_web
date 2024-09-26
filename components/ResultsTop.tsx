@@ -56,19 +56,19 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
         return <div className="card">{error}</div>;
     }
 
-    if (!quiz || !quiz.quizzes || quiz.quizzes.length === 0) {
+    if (!quiz || !quiz.content || quiz.content.length === 0) {
         return <div className="card">No quiz data available</div>;
     }
 
     // Find the specific quiz by ID
-    const specificQuiz = quiz.quizzes.find((quiz: Quiz.QuizTaken) => quiz.id === parseInt(quizId, 10));
+    const specificQuiz = quiz.content.find((quiz: Quiz.QuizTaken) => quiz.id === parseInt(quizId, 10));
 
     if (!specificQuiz || !specificQuiz.mcqs || specificQuiz.mcqs.length === 0) {
         return <div className="card">No questions available for this quiz</div>;
     }
 
     // Update the progress calculation
-    const progress = specificQuiz.mcqs.map((mcq: Quiz.Mcq) => {
+    const progress = specificQuiz.mcqs.map((mcq: Quiz.SimpleQuizResponse) => {
         const attemptOption = mcq.attemptOption ?? 0;
         const selectedOption = mcq.options[attemptOption - 1];
         return selectedOption && selectedOption.isAnswer;

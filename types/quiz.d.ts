@@ -38,6 +38,23 @@ declare namespace Quiz {
         attemptOn: number | null;
     }
 
+    interface SimpleQuizResponse {
+        id: number;
+        stem: string;
+        options: Option[];
+        topics: Topic[];
+        skills: Skill[];
+        status: string;
+        publishedOn: number;
+        publishedBy: string;
+        closedOn: number | null;
+        closedBy: string | null;
+        createdOn: number;
+        createdBy: string;
+        attemptOption: number | null;
+        attemptOn: number | null;
+    }
+
     interface ApiResponse {
         id: number;
         mcqs: Mcq;
@@ -56,12 +73,13 @@ declare namespace Quiz {
         // totalPages: number;
         // totalRecords: number;
         message?: string;
-        quizzes: QuizTaken[];
+        content: QuizTaken[];
+        // quizzes: QuizTaken[];
     }
 
     interface QuizTaken {
         id: number;
-        mcqs: Mcq[];
+        mcqs: SimpleQuizResponse[];
         status: string;
         points: number;
         pageNumber: number;
