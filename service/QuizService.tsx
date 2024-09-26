@@ -14,9 +14,8 @@ export const QuizService = {
           body: JSON.stringify({
             topics: topics,
             skills: skills,
-            totalSize: 1,
-            pageSize: 60,
-            questionCount: questionCount
+            totalSize: 0,
+            pageSize: questionCount
           }),
         });
 
@@ -36,12 +35,12 @@ export const QuizService = {
     });
   },
 
-  getQuizInProgress: async (): Promise<Quiz.ApiResponse> => {
+  getQuizInProgress: async (questionCount: number): Promise<Quiz.ApiResponse> => {
     try {
       console.log('Fetching data from API...');
       const headers = ApiHelper.getRequestHeaders();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=60`,
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=${questionCount}`,
         {
           headers: headers,
           credentials: "include"

@@ -18,6 +18,10 @@ declare namespace Quiz {
     }
 
     interface Mcq {
+        content: Content[];
+    }
+
+    interface Content {
         id: number;
         stem: string;
         options: Option[];
@@ -36,21 +40,21 @@ declare namespace Quiz {
 
     interface ApiResponse {
         id: number;
-        mcqs: Mcq[];
+        mcqs: Mcq;
         status: string;
         points: number;
-        pageNumber: number;
-        pageSize: number;
-        totalPages: number;
-        totalRecords: number;
+        // pageNumber: number;
+        // pageSize: number;
+        // totalPages: number;
+        // totalRecords: number;
         message?: string;
     }
 
     interface CompletedResponse {
-        pageNumber: number;
-        pageSize: number;
-        totalPages: number;
-        totalRecords: number;
+        // pageNumber: number;
+        // pageSize: number;
+        // totalPages: number;
+        // totalRecords: number;
         message?: string;
         quizzes: QuizTaken[];
     }
@@ -60,5 +64,9 @@ declare namespace Quiz {
         mcqs: Mcq[];
         status: string;
         points: number;
+        pageNumber: number;
+        pageSize: number;
+        totalPages: number;
+        totalRecords: number;
     }
 }

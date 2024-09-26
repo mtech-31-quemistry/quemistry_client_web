@@ -32,7 +32,17 @@ const QuizPage: React.FC = () => {
     const [quizIdAvailable, setQuizIdAvailable] = useState(false);
     const [isAbandoning, setIsAbandoning] = useState(false);
     const [questionCount, setQuestionCount] = useState<string>();
+    const [selectedQuestionCount, setSelectedQuestionCount] = useState<number>(60);
+    const [generatedQuestionCount, setGeneratedQuestionCount] = useState<number>(0);
     const router = useRouter();
+
+    // Retrieve selectedQuestionCount from local storage on component mount
+    useEffect(() => {
+        const storedQuestionCount = localStorage.getItem('selectedQuestionCount');
+        if (storedQuestionCount) {
+            setSelectedQuestionCount(Number(storedQuestionCount));
+        }
+    }, []);
 
     const handleViewResults = () => {
         router.push('/quiz/history');
@@ -86,31 +96,8 @@ const QuizPage: React.FC = () => {
         submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id] ?? 0);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const responseData = await QuizService.getQuizInProgress();
-                if (responseData.message === 'Quiz not found') {
-                    setIsQuizOngoing(false);
-                    return;
-                }
-                setQuiz(responseData);
-                const initialSelectedOptions: { [key: number]: number | 0 } = {};
-                responseData.mcqs.forEach((mcq) => {
-                    initialSelectedOptions[mcq.id] = 0;
-                });
-                setSelectedOptions(initialSelectedOptions);
-                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const currentQuestion = quiz?.mcqs?.[currentQuestionIndex];
-    const currentQuestionLength = quiz?.mcqs?.length ?? 0;
+    const currentQuestion = quiz?.mcqs?.content?.[currentQuestionIndex];
+    const currentQuestionLength = quiz?.mcqs?.content?.length ?? 0;
 
     const submitAttempt = async (quizId: number, mcqId: number, attempt: number | null | undefined) => {
         const attemptValue = attempt ?? 0;
@@ -145,7 +132,7 @@ const QuizPage: React.FC = () => {
                 status: 'abandoned'
             }));
             const initialSelectedOptions: { [key: number]: number | 0 } = {};
-            quiz.mcqs.forEach((mcq: any) => {
+            quiz.mcqs.content.forEach((mcq: any) => {
                 initialSelectedOptions[mcq.id] = 0;
             });
             setSelectedOptions(initialSelectedOptions);
@@ -214,9 +201,6 @@ const QuizPage: React.FC = () => {
 
     const [visible, setVisible] = useState(false);
 
-    const [selectedQuestionCount, setSelectedQuestionCount] = useState<number>(0);
-    const [generatedQuestionCount, setGeneratedQuestionCount] = useState<number>(0);
-
     const getNodeName = (key: string) => {
         const findNode = (nodes: any[], key: string): string | null => {
             for (const node of nodes) {
@@ -270,7 +254,7 @@ const QuizPage: React.FC = () => {
                 topics: selectedTopics,
                 skills: selectedSkills,
                 pageNumber: 0,
-                pageSize: 60
+                pageSize: 600
             };
 
             try {
@@ -295,7 +279,7 @@ const QuizPage: React.FC = () => {
         if (!quiz) return;
 
         let score = 0;
-        quiz.mcqs.forEach((mcq) => {
+        quiz.mcqs.content.forEach((mcq) => {
             const selectedOption = selectedOptions[mcq.id];
             if (mcq.options) {
                 const correctOption = mcq.options.find((option) => option.isAnswer)?.no;
@@ -311,7 +295,7 @@ const QuizPage: React.FC = () => {
 
     const displayScore = () => {
         const score = calculateScore();
-        const totalQuestions = quiz?.mcqs.length || 0;
+        const totalQuestions = quiz?.mcqs.content.length || 0;
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setShowScore(true);
         localStorage.setItem('currentQuestionIndex', '0');
@@ -373,10 +357,40 @@ const QuizPage: React.FC = () => {
         }));
     };
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                console.log(selectedQuestionCount);
+                const storedQuestionCount = Number(localStorage.getItem('selectedQuestionCount'));
+                const responseData = await QuizService.getQuizInProgress(storedQuestionCount);
+                if (responseData.message === 'Quiz not found') {
+                    setIsQuizOngoing(false);
+                    return;
+                }
+                setQuiz(responseData);
+                const initialSelectedOptions: { [key: number]: number | 0 } = {};
+                responseData.mcqs.content.forEach((mcq) => {
+                    initialSelectedOptions[mcq.id] = 0;
+                });
+                setSelectedOptions(initialSelectedOptions);
+                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Store selectedQuestionCount in local storage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('selectedQuestionCount', selectedQuestionCount.toString());
+    }, [selectedQuestionCount]);
+
     const questionOptions = Array.from({ length: generatedQuestionCount }, (_, i) => ({
         label: `${i + 1} question${i + 1 > 1 ? 's' : ''}`,
         value: i + 1,
-    }));
+    })).reverse(); // Reverse the array
 
     return (
         <div className="grid">
@@ -399,7 +413,7 @@ const QuizPage: React.FC = () => {
                             Are you sure you want to exit the quiz?
                         </Dialog>
                     </div>
-                    {quiz && quiz.mcqs && Array.isArray(quiz.mcqs) && quiz.mcqs.length === 0 && <div>No questions generated.</div>}
+                    {quiz && quiz.mcqs && Array.isArray(quiz.mcqs) && quiz.mcqs.content.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
                             <div>
@@ -440,7 +454,7 @@ const QuizPage: React.FC = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ minWidth: '200px' }}>
                                         <h6>
-                                            Question {currentQuestionIndex + 1} of {quiz?.mcqs?.length || 0}
+                                            Question {currentQuestionIndex + 1} of {quiz?.mcqs?.content.length || 0}
                                         </h6>
                                     </div>
                                     <b>
@@ -482,7 +496,7 @@ const QuizPage: React.FC = () => {
                                     </label>
                                 ))}
                                 {isAnswerSubmitted ? (
-                                    currentQuestionIndex < quiz.mcqs.length - 1 ? (
+                                    currentQuestionIndex < quiz.mcqs.content.length - 1 ? (
                                         <Button
                                             label="Next Question"
                                             onClick={() => {
