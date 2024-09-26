@@ -151,7 +151,7 @@ const QuizPage: React.FC = () => {
 
     const handleNextQuestion = () => {
         if (currentQuestionLength > 0) {
-            if (currentQuestionIndex < currentQuestionLength - 1) {
+            if (currentQuestionIndex < (currentQuestionLength || 0) - 1) {
                 setExplanationsVisible({});
                 setIsAnswerSubmitted(false);
                 setIsRadioDisabled(false);
@@ -336,7 +336,7 @@ const QuizPage: React.FC = () => {
 
     const displayScore = () => {
         const score = calculateScore();
-        const totalQuestions = quiz?.mcqs.content.length || 0;
+        const totalQuestions = quiz?.mcqs?.content?.length || 0;
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setShowScore(true);
         localStorage.setItem('currentQuestionIndex', '0');
@@ -410,9 +410,11 @@ const QuizPage: React.FC = () => {
                 }
                 setQuiz(responseData);
                 const initialSelectedOptions: { [key: number]: number | 0 } = {};
-                responseData.mcqs.content.forEach((mcq) => {
-                    initialSelectedOptions[mcq.id] = 0;
-                });
+                if (responseData.mcqs && responseData.mcqs.content) {
+                    responseData.mcqs.content.forEach((mcq) => {
+                        initialSelectedOptions[mcq.id] = 0;
+                    });
+                }
                 setSelectedOptions(initialSelectedOptions);
                 setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
             } catch (error) {
@@ -455,7 +457,7 @@ const QuizPage: React.FC = () => {
                             Are you sure you want to exit the quiz?
                         </Dialog>
                     </div>
-                    {quiz && quiz.mcqs && Array.isArray(quiz.mcqs) && quiz.mcqs.content.length === 0 && <div>No questions generated.</div>}
+                    {quiz && quiz.mcqs && Array.isArray(quiz.mcqs.content) && quiz.mcqs.content.length === 0 && <div>No questions generated.</div>}
                     {!isQuizOngoing && (
                         <div>
                             <div>
@@ -496,17 +498,17 @@ const QuizPage: React.FC = () => {
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ minWidth: '200px' }}>
                                         <h6>
-                                            Question {currentQuestionIndex + 1} of {quiz?.mcqs?.content.length || 0}
+                                            Question {currentQuestionIndex + 1} of {quiz?.mcqs?.content?.length || 0}
                                         </h6>
                                     </div>
                                     <b>
-                                        <div className="card">{currentQuestion.skills.map((skill) => skill.name).join(', ')}</div>
+                                        <div className="card">{currentQuestion.skills ? currentQuestion.skills.map((skill) => skill.name).join(', ') : ''}</div>
                                     </b>
                                 </div>
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
                                 </div>
-                                {currentQuestion.options.map((option) => (
+                                {currentQuestion.options && currentQuestion.options.map((option) => (
                                     <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
                                         <div className="card">
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -538,7 +540,7 @@ const QuizPage: React.FC = () => {
                                     </label>
                                 ))}
                                 {isAnswerSubmitted ? (
-                                    currentQuestionIndex < quiz.mcqs.content.length - 1 ? (
+                                    currentQuestionIndex < (quiz?.mcqs?.content?.length || 0) - 1 ? (
                                         <Button
                                             label="Next Question"
                                             onClick={() => {
@@ -566,16 +568,16 @@ const QuizPage: React.FC = () => {
                             </div>
                             <div style={{ marginBottom: '30px' }}>
                                 <h6>
-                                    <b>{currentQuestion.topics.map((topic) => topic.name).join(', ')}</b>
+                                    <b>{currentQuestion.topics ? currentQuestion.topics.map((topic) => topic.name).join(', ') : ''}</b>
                                 </h6>
                             </div>
-                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / quiz?.mcqs?.content?.length) * 100)} />
+                            <ProgressBar value={Math.round(((currentQuestionIndex + 1) / (quiz?.mcqs?.content?.length || 1)) * 100)} />
                         </div>
                     )}
                     {showScore && showScoreMessage && (
                         <div>
                             <p>
-                                <div className="score-message">{showScoreMessage}</div>
+                                {showScoreMessage}
                             </p>
                             <div>
                                 <Button onClick={handleViewResults}>View History</Button>
