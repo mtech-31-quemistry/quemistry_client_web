@@ -38,7 +38,7 @@ const Classes = () => {
 
     const classMapList = [
         useGenerateClassMap('Class Code', 'code'),
-        useGenerateClassMap('Class Description', 'description'),
+        useGenerateClassMap('Class Name', 'description'),
         useGenerateClassMap('Class Education Level', 'educationLevel'),
         useGenerateClassMap('Class Subject', 'subject', 'Chemistry')
     ];
@@ -52,7 +52,6 @@ const Classes = () => {
 
     const saveClass = async () => {
         const selectedClass = classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class;
-        console.log(selectedClass);
 
         if (classId > 0) await UserService.updateClass(selectedClass, classId);
         else await UserService.addClass(selectedClass);

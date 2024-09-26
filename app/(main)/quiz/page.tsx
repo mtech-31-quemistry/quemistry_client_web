@@ -1,7 +1,7 @@
 'use client';
 import './quiz.css';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Quiz } from '@/types';
 import { QuizService } from '../../../service/QuizService';
 import { Button } from 'primereact/button';
@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { TreeSelect, TreeSelectSelectionKeysType } from 'primereact/treeselect';
 import { ProgressBar } from 'primereact/progressbar';
 import { Dropdown } from 'primereact/dropdown';
+import AppMessages, { AppMessage } from '@/components/AppMessages';
 
 const QuizPage: React.FC = () => {
     const [selectedTopicNodes, setSelectedTopicNodes] = useState<string | TreeSelectSelectionKeysType | TreeSelectSelectionKeysType[] | null>();
@@ -35,6 +36,7 @@ const QuizPage: React.FC = () => {
     const [selectedQuestionCount, setSelectedQuestionCount] = useState<number>(60);
     const [generatedQuestionCount, setGeneratedQuestionCount] = useState<number>(0);
     const router = useRouter();
+    const appMsg = useRef<AppMessage>(null);
 
     // Retrieve selectedQuestionCount from local storage on component mount
     useEffect(() => {
@@ -94,6 +96,46 @@ const QuizPage: React.FC = () => {
         setIsAnswerSubmitted(true);
         setIsRadioDisabled(true);
         submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id] ?? 0);
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseData = await QuizService.getQuizInProgress();
+                if (responseData.message === 'Quiz not found') {
+                    setIsQuizOngoing(false);
+                    return;
+                }
+                setQuiz(responseData);
+                const initialSelectedOptions: { [key: number]: number | 0 } = {};
+                responseData.mcqs.forEach((mcq) => {
+                    initialSelectedOptions[mcq.id] = 0;
+                });
+                setSelectedOptions(initialSelectedOptions);
+                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+        setTimeout(() => {
+            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('invitation_result') !== null) {
+                const invitationResult = sessionStorage.getItem('invitation_result') === 'true' || false;
+                sessionStorage.removeItem('invitation_result');
+                invitationResponse(invitationResult);
+            }
+        }, 500);
+
+    }, []);
+
+    const invitationResponse = (isSucceeded: boolean) => {
+        if (!isSucceeded) {
+            appMsg.current?.showError('Error enrolling to the class. Please contact customer support for more info.');
+        } else {
+            appMsg.current?.showSuccess('We have successfully enrolled you into the class', true, 5);
+        }
     };
 
     const currentQuestion = quiz?.mcqs?.content?.[currentQuestionIndex];
@@ -273,6 +315,7 @@ const QuizPage: React.FC = () => {
         };
 
         fetchData();
+        
     }, [selectedTopics, selectedSkills]);
 
     const calculateScore = () => {
@@ -394,6 +437,7 @@ const QuizPage: React.FC = () => {
 
     return (
         <div className="grid">
+            <AppMessages ref={appMsg}></AppMessages>
             <div className="col-12">
                 <div className="card">
                     <div style={{ display: 'flex', alignItems: 'center' }}>

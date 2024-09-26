@@ -32,7 +32,7 @@ const ClassDetails = () => {
             setTutors(classResponse.tutors);
 
             if (classResponse.classInvitations && classResponse.classInvitations.length > 0) {
-                setStudents(classResponse.classInvitations.map((v, i) => ({ userEmail: v.userEmail, status: v.status } as ClassInvitation)));
+                setStudents(classResponse.classInvitations.map((v) => ({ userEmail: v.userEmail, status: v.status, firstName: v.firstName || '-', lastName: v.lastName || '-' } as ClassInvitation)));
             }
         });
     }, [inviteStudentStatus]);
@@ -63,8 +63,8 @@ const ClassDetails = () => {
         setLoading(true);
         try {
             await UserService.sendInvitation({
-                studentEmail: email,
-                studentFullName: fullName,
+                studentEmail: email.trim(),
+                studentFullName: fullName.trim(),
                 classCode: classDetails!.code
             });
             invitationResponse(true);
@@ -107,7 +107,7 @@ const ClassDetails = () => {
                     </div>
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
-                            <label className="font-bold text-lg">Description</label>
+                            <label className="font-bold text-lg">Name</label>
                             <p>{classDetails?.description}</p>
                         </div>
                     </div>
@@ -126,13 +126,13 @@ const ClassDetails = () => {
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
                             <label className="font-bold text-lg">Start Date</label>
-                            <p>{moment(classDetails?.startDate).format('DD MMM YYYY hh:mm a')}</p>
+                            <p>{classDetails?.startDate && moment(classDetails?.startDate).format('DD MMM YYYY')}</p>
                         </div>
                     </div>
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
                             <label className="font-bold text-lg">End Date </label>
-                            <p>{classDetails?.endDate && moment(classDetails?.endDate).format('DD MMM YYYY hh:mm a')}</p>
+                            <p>{classDetails?.endDate && moment(classDetails?.endDate).format('DD MMM YYYY')}</p>
                         </div>
                     </div>
 
@@ -157,6 +157,8 @@ const ClassDetails = () => {
             <Panel header="Students" className="col-12" toggleable headerTemplate={headerTemplate}>
                 <DataTable value={students} tableStyle={{ minWidth: '20rem' }}>
                     <Column field="userEmail" header="Email" />
+                    <Column field="firstName" header="First Name" />
+                    <Column field="lastName" header="Last Name" />
                     <Column field="status" header="Status" />
                 </DataTable>
             </Panel>

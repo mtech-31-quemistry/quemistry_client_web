@@ -52,14 +52,18 @@ export const RouteGuard = {
                 return this.accessibleBy(['admin', 'tutor']);
             case '/classes':
                 return this.accessibleBy(['admin', 'tutor']);
+            case '/classes/details':
+                return this.accessibleBy(['admin', 'tutor']);
             case '/genai':
                 return this.accessibleBy(['admin', 'tutor']);
+            case '/students/invitation/accept':
+                return this.accessibleBy(['student', 'tutor']);
             default:
                 return false;
         }
     },
     accessibleBy (roles: string[]): boolean {
-        var canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
+        const canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
 
         if (!canAccess) {
             sessionStorage.setItem("redirection",  queryParameters);
