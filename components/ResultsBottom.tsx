@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import { Quiz } from '@/types';
 import '../app/(main)/quiz/results/results.css';
@@ -16,6 +15,9 @@ export default function ResultsBottomComponent({ currentQuestionIndex, quiz }: R
     const currentQuestion = quiz.mcqs[currentQuestionIndex];
 
     if (!currentQuestion || !currentQuestion.stem || !currentQuestion.options) {
+        // console.log(currentQuestion)
+        // console.log(currentQuestion.stem)
+        // console.log(currentQuestion.options)
         return <div>Invalid question data</div>;
     }
 

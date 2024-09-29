@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useEffect } from 'react';
 import { Quiz } from '@/types';
 import ResultsBottomComponent from './ResultsBottom';
@@ -46,7 +45,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
         };
 
         fetchData();
-    }, [quizId, onReload]); // Add quizId and onReload as dependencies to re-fetch data when they change
+    }, [quizId]); // Only add quizId as a dependency
 
     if (loading) {
         return <div className="card">Loading...</div>;
@@ -91,10 +90,10 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
                     </div>
                 ))}
             </div>
-            {/* <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} quiz={specificQuiz} />
+            <ResultsBottomComponent currentQuestionIndex={currentQuestionIndex} quiz={specificQuiz} />
             <div className="mb-3">
                 <Button onClick={handleBackToHistory}>Quiz History</Button>
-            </div> */}
+            </div>
         </div>
     );
 }
