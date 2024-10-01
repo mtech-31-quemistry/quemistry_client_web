@@ -19,6 +19,30 @@ declare namespace Quiz {
 
     interface Mcq {
         content: Content[];
+        pageable: Pageable[];
+        last: boolean;
+        totalPages: number;
+        totalElements: number;
+        first: boolean;
+        size: number;
+        sort: Sort[];
+        numberOfElements: number;
+        empty: boolean;
+    }
+
+    interface Pageable {
+        pageNumber: number;
+        pageSize: number;
+        sort: Sort[];
+        offset: boolean;
+        paged: boolean;
+        unpaged: boolean;
+    }
+
+    interface Sort {
+        empty: boolean;
+        sorted: boolean;
+        unsorted: boolean;
     }
 
     interface Content {
@@ -75,6 +99,15 @@ declare namespace Quiz {
         message?: string;
         content: QuizTaken[];
         // quizzes: QuizTaken[];
+        pageable: Pageable[];
+        last: boolean;
+        totalPages: number;
+        totalElements: number;
+        first: boolean;
+        size: number;
+        sort: Sort[];
+        numberOfElements: number;
+        empty: boolean;
     }
 
     interface QuizTaken {
@@ -82,9 +115,9 @@ declare namespace Quiz {
         mcqs: SimpleQuizResponse[];
         status: string;
         points: number;
-        pageNumber: number;
-        pageSize: number;
-        totalPages: number;
-        totalRecords: number;
+        // pageNumber: number;
+        // pageSize: number;
+        // totalPages: number;
+        // totalRecords: number;
     }
 }

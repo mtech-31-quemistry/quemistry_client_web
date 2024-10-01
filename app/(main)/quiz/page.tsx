@@ -101,7 +101,9 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const responseData = await QuizService.getQuizInProgress(selectedQuestionCount);
+                console.log(selectedQuestionCount);
+                const storedQuestionCount = Number(localStorage.getItem('selectedQuestionCount'));
+                const responseData = await QuizService.getQuizInProgress(storedQuestionCount);
                 if (responseData.message === 'Quiz not found') {
                     setIsQuizOngoing(false);
                     return;
@@ -398,39 +400,12 @@ const QuizPage: React.FC = () => {
         }));
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                console.log(selectedQuestionCount);
-                const storedQuestionCount = Number(localStorage.getItem('selectedQuestionCount'));
-                const responseData = await QuizService.getQuizInProgress(storedQuestionCount);
-                if (responseData.message === 'Quiz not found') {
-                    setIsQuizOngoing(false);
-                    return;
-                }
-                setQuiz(responseData);
-                const initialSelectedOptions: { [key: number]: number | 0 } = {};
-                if (responseData.mcqs && responseData.mcqs.content) {
-                    responseData.mcqs.content.forEach((mcq) => {
-                        initialSelectedOptions[mcq.id] = 0;
-                    });
-                }
-                setSelectedOptions(initialSelectedOptions);
-                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
     // Store selectedQuestionCount in local storage whenever it changes
     useEffect(() => {
         localStorage.setItem('selectedQuestionCount', selectedQuestionCount.toString());
     }, [selectedQuestionCount]);
 
-    const questionOptions = Array.from({ length: generatedQuestionCount }, (_, i) => ({
+    const questionOptions = Array.from({ length: 60 }, (_, i) => ({
         label: `${i + 1} question${i + 1 > 1 ? 's' : ''}`,
         value: i + 1
     })).reverse(); // Reverse the array
@@ -560,7 +535,6 @@ const QuizPage: React.FC = () => {
                                     <Button
                                         label="Submit"
                                         onClick={() => {
-                                            submitAttempt(quiz.id, currentQuestion.id, selectedOptions[currentQuestion.id]);
                                             handleSubmitAnswer();
                                         }}
                                         disabled={isAnswerSubmitted}

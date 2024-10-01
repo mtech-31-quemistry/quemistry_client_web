@@ -24,13 +24,11 @@ const ResultsPage: React.FC = () => {
 
         // Fetch quiz data based on quizId
         const fetchQuiz = async () => {
-            console.log(1);
             try {
                 if (!quizId) {
                     throw new Error('Quiz ID is undefined');
                 }
-                const data = await QuizService.fetchQuizById(Number(quizId));
-                console.log(3);
+                const data = await QuizService.fetchQuizById(Number(quizId));;
                 setQuiz(data);
             } catch (error) {
                 console.error('Error fetching quiz:', error);
@@ -53,12 +51,6 @@ const ResultsPage: React.FC = () => {
     return (
         <div>
             <ResultsTopComponent onQuestionClick={handleQuestionClick} currentQuestionIndex={currentQuestionIndex} quizId={quizId} onReload={handleReload} />
-            {quiz && (
-                <ResultsBottomComponent
-                    currentQuestionIndex={currentQuestionIndex}
-                    quiz={quiz} // Pass the quiz data here
-                />
-            )}
         </div>
     );
 };

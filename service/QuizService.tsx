@@ -5,7 +5,7 @@ export const QuizService = {
   startNewQuiz: (topics: number[], skills: number[], questionCount: number): Promise<Quiz.ApiResponse | false> => {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log('Fetching data from API...');
+        console.log('Fetching new Quiz from API...');
         const headers = ApiHelper.getRequestHeaders();
         const response = await fetch(`${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}`, {
           method: 'POST',
@@ -14,8 +14,8 @@ export const QuizService = {
           body: JSON.stringify({
             topics: topics,
             skills: skills,
-            totalSize: 0,
-            pageSize: questionCount
+            pageSize: 60,
+            totalSize: questionCount
           }),
         });
 
@@ -37,7 +37,7 @@ export const QuizService = {
 
   getQuizInProgress: async (questionCount: number): Promise<Quiz.ApiResponse> => {
     try {
-      console.log('Fetching data from API...');
+      console.log('Fetching In Progress Quiz from API...');
       const headers = ApiHelper.getRequestHeaders();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=${questionCount}`,
@@ -57,7 +57,7 @@ export const QuizService = {
 
   getQuizCompleted: async (): Promise<Quiz.CompletedResponse> => {
     try {
-      console.log('Fetching data from API...');
+      console.log('Fetching Completed Quizzes from API...');
       const headers = ApiHelper.getRequestHeaders();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/completed?pageNumber=0&pageSize=60`,
