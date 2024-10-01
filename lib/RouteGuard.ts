@@ -58,6 +58,8 @@ export const RouteGuard = {
                 return this.accessibleBy(['admin', 'tutor']);
             case '/students/invitation/accept':
                 return this.accessibleBy(['student', 'tutor']);
+            case '/dashboard':
+                return this.accessibleBy(['student', 'tutor']);
             default:
                 return false;
         }
