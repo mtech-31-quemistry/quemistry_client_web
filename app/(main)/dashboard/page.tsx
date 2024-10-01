@@ -1,113 +1,105 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Button } from 'primereact/button';
 import { Chart } from 'primereact/chart';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import { Menu } from 'primereact/menu';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-//import { ProductService } from '../../../demo/service/ProductService';
 import { LayoutContext } from '../../../layout/context/layoutcontext';
-//import Link from 'next/link';
-//import { Demo } from '@/types';
 import { ChartData, ChartOptions } from 'chart.js';
-import { Toast } from 'primereact/toast';
 import AppMessages, { AppMessage } from '@/components/AppMessages';
+import { StatisticService } from '@/service/StatisticService';
 
-const lineData: ChartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-        {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
-            tension: 0.4
-        },
-        {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
-            fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
-            tension: 0.4
-        }
-    ]
-};
+const TOTAL_ATTEMPTS_BAR_COLOR = '#673AB7';
+const CORRECT_ANSWER_BAR_COLOR = '#157be8';
 
 const Dashboard = () => {
-    const [products, setProducts] = useState<any>([]);
-    const menu1 = useRef<Menu>(null);
-    const menu2 = useRef<Menu>(null);
-    const [lineOptions, setLineOptions] = useState<ChartOptions>({});
+    const documentStyle = getComputedStyle(document.documentElement);
+    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+
+    const [chartOptions, setChartOptions] = useState<ChartOptions>({});
+    const [topicSkillStats, setTopicSkillStats] = useState<ChartData>();
+
     const { layoutConfig } = useContext(LayoutContext);
     const appMsg = useRef<AppMessage>(null);
 
-    const applyLightTheme = () => {
-        const lineOptions: ChartOptions = {
+    useEffect(() => {
+        const chartOptions = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
             plugins: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: false
+                },
                 legend: {
                     labels: {
-                        color: '#495057'
+                        color: textColor
                     }
                 }
             },
             scales: {
                 x: {
+                    stacked: false,
                     ticks: {
-                        color: '#495057'
+                        color: textColorSecondary
                     },
                     grid: {
-                        color: '#ebedef'
+                        color: surfaceBorder
                     }
                 },
                 y: {
+                    stacked: false,
                     ticks: {
-                        color: '#495057'
+                        color: textColorSecondary
                     },
                     grid: {
-                        color: '#ebedef'
+                        color: surfaceBorder
                     }
                 }
             }
         };
 
-        setLineOptions(lineOptions);
-    };
+        setChartOptions(chartOptions);
+    }, []);
 
-    const applyDarkTheme = () => {
-        const lineOptions = {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#ebedef'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#ebedef'
+    useEffect(() => {
+        StatisticService.getTopicSkillStatistics(0, 10).then((statsResponse) => {
+            let topicSkillStat = statsResponse.data;
+            let chartLabels: string[] = [];
+            let totalAttempts: number[] = [];
+            let correctAnswers: number[] = [];
+
+            //labels
+            //array of data set
+            topicSkillStat.map((item) => {
+                chartLabels.push(item.topicName + ' - ' + item.skillName);
+                totalAttempts.push(item.cntAttempt);
+                correctAnswers.push(item.cntCorrectAnswer);
+            });
+            let chartData: ChartData = {
+                labels: chartLabels,
+                datasets: [
+                    {
+                        label: 'Total Attempts',
+                        data: totalAttempts,
+                        fill: true,
+                        backgroundColor: TOTAL_ATTEMPTS_BAR_COLOR,
+                        borderColor: TOTAL_ATTEMPTS_BAR_COLOR,
+                        tension: 0.4
                     },
-                    grid: {
-                        color: 'rgba(160, 167, 181, .3)'
+                    {
+                        label: 'Correct Answers',
+                        data: correctAnswers,
+                        fill: true,
+                        backgroundColor: CORRECT_ANSWER_BAR_COLOR,
+                        borderColor: CORRECT_ANSWER_BAR_COLOR,
+                        tension: 0.4
                     }
-                },
-                y: {
-                    ticks: {
-                        color: '#ebedef'
-                    },
-                    grid: {
-                        color: 'rgba(160, 167, 181, .3)'
-                    }
-                }
-            }
-        };
-
-        setLineOptions(lineOptions);
-    };
-
+                ]
+            };
+            setTopicSkillStats(chartData);
+        });
+    }, []);
     const invitationResponse = (isSucceeded: boolean) => {
         if (!isSucceeded) {
             appMsg.current?.showError('Error enrolling to the class. Please contact customer support for more info.');
@@ -117,12 +109,6 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        if (layoutConfig.colorScheme === 'light') {
-            applyLightTheme();
-        } else {
-            applyDarkTheme();
-        }
-
         setTimeout(() => {
             if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('invitation_result') !== null) {
                 const invitationResult = sessionStorage.getItem('invitation_result') === 'true' || false;
@@ -132,48 +118,14 @@ const Dashboard = () => {
         }, 500);
     }, [layoutConfig.colorScheme]);
 
-    const formatCurrency = (value: number) => {
-        return value?.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        });
-    };
-
     return (
         <div className="grid">
             <AppMessages ref={appMsg}></AppMessages>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
-                    <div className="flex justify-content-between mb-3">
-                        <div>
-                            <span className="block text-500 font-medium mb-3">Questions Attempted</span>
-                            <div className="text-900 font-medium text-xl">152</div>
-                        </div>
-                    </div>
-                    <span className="text-green-500 font-medium">24 new </span>
-                    <span className="text-500">since last visit</span>
-                </div>
-            </div>
-            <div className="col-12 lg:col-6 xl:col-3">
-                <div className="card mb-0">
-                    <div className="flex justify-content-between mb-3">
-                        <div>
-                            <span className="block text-500 font-medium mb-3">Comments</span>
-                            <div className="text-900 font-medium text-xl">5 Unread</div>
-                        </div>
-                        <div className="flex align-items-center justify-content-center bg-purple-100 border-round" style={{ width: '2.5rem', height: '2.5rem' }}>
-                            <i className="pi pi-comment text-purple-500 text-xl" />
-                        </div>
-                    </div>
-                    <span className="text-green-500 font-medium">10 </span>
-                    <span className="text-500">responded</span>
-                </div>
-            </div>
 
             <div className="col-12 xl:col-6">
                 <div className="card">
-                    <h5>Progress</h5>
-                    <Chart type="line" data={lineData} options={lineOptions} />
+                    <h5>Top most difficult topics-skills</h5>
+                    <Chart type="bar" data={topicSkillStats} options={chartOptions} />
                 </div>
             </div>
         </div>

@@ -32,7 +32,7 @@ const AppMenu = () => {
     //customise list of menu items for quemistry
     const model: AppMenuItem[] = [
         {
-            label: 'Home',
+            label: 'Workdesk',
             items: [
                 {
                     label: 'Practice',
@@ -44,7 +44,8 @@ const AppMenu = () => {
                         // { label: 'Results', icon: 'pi pi-fw pi-chart-bar', to: '/quiz/results', visible: accessibleBy(['student']) }
                     ]
                 },
-                { label: 'Take Test', icon: 'pi pi-fw pi-graduation-cap', to: '/test', visible: accessibleBy(['student']) }
+                { label: 'Take Test', icon: 'pi pi-fw pi-graduation-cap', to: '/test', visible: accessibleBy(['student']) },
+                { label: 'Dashboard', icon: 'pi pi-fw pi-chart-line', to: '/dashboard', visible: accessibleBy(['admin', 'tutor', 'student']) }
             ]
         },
         {

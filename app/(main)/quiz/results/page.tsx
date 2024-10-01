@@ -28,7 +28,7 @@ const ResultsPage: React.FC = () => {
                 if (!quizId) {
                     throw new Error('Quiz ID is undefined');
                 }
-                const data = await QuizService.fetchQuizById(Number(quizId));;
+                const data = await QuizService.fetchQuizById(Number(quizId));
                 setQuiz(data);
             } catch (error) {
                 console.error('Error fetching quiz:', error);
