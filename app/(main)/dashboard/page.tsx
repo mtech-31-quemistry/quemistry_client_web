@@ -124,7 +124,7 @@ const Dashboard = () => {
 
             <div className="col-12 xl:col-6">
                 <div className="card">
-                    <h5>Top most difficult topics-skills</h5>
+                    <h5>Worst performed topics-skills</h5>
                     <Chart type="bar" data={topicSkillStats} options={chartOptions} />
                 </div>
             </div>
