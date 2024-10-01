@@ -508,37 +508,38 @@ const QuizPage: React.FC = () => {
                                 <div className="cardOption">
                                     <span dangerouslySetInnerHTML={{ __html: currentQuestion.stem }} />
                                 </div>
-                                {currentQuestion.options && currentQuestion.options.map((option) => (
-                                    <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
-                                        <div className="card">
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                <input
-                                                    type="radio"
-                                                    id={`option-${option.no}`}
-                                                    name={`mcq-${currentQuestion.id}`}
-                                                    checked={selectedOptions[currentQuestion.id] === option.no}
-                                                    onChange={() => handleOptionClickQuiz(currentQuestion.id, option.no)}
-                                                    disabled={isRadioDisabled}
-                                                />
-                                                <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
-                                            </div>
-                                            {explanationsVisible[option.no] && (
-                                                <div>
-                                                    {option.isAnswer ? (
-                                                        <div className="explanation-container" style={{ color: 'green' }}>
-                                                            <strong>Correct Answer</strong>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="explanation-container" style={{ color: 'red' }}>
-                                                            <strong>Incorrect Answer</strong>
-                                                        </div>
-                                                    )}
-                                                    <div className="explanation-container" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
+                                {currentQuestion.options &&
+                                    currentQuestion.options.map((option) => (
+                                        <label key={option.no} className="option-label" htmlFor={`option-${option.no}`} style={{ display: 'block', cursor: 'pointer' }}>
+                                            <div className="card">
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    <input
+                                                        type="radio"
+                                                        id={`option-${option.no}`}
+                                                        name={`mcq-${currentQuestion.id}`}
+                                                        checked={selectedOptions[currentQuestion.id] === option.no}
+                                                        onChange={() => handleOptionClickQuiz(currentQuestion.id, option.no)}
+                                                        disabled={isRadioDisabled}
+                                                    />
+                                                    <span dangerouslySetInnerHTML={{ __html: option.text }}></span>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </label>
-                                ))}
+                                                {explanationsVisible[option.no] && (
+                                                    <div>
+                                                        {option.isAnswer ? (
+                                                            <div className="explanation-container" style={{ color: 'green' }}>
+                                                                <strong>Correct Answer</strong>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="explanation-container" style={{ color: 'red' }}>
+                                                                <strong>Incorrect Answer</strong>
+                                                            </div>
+                                                        )}
+                                                        <div className="explanation-container" dangerouslySetInnerHTML={{ __html: option.explanation }}></div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </label>
+                                    ))}
                                 {isAnswerSubmitted ? (
                                     currentQuestionIndex < (quiz?.mcqs?.content?.length || 0) - 1 ? (
                                         <Button
@@ -576,9 +577,7 @@ const QuizPage: React.FC = () => {
                     )}
                     {showScore && showScoreMessage && (
                         <div>
-                            <p>
-                                {showScoreMessage}
-                            </p>
+                            <p>{showScoreMessage}</p>
                             <div>
                                 <Button onClick={handleViewResults}>View History</Button>
                             </div>
