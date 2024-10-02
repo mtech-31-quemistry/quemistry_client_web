@@ -10,6 +10,8 @@ import { UserService } from '@/service/UserService';
 import AppMessages, { AppMessage } from '../../../components/AppMessages';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Calendar } from 'primereact/calendar';
+import { Nullable } from 'primereact/ts-helpers';
 
 interface ClassMap {
     descriptionName: string;
@@ -25,6 +27,9 @@ const Classes = () => {
     const [classes, setClasses] = useState<ClassResponse[]>([]);
     const router = useRouter();
 
+    const [startDate, setStartDate] = useState<Nullable<Date>>(null);
+    const [endDate, setEndDate] = useState<any>('');
+
     const appMsg = useRef<AppMessage>(null);
 
     useEffect(() => {
@@ -36,7 +41,7 @@ const Classes = () => {
         return { descriptionName, apiName, defaultValue, value, setValue };
     };
 
-    const classMapList = [useGenerateClassMap('Class Code', 'code'), useGenerateClassMap('Class Name', 'description'), useGenerateClassMap('Class Education Level', 'educationLevel'), useGenerateClassMap('Class Subject', 'subject', 'Chemistry')];
+    const classMapList = [useGenerateClassMap('Class Name', 'description'), useGenerateClassMap('Class Education Level', 'educationLevel'), useGenerateClassMap('Class Subject', 'subject', 'Chemistry')];
 
     const clearNewClass = () => {
         setAddClass(false);
@@ -46,7 +51,11 @@ const Classes = () => {
     const fetchClasses = async () => setClasses(await UserService.getClasses());
 
     const saveClass = async () => {
-        const selectedClass = classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class;
+        let selectedClass = classMapList.reduce((classFields, { apiName, value }) => ({ ...classFields, [apiName]: value }), {}) as Class;
+        selectedClass.startDate = startDate!;
+        selectedClass.endDate = endDate!;
+
+        console.log(selectedClass);
 
         if (classId > 0) await UserService.updateClass(selectedClass, classId);
         else await UserService.addClass(selectedClass);
@@ -95,6 +104,8 @@ const Classes = () => {
         setClassId(selectedClass.id);
         setAddClass(true);
         classMapList.forEach((classMap, index) => classMapList[index].setValue((selectedClass as any)[classMap.apiName]));
+        setStartDate(selectedClass.startDate == null ? null : new Date(selectedClass.startDate));
+        setEndDate(selectedClass.endDate == null ? null : new Date(selectedClass.endDate));
     };
 
     const ViewDetails = (selectedClass: ClassResponse) => {
@@ -120,6 +131,24 @@ const Classes = () => {
                     </Fragment>
                     <Dialog header="Add/Edit Class" style={{ width: '50vw' }} visible={addClass} onHide={() => addClass && clearNewClass()} footer={addClassFooter}>
                         {classMapList.map(({ descriptionName, value, setValue }) => renderField(descriptionName, value, ({ target }) => setValue(target.value)))}
+
+                        <div className="field grid">
+                            <label htmlFor="startDate" className="col-12 mb-2 md:col-2 md:mb-0">
+                                Class Start Date
+                            </label>
+                            <div className="col-12 md:col-10">
+                                <Calendar value={startDate} onChange={(e) => setStartDate(e.value!)} dateFormat="yy-mm-dd" selectionMode="single" />
+                            </div>
+                        </div>
+
+                        <div className="field grid">
+                            <label htmlFor="startDate" className="col-12 mb-2 md:col-2 md:mb-0">
+                                Class End Date
+                            </label>
+                            <div className="col-12 md:col-10">
+                                <Calendar value={endDate} onChange={(e) => setEndDate(e.value!)} dateFormat="yy-mm-dd" selectionMode="single" />
+                            </div>
+                        </div>
                     </Dialog>
                     <h5>Manage Classes</h5>
                     <DataTable value={classes} tableStyle={{ minWidth: '20rem' }}>

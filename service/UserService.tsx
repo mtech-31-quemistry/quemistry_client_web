@@ -4,6 +4,7 @@ const classUrl = process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL || '';
 const getAllClassesUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}`;
 const acceptInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/accept-invitation`;
 const sendInvitationUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_STUDENTS_INVITATION_URL}/send-invitation`;
+const removeStudentsFromClassUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_CLASS_URL}/remove-student`;
 const tutorProfileUrl = `${process.env.NEXT_PUBLIC_QUEMISTRY_TUTOR_URL}/profile`;
 
 import api from './ConnectionService';
@@ -37,6 +38,13 @@ export const UserService = {
     async sendInvitation(inviteStudent: InviteStudent) {
         const body = JSON.stringify(inviteStudent);
         return (await api<UserServiceResponse<boolean>>({ url: sendInvitationUrl, body, method: 'POST' })).payload;
+    },
+    async removeStudentsFromClass(classId: number, studentEmails: string[]) {
+        const body = JSON.stringify({
+            emails: studentEmails,
+            classId: classId
+        });
+        return (await api<UserServiceResponse<boolean>>({ url: removeStudentsFromClassUrl, body, method: 'POST' })).payload;
     },
     getTutorProfile(): Promise<Tutor | null | undefined> {
         return fetch(tutorProfileUrl, {

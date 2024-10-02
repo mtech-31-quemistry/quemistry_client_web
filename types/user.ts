@@ -50,7 +50,7 @@ interface StudentInvitationResponse {
 interface InviteStudent {
     studentEmail: string;
     studentFullName: string;
-    classCode: string;
+    classId: number;
 }
 
 interface InputClass {

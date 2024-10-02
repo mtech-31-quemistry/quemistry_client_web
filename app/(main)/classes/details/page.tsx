@@ -6,11 +6,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Panel } from 'primereact/panel';
 import { UserService } from '@/service/UserService';
 import moment from 'moment';
-import { DataTable } from 'primereact/datatable';
+import { DataTable, DataTableSelectionMultipleChangeEvent } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import CreateInvitationComponent from '@/app/(main)/classes/details/CreateInvitationComponent';
 import { Dialog } from 'primereact/dialog';
+import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog';
 
 const ClassDetails = () => {
     const router = useRouter();
@@ -25,6 +26,9 @@ const ClassDetails = () => {
     const [inviteStudentStatus, setInviteStudentStatus] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [showDialog, setShowDialog] = useState<boolean>(false);
+    const [enabledRemoveStudents, setEnabledRemoveStudents] = useState<boolean>(true);
+
+    const [selectedStudents, setSelectedStudents] = useState<any>(null);
 
     useEffect(() => {
         UserService.getClassById(classId).then((classResponse) => {
@@ -35,7 +39,7 @@ const ClassDetails = () => {
                 setStudents(classResponse.classInvitations.map((v) => ({ userEmail: v.userEmail, status: v.status, firstName: v.firstName || '-', lastName: v.lastName || '-' } as ClassInvitation)));
             }
         });
-    }, [inviteStudentStatus]);
+    }, [classId, inviteStudentStatus]);
 
     const headerTemplate = (options: any) => {
         const className = `${options.className} justify-content-space-between`;
@@ -46,11 +50,45 @@ const ClassDetails = () => {
                     <span className="font-bold">Students</span>
                 </div>
                 <div>
+                    <Button label="Remove" icon="pi pi-user-minus" onClick={removeStudents} text disabled={enabledRemoveStudents} />
                     <Button label="Add" icon="pi pi-user-plus" onClick={() => setShowDialog(true)} text />
                     {options.togglerElement}
                 </div>
             </div>
         );
+    };
+
+    const removeStudents = () => {
+        confirmDialog({
+            header: 'Confirmation',
+            message: (
+                <div className="flex flex-column align-items-center w-full gap-3 surface-border">
+                    <i className="pi pi-exclamation-triangle text-3xl text-primary-500"></i>
+                    <span>The below email(s) will be removed from the invitation list. Are you sure you want to continue?</span>
+                    {selectedStudents.map(({ userEmail }: { userEmail: string }) => {
+                        return (
+                            <span className="font-bold" key={userEmail}>
+                                {userEmail}
+                            </span>
+                        );
+                    })}
+                </div>
+            ),
+            accept() {
+                let emails: string[] = [];
+                selectedStudents.map(({ userEmail }: { userEmail: string }) => emails.push(userEmail));
+                UserService.removeStudentsFromClass(Number(classId), emails)
+                    .then(() => {
+                        appMsg.current?.showSuccess('Successfully withdrew the the selected student(s) from the class', true);
+                        setSelectedStudents(null);
+                        setStudents([]);
+                        setInviteStudentStatus(!inviteStudentStatus);
+                        setEnabledRemoveStudents(true);
+                    })
+                    .catch(() => appMsg.current?.showError(`Error removing students from the class. Please contact customer support for more info.`));
+            },
+            reject() {}
+        });
     };
 
     const clearInviteStudent = () => {
@@ -65,7 +103,7 @@ const ClassDetails = () => {
             await UserService.sendInvitation({
                 studentEmail: email.trim(),
                 studentFullName: fullName.trim(),
-                classCode: classDetails!.code
+                classId: classDetails!.id
             });
             invitationResponse(true);
         } catch (e) {
@@ -73,7 +111,7 @@ const ClassDetails = () => {
         } finally {
             clearInviteStudent();
             setLoading(false);
-            setInviteStudentStatus(true);
+            setInviteStudentStatus(!inviteStudentStatus);
         }
     };
 
@@ -89,11 +127,17 @@ const ClassDetails = () => {
         </div>
     );
 
+    const checkboxSelectionEvent = (e: DataTableSelectionMultipleChangeEvent<any>) => {
+        setSelectedStudents(e.value);
+        setEnabledRemoveStudents(!(e.value.length > 0));
+    };
+
     return (
         <div className="grid">
             <AppMessages ref={appMsg} />
+            <ConfirmDialog />
 
-            <Dialog header="Invite Student" style={{ width: '50vw' }} visible={showDialog} onHide={() => showDialog || clearInviteStudent()} footer={addStudentFooter}>
+            <Dialog header="Invite Student" style={{ width: '50vw' }} visible={showDialog} onHide={() => !showDialog || clearInviteStudent()} footer={addStudentFooter}>
                 <CreateInvitationComponent setEmail={setEmail} email={email} setFullName={setFullName} fullName={fullName} loading={loading} />
             </Dialog>
 
@@ -101,8 +145,8 @@ const ClassDetails = () => {
                 <div className="grid">
                     <div className="col-3">
                         <div className="text-left p-3 border-round-sm">
-                            <label className="font-bold text-lg">Code</label>
-                            <p>{classDetails?.code}</p>
+                            <label className="font-bold text-lg">Id</label>
+                            <p>{classDetails?.id}</p>
                         </div>
                     </div>
                     <div className="col-3">
@@ -155,7 +199,8 @@ const ClassDetails = () => {
             </Panel>
 
             <Panel header="Students" className="col-12" toggleable headerTemplate={headerTemplate}>
-                <DataTable value={students} tableStyle={{ minWidth: '20rem' }}>
+                <DataTable value={students} tableStyle={{ minWidth: '20rem' }} selectionMode="checkbox" selection={selectedStudents} onSelectionChange={checkboxSelectionEvent}>
+                    <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
                     <Column field="userEmail" header="Email" />
                     <Column field="firstName" header="First Name" />
                     <Column field="lastName" header="Last Name" />
