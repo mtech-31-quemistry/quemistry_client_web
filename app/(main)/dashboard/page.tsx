@@ -61,7 +61,7 @@ const Dashboard = () => {
         };
 
         setChartOptions(chartOptions);
-    }, []);
+    }, [textColor, textColorSecondary, surfaceBorder]);
 
     useEffect(() => {
         StatisticService.getTopicSkillStatistics(0, 10).then((statsResponse) => {
@@ -131,7 +131,7 @@ const Dashboard = () => {
                     <h5>Top 10 Topics/Skill for Improvement</h5>
                     <Chart type="bar" data={topicSkillStats} options={chartOptions} />
                     {
-                        top10SkillNames.map((skill, i) => <p>{i+1}. {skill}</p>)
+                        top10SkillNames.map((skill, i) => <p key={i}>{i+1}. {skill}</p>)
                     }
                 </div>
             </div>
