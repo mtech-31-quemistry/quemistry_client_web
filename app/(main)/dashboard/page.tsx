@@ -16,44 +16,45 @@ const Dashboard = () => {
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
 
-    const [chartOptions, setChartOptions] = useState<ChartOptions>({});
+    const [chartOptions, setChartOptions] = useState({});
     const [topicSkillStats, setTopicSkillStats] = useState<ChartData>();
+    const [top10SkillNames, settop10SkillNames] = useState<string[]>([]);
 
     const { layoutConfig } = useContext(LayoutContext);
     const appMsg = useRef<AppMessage>(null);
 
     useEffect(() => {
         const chartOptions = {
+            indexAxis: 'y',
             maintainAspectRatio: false,
-            aspectRatio: 0.8,
+            aspectRatio: 1,
             plugins: {
-                tooltips: {
-                    mode: 'index',
-                    intersect: false
-                },
                 legend: {
                     labels: {
-                        color: textColor
+                        fontColor: textColor
                     }
                 }
             },
             scales: {
                 x: {
-                    stacked: false,
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,
+                        font: {
+                            weight: 500
+                        }
                     },
                     grid: {
-                        color: surfaceBorder
+                        display: false,
+                        drawBorder: false
                     }
                 },
                 y: {
-                    stacked: false,
                     ticks: {
                         color: textColorSecondary
                     },
                     grid: {
-                        color: surfaceBorder
+                        color: surfaceBorder,
+                        drawBorder: false
                     }
                 }
             }
@@ -66,13 +67,15 @@ const Dashboard = () => {
         StatisticService.getTopicSkillStatistics(0, 10).then((statsResponse) => {
             let topicSkillStat = statsResponse.data;
             let chartLabels: string[] = [];
+            let top10FullNames: string[] = [];
             let totalAttempts: number[] = [];
             let correctAnswers: number[] = [];
 
             //labels
             //array of data set
             topicSkillStat.map((item) => {
-                chartLabels.push(item.topicName + ' - ' + item.skillName);
+                top10FullNames.push(item.topicName + ' - ' + item.skillName);
+                chartLabels.push(item.skillName.substring(0, 20));
                 totalAttempts.push(item.cntAttempt);
                 correctAnswers.push(item.cntCorrectAnswer);
             });
@@ -97,6 +100,7 @@ const Dashboard = () => {
                     }
                 ]
             };
+            settop10SkillNames(top10FullNames);
             setTopicSkillStats(chartData);
         });
     }, []);
@@ -124,8 +128,11 @@ const Dashboard = () => {
 
             <div className="col-12 xl:col-6">
                 <div className="card">
-                    <h5>Worst performed topics-skills</h5>
+                    <h5>Top 10 Topics/Skill for Improvement</h5>
                     <Chart type="bar" data={topicSkillStats} options={chartOptions} />
+                    {
+                        top10SkillNames.map((skill, i) => <p>{i+1}. {skill}</p>)
+                    }
                 </div>
             </div>
         </div>
