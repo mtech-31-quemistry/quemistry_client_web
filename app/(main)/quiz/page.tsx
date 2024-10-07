@@ -291,33 +291,6 @@ const QuizPage: React.FC = () => {
         setSelectedSkills(newSelectedSkills);
     }, [selectedTopicNodes]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const retrieveQuestionRequest = {
-                topics: selectedTopics,
-                skills: selectedSkills,
-                pageNumber: 0,
-                pageSize: 600
-            };
-
-            try {
-                const mcqResponse = (await QuestionsService.retrieveMCQ(retrieveQuestionRequest)).mcqs;
-                if (mcqResponse && mcqResponse) {
-                    const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
-                    const count = uniqueIds.size;
-                    setGeneratedQuestionCount(count);
-                } else {
-                    setGeneratedQuestionCount(0);
-                }
-            } catch (error) {
-                console.error('Error retrieving MCQs:', error);
-                setGeneratedQuestionCount(0);
-            }
-        };
-
-        fetchData();
-    }, [selectedTopics, selectedSkills]);
-
     const calculateScore = () => {
         if (!quiz) return;
 

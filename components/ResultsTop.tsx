@@ -79,7 +79,7 @@ export default function ResultsTopComponent({ onQuestionClick, currentQuestionIn
 
     return (
         <div className="card">
-            <h5>Results for Quiz ID: {specificQuiz.id}</h5>
+            <h5>My Answers</h5>
             <div className="progress-bar-container mb-3">
                 {progress.map((correct: boolean, index: number) => (
                     <div key={index} className="progress-bar-segment">
