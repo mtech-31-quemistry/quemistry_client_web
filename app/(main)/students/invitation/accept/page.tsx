@@ -11,7 +11,7 @@ const InvitationPage = () => {
     const storeInvitationResponse = useCallback(
         (result: boolean) => {
             sessionStorage.setItem('invitation_result', String(result));
-            router.push('/quiz');
+            router.push('/quiz/practice');
         },
         [router]
     );
