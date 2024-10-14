@@ -40,7 +40,7 @@ export const QuizService = {
       console.log('Fetching In Progress Quiz from API...');
       const headers = ApiHelper.getRequestHeaders();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=${questionCount}`,
+        `${process.env.NEXT_PUBLIC_QUEMISTRY_QUIZZES_URL}/me/in-progress?pageNumber=0&pageSize=60`,
         {
           headers: headers,
           credentials: "include"

@@ -3,7 +3,7 @@ import './quiz.css';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState, Fragment, useRef } from 'react';
 import { Quiz } from '@/types';
-import { QuizService } from '../../../service/QuizService';
+import { QuizService } from '../../../../service/QuizService';
 import { Button } from 'primereact/button';
 import { QuestionsService } from '@/service/QuestionsService';
 import { Questions } from '@/types';
@@ -290,33 +290,6 @@ const QuizPage: React.FC = () => {
         setSelectedTopics(newSelectedTopics);
         setSelectedSkills(newSelectedSkills);
     }, [selectedTopicNodes]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const retrieveQuestionRequest = {
-                topics: selectedTopics,
-                skills: selectedSkills,
-                pageNumber: 0,
-                pageSize: 600
-            };
-
-            try {
-                const mcqResponse = (await QuestionsService.retrieveMCQ(retrieveQuestionRequest)).mcqs;
-                if (mcqResponse && mcqResponse) {
-                    const uniqueIds = new Set(mcqResponse.map((mcq) => mcq.id));
-                    const count = uniqueIds.size;
-                    setGeneratedQuestionCount(count);
-                } else {
-                    setGeneratedQuestionCount(0);
-                }
-            } catch (error) {
-                console.error('Error retrieving MCQs:', error);
-                setGeneratedQuestionCount(0);
-            }
-        };
-
-        fetchData();
-    }, [selectedTopics, selectedSkills]);
 
     const calculateScore = () => {
         if (!quiz) return;

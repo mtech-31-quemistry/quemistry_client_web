@@ -4,26 +4,26 @@ import { USER, IS_LOGIN } from '@/lib/constants'
 let queryParameters = '';
 export const RouteGuard = {
 
-    isLogin(){
-        if(typeof sessionStorage !== "undefined"){
+    isLogin() {
+        if (typeof sessionStorage !== "undefined") {
             return sessionStorage?.getItem(IS_LOGIN) == "true" || false;
         }
-        else{
+        else {
             return false;
         }
     },
-    loginUser(){
-        if(this.isLogin()){
-            return  JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile;
+    loginUser() {
+        if (this.isLogin()) {
+            return JSON.parse(sessionStorage.getItem(USER) || '') as UserProfile;
         }
-        else{
+        else {
             return null;
         }
     },
-    apply(path: string, queryString: string):boolean{
+    apply(path: string, queryString: string): boolean {
         queryParameters = path + "?" + queryString;
-        if(process.env.NODE_ENV === 'development') return true;
-        switch(path){
+        if (process.env.NODE_ENV === 'development') return true;
+        switch (path) {
             case '/':
                 return true;
             case '/auth/google':
@@ -34,7 +34,7 @@ export const RouteGuard = {
                 return true;
             case '/profile/edit':
                 return this.accessibleBy(['student', 'tutor']);
-            case '/quiz':
+            case '/quiz/practice':
                 return this.accessibleBy(['student']);
             case '/test':
                 return this.accessibleBy(['student']);
@@ -64,11 +64,11 @@ export const RouteGuard = {
                 return false;
         }
     },
-    accessibleBy (roles: string[]): boolean {
+    accessibleBy(roles: string[]): boolean {
         const canAccess = this.isLogin() && this.loginUser()?.roles.some(role => roles.includes(role)) || false;
 
         if (!canAccess) {
-            sessionStorage.setItem("redirection",  queryParameters);
+            sessionStorage.setItem("redirection", queryParameters);
         }
 
         return canAccess;
