@@ -9,7 +9,7 @@ const AppFooter = () => {
     return (
         <div className="layout-footer">
             <img src={`/layout/images/logo-${layoutConfig.colorScheme === 'light' ? 'dark' : 'white'}.png`} alt="Logo" height="20" className="mr-2" />
-            <span className="font-medium ml-2">&copy; 2024 by Quemistry</span>
+            <span className="font-medium ml-2">&copy; Copyright 2024 by Quemistry</span>
         </div>
     );
 };
