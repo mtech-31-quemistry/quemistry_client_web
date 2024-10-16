@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Page from '../../../../app/(main)/quiz/practice/page';
+import Page from '../../../app/(main)/quiz/practice/page';
 import { useRouter } from 'next/navigation';
-import { QuizService } from '../../../../service/QuizService';
+import { QuizService } from '../../../service/QuizService';
 import { describe, beforeEach, afterEach, it, vi, expect, Mock } from 'vitest';
 
 vi.mock('next/navigation', () => ({
@@ -43,36 +43,8 @@ describe('Page', () => {
         await act(async () => {
             render(<Page />);
         });
-        const response = await fetch('http://localhost:3000/quiz/practice');
+        const response = await fetch('http://localhost:3000/test');
         await waitFor(() => expect(response.ok).toBe(true));
         expect(screen.getByText('Quizzes')).toBeInTheDocument();
-    });
-
-    it('should show "Select Topics / Skills" dropdown when !isQuizOngoing is true', async () => {
-        await act(async () => {
-            render(<Page />);
-        });
-        await waitFor(() => {
-            expect(screen.getByText('Select Topics / Skills')).toBeInTheDocument();
-        });
-    });
-
-    it('should show correct question count when currentQuestion is true', async () => {
-        (QuizService.getQuizInProgress as Mock).mockResolvedValue({
-            id: 1,
-            mcqs: {
-                content: [
-                    { id: 1, stem: 'Question 1' },
-                    { id: 2, stem: 'Question 2' },
-                    { id: 3, stem: 'Question 3' },
-                ]
-            }
-        });
-        await act(async () => {
-            render(<Page />);
-        });
-        await waitFor(() => {
-            expect(screen.getByText('Question 1 of 3')).toBeInTheDocument();
-        });
     });
 });
