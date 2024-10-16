@@ -1,10 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom'; // Import jest-dom matchers
 import Page from '../../../../app/(main)/quiz/practice/page';
 import { useRouter } from 'next/navigation';
 import { QuizService } from '../../../../service/QuizService';
-import { QuestionsService } from '../../../../service/QuestionsService';
 
 // Mock the useRouter hook
 vi.mock('next/navigation', () => ({
@@ -45,8 +44,10 @@ describe('Page', () => {
             })
         ) as jest.Mock;
 
-        // Render the page
-        render(<Page />);
+        // Wrap the rendering and state updates in act()
+        await act(async () => {
+            render(<Page />);
+        });
 
         // Simulate loading the URL
         const response = await fetch('http://localhost:3000/quiz/practice');

@@ -1,17 +1,17 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 
 export default defineConfig({
     resolve: {
         alias: {
-            '@': '/',
+            '@': resolve(__dirname, './'),
         },
     },
     test: {
-        globals: true, // Enable global APIs
-        environment: 'jsdom', // Use jsdom environment for browser-like testing
-        css: false,
-        setupFiles: './vitest.setup.ts', // Optional setup file
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './vitest.setup.ts',
     },
-    plugins: [react()], // Add the React plugin
+    plugins: [react()],
 });
