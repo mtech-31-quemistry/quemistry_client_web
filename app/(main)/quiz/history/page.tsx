@@ -54,7 +54,7 @@ const achievementBodyTemplate = (rowData: ProcessedQuiz) => {
     const earnedPoints = rowData.points;
     const percentage = (earnedPoints / totalPoints) * 100;
 
-    let severity: 'success' | 'warning' | 'danger' = 'danger'; // Default to danger
+    let severity: 'success' | 'warning' | 'danger' = 'danger';
     if (percentage >= 80) {
         severity = 'success';
     } else if (percentage >= 50) {
@@ -76,14 +76,7 @@ const QuizHistory: React.FC = () => {
         const fetchData = async () => {
             try {
                 const responseData = await QuizService.getQuizCompleted();
-                // if (responseData.message === 'Quiz not found') {
-                //     setError('Quiz not found');
-                //     setLoading(false);
-                //     return;
-                // }
                 setQuiz(responseData);
-
-                // Process the data to calculate counts and extract unique topics and skills
                 const processedData = responseData.content
                     .map((quiz: Quiz.QuizTaken) => {
                         const topicsMap = new Map<number, Topic>();
@@ -105,7 +98,7 @@ const QuizHistory: React.FC = () => {
                             mcqsCount: quiz.mcqs.length
                         } as ProcessedQuiz;
                     })
-                    .sort((a, b) => new Date(b.attemptOn!).getTime() - new Date(a.attemptOn!).getTime()); // Sort by attemptOn in descending order
+                    .sort((a, b) => new Date(b.attemptOn!).getTime() - new Date(a.attemptOn!).getTime());
 
                 setProcessedQuizzes(processedData);
             } catch (error) {
@@ -157,7 +150,6 @@ const QuizHistory: React.FC = () => {
                     <p>You currently have completed {quiz?.content ? quiz.content.length : 0} quizzes.</p>
                     <DataTable value={processedQuizzes} tableStyle={{ minWidth: '50rem' }} sortField="attemptOn" sortOrder={-1} defaultSortOrder={1}>
                         <Column body={dateBodyTemplate} header="Attempted On" sortable field="attemptOn"></Column>
-                        {/* <Column body={idBodyTemplate} header="Quiz Number" sortable field="id"></Column> */}
                         <Column body={topicsBodyTemplate} header="Topics" field="topic"></Column>
                         <Column body={skillsBodyTemplate} header="Skills" field="skill"></Column>
                         <Column body={achievementBodyTemplate} header="Achievement" field="score"></Column>

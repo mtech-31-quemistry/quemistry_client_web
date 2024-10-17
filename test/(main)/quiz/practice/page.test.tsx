@@ -48,7 +48,7 @@ describe('Page', () => {
         expect(screen.getByText('Quizzes')).toBeInTheDocument();
     });
 
-    it('should show "Select Topics / Skills" dropdown when !isQuizOngoing is true', async () => {
+    it('should show "Select Topics / Skills" dropdown when quiz is not yet started', async () => {
         await act(async () => {
             render(<Page />);
         });
@@ -57,7 +57,7 @@ describe('Page', () => {
         });
     });
 
-    it('should show correct question count when currentQuestion is true', async () => {
+    it('should show correct question count when quiz is started', async () => {
         (QuizService.getQuizInProgress as Mock).mockResolvedValue({
             id: 1,
             mcqs: {

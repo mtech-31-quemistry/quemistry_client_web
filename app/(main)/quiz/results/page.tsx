@@ -8,21 +8,18 @@ import { QuizService } from '@/service/QuizService';
 const ResultsPage: React.FC = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [reload, setReload] = useState(false);
-    const [quiz, setQuiz] = useState<Quiz.QuizTaken | null>(null); // Add state for the quiz data
+    const [quiz, setQuiz] = useState<Quiz.QuizTaken | null>(null);
 
     const searchParams = useSearchParams();
     const quizIdParam = searchParams.get('quizId');
 
-    // Retrieve the last visited quizId from local storage
     const [quizId, setQuizId] = useState<string | null>(quizIdParam || (typeof window !== 'undefined' ? localStorage.getItem('lastVisitedQuizId') : null) || null);
 
     useEffect(() => {
-        // Store the current quizId in local storage
         if (quizId) {
             localStorage.setItem('lastVisitedQuizId', quizId);
         }
 
-        // Fetch quiz data based on quizId
         const fetchQuiz = async () => {
             try {
                 if (!quizId) {

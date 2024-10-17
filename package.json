@@ -2,6 +2,7 @@
   "name": "quesmistry-react",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "npm run format && next lint && next dev",
     "build": "npm run test && next build",

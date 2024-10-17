@@ -38,7 +38,6 @@ const QuizPage: React.FC = () => {
     const router = useRouter();
     const appMsg = useRef<AppMessage>(null);
 
-    // Retrieve selectedQuestionCount from local storage on component mount
     useEffect(() => {
         const storedQuestionCount = localStorage.getItem('selectedQuestionCount');
         if (storedQuestionCount) {
@@ -101,7 +100,6 @@ const QuizPage: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log(selectedQuestionCount);
                 const storedQuestionCount = Number(localStorage.getItem('selectedQuestionCount'));
                 const responseData = await QuizService.getQuizInProgress(storedQuestionCount);
                 if (responseData.message === 'Quiz not found') {
@@ -114,7 +112,7 @@ const QuizPage: React.FC = () => {
                     initialSelectedOptions[mcq.id] = 0;
                 });
                 setSelectedOptions(initialSelectedOptions);
-                setQuizIdAvailable(true); // Set quizIdAvailable to true once quiz data is fetched
+                setQuizIdAvailable(true);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -167,7 +165,7 @@ const QuizPage: React.FC = () => {
             console.error('No quiz to abandon');
             return;
         }
-        setIsAbandoning(true); // Set isAbandoning to true to disable further actions
+        setIsAbandoning(true);
         try {
             await QuizService.abandonQuiz(quiz.id);
             setQuiz((prevQuiz: any) => ({
@@ -185,7 +183,7 @@ const QuizPage: React.FC = () => {
         } catch (error) {
             console.error('Error abandoning quiz:', error);
         } finally {
-            setIsAbandoning(false); // Set isAbandoning to false once the call is complete
+            setIsAbandoning(false);
             setIsQuizOngoing(false);
             window.location.reload();
         }
@@ -226,7 +224,7 @@ const QuizPage: React.FC = () => {
                 icon="pi pi-save"
                 onClick={confirmExit}
                 autoFocus
-                disabled={isAbandoning} // Disable the button while the quiz is being abandoned
+                disabled={isAbandoning}
             />
         </div>
     );
@@ -319,7 +317,6 @@ const QuizPage: React.FC = () => {
         localStorage.setItem('showScoreMessage', showScoreMessage);
     };
 
-    // Save currentQuestionIndex to local storage whenever it changes
     useEffect(() => {
         localStorage.setItem('currentQuestionIndex', currentQuestionIndex.toString());
     }, [currentQuestionIndex]);
@@ -355,13 +352,13 @@ const QuizPage: React.FC = () => {
                 }
             });
         }
-        setIsStartingNewQuiz(true); // Set isStartingNewQuiz to true to disable the button
+        setIsStartingNewQuiz(true);
         try {
             await QuizService.startNewQuiz(selectedTopics, selectedSkills, selectedQuestionCount);
         } catch (error) {
             console.error('Error starting new quiz:', error);
         } finally {
-            setIsStartingNewQuiz(false); // Set isStartingNewQuiz to false once the call is complete
+            setIsStartingNewQuiz(false);
             window.location.reload();
         }
     };
@@ -373,7 +370,6 @@ const QuizPage: React.FC = () => {
         }));
     };
 
-    // Store selectedQuestionCount in local storage whenever it changes
     useEffect(() => {
         localStorage.setItem('selectedQuestionCount', selectedQuestionCount.toString());
     }, [selectedQuestionCount]);
@@ -381,7 +377,7 @@ const QuizPage: React.FC = () => {
     const questionOptions = Array.from({ length: 60 }, (_, i) => ({
         label: `${i + 1} question${i + 1 > 1 ? 's' : ''}`,
         value: i + 1
-    })).reverse(); // Reverse the array
+    })).reverse();
 
     return (
         <div className="grid">

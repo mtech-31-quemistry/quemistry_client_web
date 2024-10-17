@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Page from '../../../app/(main)/dashboard/page';
@@ -34,7 +34,7 @@ vi.mock('primereact/chart', () => ({
 // Mock the AppMessages component
 vi.mock('@/components/AppMessages', () => ({
     __esModule: true,
-    default: vi.fn(() => null),
+    default: forwardRef((props, ref) => null),
 }));
 
 describe('Dashboard Page', () => {

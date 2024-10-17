@@ -23,7 +23,6 @@ const EditProfile = () => {
     }, []);
     const onSubmit = (data: Tutor) => {
         UserService.updateTutorProfile(data).then((data) => {
-            console.log('Saved outout', data);
             reset(data);
             appMsg.current?.showSuccess('Profile updated successfully');
         });
