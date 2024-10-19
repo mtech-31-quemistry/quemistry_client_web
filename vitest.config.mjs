@@ -12,6 +12,11 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
         setupFiles: './vitest.setup.mjs',
+        coverage: {
+            provider: 'istanbul',
+            reporter: ['text', 'json', 'html', 'lcov'],
+            reportsDirectory: './coverage',
+        },
     },
     plugins: [react()],
 });
