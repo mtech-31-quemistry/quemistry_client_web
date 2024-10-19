@@ -1,10 +1,11 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Page from '../../../../app/(main)/quiz/practice/page';
 import { useRouter } from 'next/navigation';
 import { QuizService } from '../../../../service/QuizService';
 import { describe, beforeEach, afterEach, it, vi, expect, Mock } from 'vitest';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 vi.mock('next/navigation', () => ({
     useRouter: vi.fn(),
@@ -75,4 +76,57 @@ describe('Page', () => {
             expect(screen.getByText('Question 1 of 3')).toBeInTheDocument();
         });
     });
+
+    it('handles option click correctly', async () => {
+        (QuizService.getQuizInProgress as Mock).mockResolvedValueOnce({
+          id: 1,
+          mcqs: {
+            content: [{ id: 1, question: 'Question 1', options: [{ no: 1, text: 'Option 1' }, { no: 2, text: 'Option 2' }] }],
+          },
+        });
+    
+        render(
+          <Router>
+            <Page />
+          </Router>
+        );
+    
+        await waitFor(() => {
+          expect(screen.getByText(/Question 1/i)).toBeInTheDocument();
+        });
+    
+        // Click the first option
+        fireEvent.click(screen.getByLabelText('Option 1'));
+    
+        // Check if the option is selected
+        expect(screen.getByLabelText('Option 1')).toBeChecked();
+      });
+
+      it('submits the answer when the submit button is clicked', async () => {
+        (QuizService.getQuizInProgress as Mock).mockResolvedValueOnce({
+          id: 1,
+          mcqs: {
+            content: [{ id: 1, question: 'Question 1', options: [{ no: 1, text: 'Option 1' }, { no: 2, text: 'Option 2' }] }],
+          },
+        });
+    
+        render(
+          <Router>
+            <Page />
+          </Router>
+        );
+    
+        await waitFor(() => {
+          expect(screen.getByText(/Question 1/i)).toBeInTheDocument();
+        });
+    
+        // Click the first option
+        fireEvent.click(screen.getByLabelText('Option 1'));
+    
+        // Submit the answer
+        fireEvent.click(screen.getByText(/Submit/i)); // Adjust based on your button text
+    
+        // Verify that the submitAttempt function was called
+        expect(QuizService.submitAttempt).toHaveBeenCalledWith(1, 1, 1); // Adjust based on your mock implementation
+      });
 });
