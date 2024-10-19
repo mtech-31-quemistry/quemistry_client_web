@@ -48,6 +48,9 @@ jobs:
 
       - name: Test
       - run: npm run test
+        env:
+          NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
+          NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL: ${{ secrets.QUEMISTRY_GATEWAY_URL }}
 
       #Run sonar cloud scan
       - name: SonarCloud Scan
