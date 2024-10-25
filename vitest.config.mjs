@@ -19,6 +19,7 @@ export default defineConfig({
             exclude: [
                 'service/**', // Exclude specific folders or files
                 'layout/**', // Exclude specific folders or files
+                '**/*.mjs',
             ]
         },
     },
