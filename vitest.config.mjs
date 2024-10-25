@@ -15,12 +15,7 @@ export default defineConfig({
         coverage: {
             provider: 'istanbul',
             reporter: ['text', 'json', 'html', 'lcov'],
-            reportsDirectory: './coverage',
-            exclude: [
-                // '**/*.test.{ts,tsx,js,jsx}', // Exclude test files
-                // '**/*.spec.{ts,tsx,js,jsx}', // Exclude spec files
-                'layout/*.{ts,tsx,js,jsx}', // Exclude primereact files
-              ],
+            reportsDirectory: './coverage'
         },
     },
     plugins: [react()],

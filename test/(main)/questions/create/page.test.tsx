@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 // import EditQuestion from './EditQuestion';
 import Page from '../../../../app/(main)/questions/create/page';
 import { QuestionsService } from '@/service/QuestionsService';
@@ -50,7 +50,9 @@ describe('EditQuestion Component', () => {
         await waitFor(() => expect(QuestionsService.getTopics).toHaveBeenCalled());
 
         const treeSelectButton = screen.getByTestId('tree-select-topics');
-        fireEvent.click(treeSelectButton);
+        act(() => {
+            fireEvent.click(treeSelectButton);
+        });
         expect(screen.getByText(/Topic 1/i)).toBeInTheDocument();
     });
 
@@ -65,9 +67,9 @@ describe('EditQuestion Component', () => {
 
         render(<Page />);
         const generateButton = screen.getByRole('button', { name: /Generate Question/i });
-
-        fireEvent.click(generateButton);
-
+        act(() => {
+            fireEvent.click(generateButton);
+        });
         await waitFor(() => {
             expect(screen.getByText(/Generate Question works only for 1 topic with 1 or more skills selected/i)).toBeInTheDocument();
         });
@@ -77,7 +79,10 @@ describe('EditQuestion Component', () => {
         // stem and review tab cannot be tested due to dependency error
         render(<Page />);
         const optionsTab = screen.getByRole('tab', { name: /Options/i });
-        fireEvent.click(optionsTab);
+        act(() => {
+            fireEvent.click(optionsTab);
+        });
+
         expect(screen.getByText(/Add options for question/i)).toBeInTheDocument();
         expect(screen.getByTestId('next-btn')).toBeInTheDocument();
     });
