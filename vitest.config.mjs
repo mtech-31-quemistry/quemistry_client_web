@@ -15,7 +15,10 @@ export default defineConfig({
         coverage: {
             provider: 'istanbul',
             reporter: ['text', 'json', 'html', 'lcov'],
-            reportsDirectory: './coverage'
+            reportsDirectory: './coverage',
+            exclude: [
+                'service/*' // Exclude specific folders or files
+            ]
         },
     },
     plugins: [react()],
