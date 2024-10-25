@@ -34,7 +34,8 @@ declare namespace Questions {
         name: string;
         status: string;
         skills: Skill[];
-        edited: boolean = false; //false by default (only used by UI)
+        // edited: boolean = false; //false by default (only used by UI)
+        edited: boolean; //false by default (only used by UI)
     }
 
     interface Skill {
@@ -42,7 +43,8 @@ declare namespace Questions {
         name: string;
         status: string;
         topicId: number;
-        edited: boolean = false; //false by default (only used by UI)
+        // edited: boolean = false; //false by default (only used by UI)
+        edited: boolean; //false by default (only used by UI)
     }
 
     interface RetrieveQuestionRequest {
