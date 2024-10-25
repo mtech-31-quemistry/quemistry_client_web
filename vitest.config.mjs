@@ -17,8 +17,8 @@ export default defineConfig({
             reporter: ['text', 'json', 'html', 'lcov'],
             reportsDirectory: './coverage',
             exclude: [
-                '**/*.test.{ts,tsx,js,jsx}', // Exclude test files
-                '**/*.spec.{ts,tsx,js,jsx}', // Exclude spec files
+                // '**/*.test.{ts,tsx,js,jsx}', // Exclude test files
+                // '**/*.spec.{ts,tsx,js,jsx}', // Exclude spec files
                 'layout/*.{ts,tsx,js,jsx}', // Exclude primereact files
               ],
         },
