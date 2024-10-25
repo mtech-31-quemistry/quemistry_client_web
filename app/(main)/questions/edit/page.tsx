@@ -278,13 +278,14 @@ const EditQuestion = () => {
     };
     return (
         <>
-            <h5>Add Question</h5>
+            <h5>Edit Question</h5>
             <br />
             <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
                 <TabPanel header="General Information">
                     <div className="grid">
                         <div className="col-12 md:col-6 mb-5">
                             <TreeSelect
+                                data-testid='tree-select-topics'
                                 value={selectedTopicNodes}
                                 onChange={(e) => setSelectedTopicNodes(e.value)}
                                 options={topicNodes}
@@ -331,6 +332,7 @@ const EditQuestion = () => {
                     </div> */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button
+                                data-testid='next-btn'
                                 label="Next"
                                 onClick={() => {
                                     setActiveTab(1);
@@ -351,6 +353,7 @@ const EditQuestion = () => {
                     </div> */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button
+                            data-testid='next-btn'
                             label="Next"
                             onClick={() => {
                                 setActiveTab(2);
@@ -399,6 +402,7 @@ const EditQuestion = () => {
                          </div> */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button
+                                data-testid='next-btn'
                                 label="Next"
                                 onClick={() => {
                                     setActiveTab(3);
