@@ -50,8 +50,6 @@ describe('EditQuestion Component', () => {
         render(<Page />);
 
         expect(screen.getByText(/Edit Question/i)).toBeInTheDocument();
-        console.log("ernestt")
-        screen.debug();
         expect(screen.getByTestId('tree-select-topics')).toBeInTheDocument();
         expect(screen.getByRole('tab', { name: /Stem/i })).toBeInTheDocument();
         expect(screen.getByRole('tab', { name: /Options/i })).toBeInTheDocument();
