@@ -249,13 +249,14 @@ const EditQuestion = () => {
         <>
             <AppMessages ref={appMsg} />
             {!showSpinner || <ProgressSpinner style={{ width: '50px', height: '50px', position: 'fixed', left: '50%', top: '50%', opacity: '1', zIndex: '1000', background: 'transparent' }} strokeWidth="8" fill="var(--surface-ground)" />}
-            <h5>Add Question</h5>
+            <h5 data-testid="add-qn-header">Add Question</h5>
             <br />
             <TabView activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
                 <TabPanel header="General Information">
                     <div className="grid">
                         <div className="col-12 md:col-6 mb-5">
                             <TreeSelect
+                                data-testid="tree-select-topics"
                                 value={selectedTopicNodes}
                                 onChange={(e) => setSelectedTopicNodes(e.value)}
                                 options={topicNodes}
@@ -272,6 +273,7 @@ const EditQuestion = () => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button
+                                data-testid="next-btn"
                                 label="Next"
                                 onClick={() => {
                                     setActiveTab(1);
@@ -340,6 +342,7 @@ const EditQuestion = () => {
                          </div> */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button
+                                data-testid="next-btn"
                                 label="Next"
                                 onClick={() => {
                                     setActiveTab(3);
