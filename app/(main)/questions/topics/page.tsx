@@ -65,7 +65,7 @@ const ManageTopics = () => {
     const statusTemplate = (node: any) => {
         return (
             <>
-                {!node.data.id || <SelectButton value={node.data.status} onChange={(e) => onStatusChange(node, e.target.value)} options={['ACTIVE', 'INACTIVE']} />}
+                {!node.data.id || <SelectButton data-testid="active-btn" value={node.data.status} onChange={(e) => onStatusChange(node, e.target.value)} options={['ACTIVE', 'INACTIVE']} />}
                 {node.data.id != undefined || <Button label="Undo" icon="pi pi-undo" onClick={(e) => undoAddSkill(node)} />}
             </>
         );
@@ -218,6 +218,7 @@ const ManageTopics = () => {
     const startContent = (
         <React.Fragment>
             <Button
+                data-testid="add-btn" 
                 icon="pi pi-plus"
                 className="mr-2"
                 onClick={(e) => {
@@ -230,8 +231,8 @@ const ManageTopics = () => {
     //add topic footer
     const addTopicFooter = (
         <div>
-            <Button label="Cancel" icon="pi pi-times" onClick={() => setAddTopic(false)} className="p-button-text" />
-            <Button label="Save" icon="pi pi-save" onClick={() => saveTopic()} autoFocus />
+            <Button data-testid="cancel-btn" label="Cancel" icon="pi pi-times" onClick={() => setAddTopic(false)} className="p-button-text" />
+            <Button data-testid="save-btn" label="Save" icon="pi pi-save" onClick={() => saveTopic()} autoFocus />
         </div>
     );
     //footer
