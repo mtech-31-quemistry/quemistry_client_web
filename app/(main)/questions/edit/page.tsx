@@ -285,7 +285,7 @@ const EditQuestion = () => {
                     <div className="grid">
                         <div className="col-12 md:col-6 mb-5">
                             <TreeSelect
-                                data-testid='tree-select-topics'
+                                data-testid="tree-select-topics"
                                 value={selectedTopicNodes}
                                 onChange={(e) => setSelectedTopicNodes(e.value)}
                                 options={topicNodes}
@@ -332,7 +332,7 @@ const EditQuestion = () => {
                     </div> */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button
-                                data-testid='next-btn'
+                                data-testid="next-btn"
                                 label="Next"
                                 onClick={() => {
                                     setActiveTab(1);
@@ -353,7 +353,7 @@ const EditQuestion = () => {
                     </div> */}
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                         <Button
-                            data-testid='next-btn'
+                            data-testid="next-btn"
                             label="Next"
                             onClick={() => {
                                 setActiveTab(2);
@@ -402,7 +402,7 @@ const EditQuestion = () => {
                          </div> */}
                         <div style={{ display: 'flex', justifyContent: 'flex-end' }} className="col-12">
                             <Button
-                                data-testid='next-btn'
+                                data-testid="next-btn"
                                 label="Next"
                                 onClick={() => {
                                     setActiveTab(3);

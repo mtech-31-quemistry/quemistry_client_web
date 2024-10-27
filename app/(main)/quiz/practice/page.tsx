@@ -219,13 +219,7 @@ const QuizPage: React.FC = () => {
     const cancelFooter = (
         <div>
             <Button label="Cancel" icon="pi pi-times" onClick={cancelExit} className="p-button-text" />
-            <Button
-                label="Quit"
-                icon="pi pi-save"
-                onClick={confirmExit}
-                autoFocus
-                disabled={isAbandoning}
-            />
+            <Button label="Quit" icon="pi pi-save" onClick={confirmExit} autoFocus disabled={isAbandoning} />
         </div>
     );
 

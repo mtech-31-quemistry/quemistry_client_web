@@ -218,7 +218,7 @@ const ManageTopics = () => {
     const startContent = (
         <React.Fragment>
             <Button
-                data-testid="add-btn" 
+                data-testid="add-btn"
                 icon="pi pi-plus"
                 className="mr-2"
                 onClick={(e) => {

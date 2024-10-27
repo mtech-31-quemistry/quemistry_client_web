@@ -63,8 +63,6 @@ const LandingPage = () => {
                     </div>
                 </div>
 
-
-
                 <div className="py-4 px-4 mx-0 mt-8 lg:mx-8">
                     <div className="grid justify-content-between">
                         <div className="col-12 md:col-2" style={{ marginTop: '-1.5rem' }}>
@@ -80,8 +78,6 @@ const LandingPage = () => {
                                     <h4 className="font-medium text-2xl line-height-3 mb-3 text-900">Company</h4>
                                     <a className="line-height-3 text-xl block cursor-pointer mb-2 text-700">About Us</a>
                                 </div>
-
-
 
                                 <div className="col-12 md:col-3 mt-4 md:mt-0">
                                     <h4 className="font-medium text-2xl line-height-3 mb-3 text-900">Legal</h4>
