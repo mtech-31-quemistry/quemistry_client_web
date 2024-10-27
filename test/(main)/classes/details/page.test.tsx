@@ -63,27 +63,11 @@ vi.mock('@/service/UserService', () => ({
 beforeEach(() => {
   (useRouter as Mock).mockReturnValue(mockRouter);
   (useSearchParams as Mock).mockReturnValue({ get: vi.fn(() => '1') });
-
-  // Reset mocks between tests
-//   mockGetClassById.mockReset();
-//   mockRemoveStudentsFromClass.mockReset();
-//   mockSendInvitation.mockReset();
   mockRouter.push.mockReset();
 });
 
 describe('ClassDetails Component', () => {
   it('renders ClassDetails component and loads data', async () => {
-    // const classData = {
-    //   id: 1,
-    //   description: 'Physics 101',
-    //   tutors: [{ firstName: 'Jane', lastName: 'Doe', email: 'jane.doe@example.com', educationLevel: 'PhD' }],
-    //   classInvitations: [
-    //     { userEmail: 'student1@example.com', status: 'Pending', firstName: 'Student', lastName: 'One' },
-    //   ],
-    // };
-
-    // mockGetClassById.mockResolvedValue(classData);
-
     render(<Page />);
     await waitFor(() => expect(UserService.getClassById).toHaveBeenCalledWith('1'));
     expect(screen.getByText('Physics 101')).toBeInTheDocument();
