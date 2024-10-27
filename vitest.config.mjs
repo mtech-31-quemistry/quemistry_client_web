@@ -17,7 +17,7 @@ export default defineConfig({
             reporter: ['text', 'json', 'html', 'lcov'],
             reportsDirectory: './coverage',
             exclude: [
-                'service/**', // Exclude specific folders or files
+                // 'service/**', // Exclude specific folders or files
                 'layout/**', // Exclude specific folders or files
                 '**/*.mjs',
             ]
