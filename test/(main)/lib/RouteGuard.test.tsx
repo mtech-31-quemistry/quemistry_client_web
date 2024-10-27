@@ -57,6 +57,15 @@ describe('RouteGuard', () => {
       sessionStorage.setItem('IS_LOGIN', 'true');
       sessionStorage.setItem('USER', JSON.stringify({ roles: ['admin'] }));
       expect(RouteGuard.apply('/questions/create', '')).toBe(true);
+      expect(RouteGuard.apply('/questions/edit', '')).toBe(true);
+      expect(RouteGuard.apply('/questions/searchlist', '')).toBe(true);
+      expect(RouteGuard.apply('/questions/topics', '')).toBe(true);
+      expect(RouteGuard.apply('/classes', '')).toBe(true);
+      expect(RouteGuard.apply('/classes/details', '')).toBe(true);
+      expect(RouteGuard.apply('/genai', '')).toBe(true);
+      sessionStorage.setItem('USER', JSON.stringify({ roles: ['student'] }));
+      expect(RouteGuard.apply('/students/invitation/accept', '')).toBe(true);
+      expect(RouteGuard.apply('/dashboard', '')).toBe(true);
     });
   });
 

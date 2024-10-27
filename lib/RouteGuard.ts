@@ -60,8 +60,6 @@ export const RouteGuard = {
                 return this.accessibleBy(['student', 'tutor']);
             case '/dashboard':
                 return this.accessibleBy(['student', 'tutor']);
-            case '/documentation':
-                return this.accessibleBy(['student', 'tutor']);
             default:
                 return false;
         }
