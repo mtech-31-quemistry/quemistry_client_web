@@ -26,6 +26,10 @@ export const RouteGuard = {
         switch (path) {
             case '/':
                 return true;
+            case '/privacy':
+                return true;
+            case '/terms':
+                return true;
             case '/auth/google':
                 return true;
             case '/auth/access':

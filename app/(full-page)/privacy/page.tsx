@@ -2,9 +2,11 @@ import React from 'react';
 
 const PrivacyPage = () => {
     return (
-        <div className="grid">
-            <div className="col-12">
-                <div className="card">
+        <div className="grid" 
+        style={{ maxWidth: '800px', margin: '20px auto', padding: '20px', backgroundColor: '#ffffff', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}
+        >
+            <div className="col-12" >
+                {/* <div className="card"> */}
                     <h5>Privacy Policy</h5>
                     <p>
                         <b>Effective Date: 1 October 2024</b>
@@ -126,7 +128,7 @@ const PrivacyPage = () => {
                         <br />
                         If you have any questions about this Privacy Policy, please contact us by email: quemistrymtech@gmail.com
                     </p>
-                </div>
+                {/* </div> */}
             </div>
         </div>
     );
