@@ -103,7 +103,7 @@ const GoogleAuthPage = () => {
                             </Button>
                         </div>
                         <div className="mt-5">
-                            By signing in, you agree to Quemistry's 
+                            By signing in, you agree to Quemistry&apos;s 
                             <Link href="/terms"> terms of service </Link>
                             and 
                             <Link href="/privacy"> privacy policy</Link>
