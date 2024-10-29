@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from 'react';
 import { LayoutContext } from '../../../../layout/context/layoutcontext';
 import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
+import Link from 'next/link';
 
 const GoogleAuthPage = () => {
     const { layoutConfig } = useContext(LayoutContext);
@@ -100,6 +101,12 @@ const GoogleAuthPage = () => {
                                     oogle
                                 </span>
                             </Button>
+                        </div>
+                        <div className="mt-5">
+                            By signing in, you agree to Quemistry's 
+                            <Link href="/terms"> terms of service </Link>
+                            and 
+                            <Link href="/privacy"> privacy policy</Link>
                         </div>
                     </div>
                 </div>

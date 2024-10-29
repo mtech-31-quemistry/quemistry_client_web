@@ -15,7 +15,10 @@ const TermsOfService = () => {
             <p>Quemistry reserves the right to modify these Terms of Service at any time. We will notify you of any changes by updating the date at the top of this page. It is your responsibility to review the terms periodically.</p>
 
             <h2>3. User Accounts</h2>
-            <p>To use certain features of Quemistry, you may need to create an account. You agree to provide accurate and complete information when creating your account and to keep this information up-to-date. You are responsible for maintaining the confidentiality of your account and password.</p>
+            <p>
+                To use certain features of Quemistry, you may need to create an account. You agree to provide accurate and complete information when creating your account and to keep this information up-to-date. You are responsible for maintaining
+                the confidentiality of your account and password.
+            </p>
 
             <h2>4. User Conduct</h2>
             <p>You agree not to use Quemistry in any way that could harm, disable, or impair the platform. Prohibited activities include:</p>
@@ -26,7 +29,10 @@ const TermsOfService = () => {
             </ul>
 
             <h2>5. Intellectual Property</h2>
-            <p>All content on Quemistry, including text, graphics, logos, and software, is the property of Quemistry or its content suppliers and is protected by intellectual property laws. You may not reproduce, distribute, or create derivative works without our permission.</p>
+            <p>
+                All content on Quemistry, including text, graphics, logos, and software, is the property of Quemistry or its content suppliers and is protected by intellectual property laws. You may not reproduce, distribute, or create derivative
+                works without our permission.
+            </p>
 
             <h2>6. Fees and Payment</h2>
             <p>Quemistry offers both free and paid services. If you choose to purchase any paid services, you agree to pay all fees associated with your subscription. Fees may vary and are subject to change with notice.</p>
@@ -44,7 +50,9 @@ const TermsOfService = () => {
             <p>These Terms of Service are governed by the laws of Singapore. You agree to submit to the exclusive jurisdiction of the courts located in Singapore.</p>
 
             <h2>11. Contact Us</h2>
-            <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:quemistrymtech@gmail.com">quemistrymtech@gmail.com</a>.</p>
+            <p>
+                If you have any questions about these Terms of Service, please contact us at <a href="mailto:quemistrymtech@gmail.com">quemistrymtech@gmail.com</a>.
+            </p>
         </div>
     );
 };
