@@ -35,7 +35,7 @@ const TermsOfService = () => {
             <p>Quemistry reserves the right to terminate or suspend your access to the platform at any time, without notice, for conduct that we believe violates these Terms of Service or is harmful to other users.</p>
 
             <h2>8. Disclaimer of Warranties</h2>
-            <p>Quemistry is provided "as is" without any warranties, express or implied. We do not warrant that the platform will be error-free or uninterrupted.</p>
+            <p>Quemistry is provided &quot;as is&quot; without any warranties, express or implied. We do not warrant that the platform will be error-free or uninterrupted.</p>
 
             <h2>9. Limitation of Liability</h2>
             <p>In no event shall Quemistry or its affiliates be liable for any damages arising out of or related to your use of the platform.</p>
