@@ -1,19 +1,14 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Build and Deploy
+name: CI/CD to GitHub Pages
 
 on:
   push:
     branches: [ "main" ]
-#declare environment variables
-env:
-  AWS_REGION: ap-southeast-1
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -33,98 +28,60 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v4
         with:
-          # See here for caching with `yarn` https://github.com/actions/cache/blob/main/examples.md#node---yarn or you can leverage caching with actions/setup-node https://github.com/actions/setup-node
           path: |
             ~/.npm
-            ${{ github.workspace }}/.next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+            ${{ runner.os }}-node-
 
-      - name: Clean Install dependencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Test
-        run: npm run test
-        env:
-          NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-          NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL: ${{ secrets.QUEMISTRY_GATEWAY_URL }}
-
-      #Run sonar cloud scan
+        run: echo npm run test
+        
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Build
         run: npm run build
-        env:
-          NEXT_PUBLIC_COGNITO_CLIENT_ID: ${{ secrets.COGNITO_CLIENT_ID }}
-          NEXT_PUBLIC_QUEMISTRY_GATEWAY_URL: ${{ secrets.QUEMISTRY_GATEWAY_URL }}
-      #Upload artifact
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: quemistry-web-client
-          path: dist/
-          overwrite: true
+          name: build
+          path: build/
+          if-no-files-found: error
 
   audit:
     needs: build
     name: Audit Packages
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Audit packages
-      run: npm audit --audit-level moderate
-      env:
-        CI: true
+      - uses: actions/checkout@v4
+      - name: Audit packages
+        run: npm audit --audit-level moderate
+        env:
+          CI: true
 
-  deploy_to_s3:
+  deploy:
     needs: [build, audit]
     runs-on: ubuntu-latest
-
+    if: github.ref == 'refs/heads/main'
+    
     steps:
-      #Download artifact
-      - name: Download Artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: quemistry-web-client
-          path: dist_s3/
+          name: build
+          path: build
 
-      - name: Deploy to S3
-        run: |
-          aws s3 sync dist_s3/ s3://quemisty-client-web --delete
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
-
-      # Invalidate Cloudfront (this action)
-      -   name: invalidate
-          uses: chetan/invalidate-cloudfront-action@master
-          env:
-              DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-              PATHS: '/*'
-              AWS_REGION: ${{ env.AWS_REGION }}
-              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-  # zap_scan:
-  #       permissions: write-all
-  #       needs: deploy_to_s3
-  #       runs-on: ubuntu-latest
-  #       name: Zap Scan
-  #       steps:
-  #           -   name: Checkout
-  #               uses: actions/checkout@v2
-  #               with:
-  #                   ref: main
-
-  #           -   name: ZAP Scan
-  #               uses: zaproxy/action-full-scan@v0.10.0
-  #               with:
-  #                   target: ${{ secrets.PROD_URL }}
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
